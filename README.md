@@ -8,7 +8,7 @@ the process ends all posts are gone.
 # Installation
 
 ```sh
-go get github.com/mmb/tmpbbs
+go install github.com/mmb/tmpbbs@latest
 ```
 
 # Options
