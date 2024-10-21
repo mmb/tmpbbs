@@ -9,11 +9,9 @@ import (
 
 const html = `
 {{- define "post_title" -}}
-<a href="{{ .URL }}">
-{{- .Title -}}
-{{ if .Author }} by {{ .Author }}{{ end -}}
+<a href="{{ .URL }}">{{ .Title }}</a>
+{{- if .Author }} by {{ .Author }}{{ end -}}
 {{ if .Replies }} ({{ len .Replies }} replies){{ end }} {{ .TimeAgo -}}
-</a>
 {{- end -}}
 
 {{ define "post" -}}
