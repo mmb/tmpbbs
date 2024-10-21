@@ -33,7 +33,7 @@ const html = `
 <link rel="stylesheet" href="{{ .cssURL }}">
 </head>
 <body>
-<ul>
+<ul class="post">
 {{- if .post.Parent }}
 <li>
 <div class="post">
@@ -43,13 +43,13 @@ const html = `
 </div>
 </li>
 <li>
-<ul>
+<ul class="post">
 {{- end }}
 <li>
 {{ template "post" .post }}
 </li>
 <li>
-<ul>
+<ul class="post">
 {{- range .post.Replies }}
 <li>
 {{ template "post" . }}

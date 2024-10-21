@@ -19,7 +19,7 @@ textarea, input {
   width: 400px;
 }
 
-ul {
+ul.post {
   list-style-type: none;
 }
 `))
