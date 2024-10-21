@@ -22,7 +22,7 @@ const html = `
 {{ template "post_title" . }}
 </p>
 {{- if .Body }}
-<pre>{{ .Body }}</pre>
+{{ .BodyHTML }}
 {{- end }}
 </div>
 {{- end -}}

@@ -2,6 +2,7 @@ Ephemeral internet forum software. All data is stored in memory only and when
 the process ends all posts are gone.
 
 # Features
+  * Markdown support
   * optional TLS using (`-tlsCert` and `-tlsKey` options)
   * trip code support in `username#secret` format if `-tripCodeSalt` is provided
 

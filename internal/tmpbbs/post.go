@@ -2,6 +2,7 @@ package tmpbbs
 
 import (
 	"fmt"
+	"html/template"
 	"math"
 	"time"
 )
@@ -26,6 +27,10 @@ func newPost(title string, author string, body string, tripCoder *tripCoder) *po
 		Body:   body,
 		time:   time.Now(),
 	}
+}
+
+func (p post) BodyHTML() template.HTML {
+	return template.HTML(markdownToHTML([]byte(p.Body)))
 }
 
 func (p post) TimeAgo() string {
