@@ -57,7 +57,7 @@ const html = `
 {{- end }}
 <li>
 <div class="post">
-<form action="" method="post">
+<form action="{{ .post.URL }}" method="post">
 <p>
 <label for="title">Title</label>
 <input type="text" id="title" name="title">
