@@ -1,6 +1,7 @@
 package tmpbbs
 
 import (
+	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
@@ -8,17 +9,23 @@ import (
 )
 
 type tripCoder struct {
-	salt string
+	salt []byte
 }
 
-func NewTripCoder(salt string) *tripCoder {
-	if salt == "" {
-		return nil
+func NewTripCoder(salt string) (*tripCoder, error) {
+	tc := tripCoder{}
+
+	if salt != "" {
+		tc.salt = []byte(salt)
+	} else {
+		tc.salt = make([]byte, 16)
+		_, err := rand.Read(tc.salt)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	return &tripCoder{
-		salt: salt,
-	}
+	return &tc, nil
 }
 
 func (tc tripCoder) code(s string) string {
@@ -28,7 +35,7 @@ func (tc tripCoder) code(s string) string {
 	}
 
 	hash := sha256.New()
-	hash.Write([]byte(tc.salt))
+	hash.Write(tc.salt)
 	hash.Write([]byte(s))
 	hash.Sum(nil)
 

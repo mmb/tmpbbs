@@ -24,7 +24,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	tripCoder := tmpbbs.NewTripCoder(*tripCodeSalt)
+	tripCoder, err := tmpbbs.NewTripCoder(*tripCodeSalt)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	postPostHandler := tmpbbs.CreatePostPostHandler(postStore, tripCoder)
 	http.HandleFunc("POST /", postPostHandler)
