@@ -106,7 +106,7 @@ func CreatePostPostHandler(postStore *postStore, tripCoder *tripCoder) func(http
 	}
 }
 
-func CreateGetPostHandler(postStore *postStore, cssURL *string, title *string) func(http.ResponseWriter, *http.Request) {
+func CreateGetPostHandler(postStore *postStore, cssURL string, title string) func(http.ResponseWriter, *http.Request) {
 	t := template.Must(template.New("index").Parse(html))
 
 	return func(w http.ResponseWriter, r *http.Request) {

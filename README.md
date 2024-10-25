@@ -15,20 +15,15 @@ go install github.com/mmb/tmpbbs@latest
 # Options
 
 ```
-% ./tmpbbs --help
-Usage of ./tmpbbs:
-  -cssURL string
-        CSS URL (default "/css")
-  -listenAddress string
-        <host>:port to listen on (default ":8080")
-  -title string
-        Site title (default "tmpbbs")
-  -tlsCert string
-        path to PEM server certificate
-  -tlsKey string
-        path to PEM server key
-  -tripCodeSalt string
-        random salt to use for generating trip codes
+% tmpbbs --help
+Usage of tmpbbs:
+  -u, --css-url string          CSS URL ($TMPBBS_CSS_URL) (default "/css")
+  -h, --help                    usage help
+  -l, --listen-address string   <host>:port to listen on ($TMPBBS_LISTEN_ADDRESS) (default ":8080")
+  -t, --title string            site title ($TMPBBS_TITLE) (default "tmpbbs")
+  -c, --tls-cert string         path to PEM server certificate ($TMPBBS_TLS_CERT)
+  -k, --tls-key string          path to PEM server key ($TMPBBS_TLS_KEY)
+  -a, --trip-code-salt string   random salt to use for generating trip codes ($TMPBBS_TRIP_CODE_SALT)
 ```
 
 # Compiling
