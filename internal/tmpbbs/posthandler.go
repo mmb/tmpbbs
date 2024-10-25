@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -96,7 +97,9 @@ func CreatePostPostHandler(postStore *postStore, tripCoder *tripCoder) func(http
 			return
 		}
 
-		p := newPost(r.FormValue("title"), r.FormValue("author"), r.FormValue("body"), tripCoder)
+		// The body has CRLF line endings which blackfriday doesn't handle well. Convert to CR.
+		body := strings.Replace(r.FormValue("body"), "\r\n", "\n", -1)
+		p := newPost(r.FormValue("title"), r.FormValue("author"), body, tripCoder)
 		postStore.put(p, parentID)
 
 		http.Redirect(w, r, r.URL.String(), http.StatusSeeOther)
