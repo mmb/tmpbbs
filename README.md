@@ -3,7 +3,7 @@ the process ends all posts are gone.
 
 # Features
   * Markdown support
-  * optional TLS using (`-tlsCert` and `-tlsKey` options)
+  * optional TLS (using `-tls-cert` and `-tls-key` options)
   * trip code support in `username#secret` format
 
 # Installation
