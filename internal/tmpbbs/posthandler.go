@@ -31,7 +31,9 @@ const html = `
 <head>
 <title>{{ .title }}</title>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="{{ .cssURL }}">
+{{- range .cssURLs }}
+<link rel="stylesheet" href="{{ . }}">
+{{- end }}
 </head>
 <body>
 <ul class="post">
@@ -106,7 +108,7 @@ func CreatePostPostHandler(postStore *postStore, tripCoder *tripCoder) func(http
 	}
 }
 
-func CreateGetPostHandler(postStore *postStore, cssURL string, title string) func(http.ResponseWriter, *http.Request) {
+func CreateGetPostHandler(postStore *postStore, cssURLs []string, title string) func(http.ResponseWriter, *http.Request) {
 	t := template.Must(template.New("index").Parse(html))
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -118,7 +120,7 @@ func CreateGetPostHandler(postStore *postStore, cssURL string, title string) fun
 
 		found := postStore.get(id, func(post *post) {
 			err = t.Execute(w, map[string]interface{}{
-				"cssURL":     cssURL,
+				"cssURLs":    cssURLs,
 				"post":       post,
 				"title":      title,
 				"timeFormat": time.DateTime,

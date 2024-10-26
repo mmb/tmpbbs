@@ -12,7 +12,7 @@ import (
 )
 
 func init() {
-	pflag.StringP("css-url", "u", "/css", "CSS URL ($TMPBBS_CSS_URL)")
+	pflag.StringSliceP("css-urls", "u", []string{"/css"}, "comma-separated list of CSS URLs ($TMPBBS_CSS_URLS)")
 	pflag.StringP("listen-address", "l", ":8080", "<host>:port to listen on ($TMPBBS_LISTEN_ADDRESS)")
 	pflag.StringP("title", "t", "tmpbbs", "site title ($TMPBBS_TITLE)")
 	pflag.StringP("tls-cert", "c", "", "path to PEM server certificate ($TMPBBS_TLS_CERT)")
@@ -51,7 +51,7 @@ func main() {
 	postPostHandler := tmpbbs.CreatePostPostHandler(postStore, tripCoder)
 	http.HandleFunc("POST /", postPostHandler)
 	http.HandleFunc("POST /{parentID}", postPostHandler)
-	getPostHandler := tmpbbs.CreateGetPostHandler(postStore, viper.GetString("css-url"), title)
+	getPostHandler := tmpbbs.CreateGetPostHandler(postStore, viper.GetStringSlice("css-urls"), title)
 	http.HandleFunc("GET /", getPostHandler)
 	http.HandleFunc("GET /{id}", getPostHandler)
 	http.HandleFunc("GET /css", tmpbbs.CSSHandler)
