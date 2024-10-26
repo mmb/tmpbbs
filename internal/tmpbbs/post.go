@@ -9,7 +9,7 @@ import (
 
 type post struct {
 	id      int
-	title   string
+	Title   string
 	Author  string
 	Body    string
 	Parent  *post
@@ -22,7 +22,7 @@ func newPost(title string, author string, body string, tripCoder *tripCoder) *po
 		author = tripCoder.code(author)
 	}
 	return &post{
-		title:  title,
+		Title:  title,
 		Author: author,
 		Body:   body,
 		time:   time.Now(),
@@ -45,12 +45,13 @@ func (p post) TimeAgo() string {
 	}
 }
 
-func (p post) Title() string {
-	if p.title != "" {
-		return p.title
+func (p post) DisplayTitle() string {
+	if p.Title == "" {
+		return fmt.Sprintf("#%d", p.id)
+
 	}
 
-	return fmt.Sprintf("#%d", p.id)
+	return p.Title
 }
 
 func (p post) URL() string {

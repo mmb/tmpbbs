@@ -18,6 +18,7 @@ func init() {
 	pflag.StringP("tls-cert", "c", "", "path to PEM server certificate ($TMPBBS_TLS_CERT)")
 	pflag.StringP("tls-key", "k", "", "path to PEM server key ($TMPBBS_TLS_KEY)")
 	pflag.StringP("trip-code-salt", "a", "", "random salt to use for generating trip codes ($TMPBBS_TRIP_CODE_SALT)")
+	pflag.StringP("load-posts", "p", "", "path to YAML or JSON file of posts to load ($TMPBBS_LOAD_POSTS)")
 	pflag.BoolP("help", "h", false, "usage help")
 
 	pflag.Parse()
@@ -46,6 +47,14 @@ func main() {
 	tripCoder, err := tmpbbs.NewTripCoder(viper.GetString("trip-code-salt"))
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	loadPath := viper.GetString("load-posts")
+	if loadPath != "" {
+		err = postStore.LoadYAML(loadPath, tripCoder)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	postPostHandler := tmpbbs.CreatePostPostHandler(postStore, tripCoder)

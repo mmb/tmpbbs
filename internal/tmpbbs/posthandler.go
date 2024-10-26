@@ -10,7 +10,7 @@ import (
 
 const html = `
 {{- define "post_title" -}}
-<a href="{{ .URL }}">{{ .Title }}</a>
+<a href="{{ .URL }}">{{ .DisplayTitle }}</a>
 {{- if .Author }} by {{ .Author }}{{ end -}}
 {{ if .Replies }} ({{ len .Replies }} replies){{ end }} {{ .TimeAgo -}}
 {{- end -}}

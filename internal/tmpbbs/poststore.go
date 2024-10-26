@@ -1,6 +1,11 @@
 package tmpbbs
 
-import "sync"
+import (
+	"os"
+	"sync"
+
+	"gopkg.in/yaml.v3"
+)
 
 type postStore struct {
 	posts []*post
@@ -33,4 +38,23 @@ func (ps *postStore) get(id int, callback func(*post)) bool {
 	callback(ps.posts[id])
 
 	return true
+}
+
+func (ps *postStore) LoadYAML(path string, tripCoder *tripCoder) error {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return err
+	}
+
+	var posts []post
+	err = yaml.Unmarshal(data, &posts)
+	if err != nil {
+		return err
+	}
+
+	for _, post := range posts {
+		ps.put(newPost(post.Title, post.Author, post.Body, tripCoder), 0)
+	}
+
+	return nil
 }
