@@ -12,8 +12,8 @@ const html = `
 {{- define "post_title" -}}
 <a href="{{ .URL }}">{{ .DisplayTitle }}</a>
 {{- if .Author }} by {{ .Author }}{{ end -}}
-{{ if .Replies }} ({{ len .Replies }} replies){{ end }} {{ .TimeAgo -}}
-{{- end -}}
+{{ if .Replies }} ({{ len .Replies }}{{ if eq (len .Replies) 1 }} reply{{ else }} replies{{ end }}){{ end }} {{ .TimeAgo -}}
+{{ end -}}
 
 {{ define "post" -}}
 <div class="post">
