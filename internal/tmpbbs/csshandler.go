@@ -6,7 +6,14 @@ type CSSHandler struct{}
 
 func (rh CSSHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "text/css")
-	_, err := w.Write([]byte(`
+	_, err := w.Write([]byte(css))
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+var css = `
 label {
   display: inline-block;
   width: 50px;
@@ -24,9 +31,4 @@ textarea, input {
 ul.post {
   list-style-type: none;
 }
-`))
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-}
+`
