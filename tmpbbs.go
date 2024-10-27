@@ -17,7 +17,7 @@ func init() {
 	pflag.StringP("tls-key", "k", "", "path to PEM server key ($TMPBBS_TLS_KEY)")
 	pflag.StringP("title", "t", "tmpbbs", "site title ($TMPBBS_TITLE)")
 	pflag.StringP("trip-code-salt", "a", "", "random salt to use for generating trip codes ($TMPBBS_TRIP_CODE_SALT)")
-	pflag.StringP("load-posts", "p", "", "path to YAML or JSON file of posts to load ($TMPBBS_LOAD_POSTS)")
+	pflag.StringP("load-posts", "p", "", `path to YAML or JSON file of posts to load, format [{"title":"","author":"","body":""}] ($TMPBBS_LOAD_POSTS)`)
 	pflag.StringSliceP("css-urls", "u", []string{"/css"}, "comma-separated list of CSS URLs ($TMPBBS_CSS_URLS)")
 	pflag.BoolP("help", "h", false, "usage help")
 
