@@ -1,10 +1,10 @@
 package tmpbbs
 
 import (
-	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"io"
 	"strings"
 )
 
@@ -12,14 +12,14 @@ type tripCoder struct {
 	salt []byte
 }
 
-func NewTripCoder(salt string) (*tripCoder, error) {
+func NewTripCoder(salt string, randReader io.Reader) (*tripCoder, error) {
 	tc := tripCoder{}
 
 	if salt != "" {
 		tc.salt = []byte(salt)
 	} else {
 		tc.salt = make([]byte, 16)
-		_, err := rand.Read(tc.salt)
+		_, err := randReader.Read(tc.salt)
 		if err != nil {
 			return nil, err
 		}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/rand"
 	"log"
 	"net/http"
 	"os"
@@ -45,7 +46,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	tripCoder, err := tmpbbs.NewTripCoder(viper.GetString("trip-code-salt"))
+	tripCoder, err := tmpbbs.NewTripCoder(viper.GetString("trip-code-salt"), rand.Reader)
 	if err != nil {
 		log.Fatal(err)
 	}
