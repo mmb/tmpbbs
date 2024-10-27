@@ -8,24 +8,27 @@ import (
 )
 
 type post struct {
-	id      int
-	Title   string
-	Author  string
-	Body    string
-	Parent  *post
-	Replies []*post
-	time    time.Time
+	id       int
+	Title    string
+	Author   string
+	TripCode string
+	Body     string
+	Parent   *post
+	Replies  []*post
+	time     time.Time
 }
 
 func newPost(title string, author string, body string, tripCoder *tripCoder) *post {
+	var tripCode string
 	if tripCoder != nil {
-		author = tripCoder.code(author)
+		author, tripCode = tripCoder.code(author)
 	}
 	return &post{
-		Title:  title,
-		Author: author,
-		Body:   body,
-		time:   time.Now(),
+		Title:    title,
+		Author:   author,
+		TripCode: tripCode,
+		Body:     body,
+		time:     time.Now(),
 	}
 }
 
@@ -48,7 +51,6 @@ func (p post) TimeAgo() string {
 func (p post) DisplayTitle() string {
 	if p.Title == "" {
 		return fmt.Sprintf("#%d", p.id)
-
 	}
 
 	return p.Title

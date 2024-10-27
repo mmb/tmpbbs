@@ -11,7 +11,7 @@ import (
 const html = `
 {{- define "post_title" -}}
 <a href="{{ .URL }}">{{ .DisplayTitle }}</a>
-{{- if .Author }} by {{ .Author }}{{ end -}}
+{{- if .Author }} by {{ .Author }}{{ if .TripCode }} !{{ .TripCode }}{{ end }}{{ end -}}
 {{ if .Replies }} ({{ len .Replies }}{{ if eq (len .Replies) 1 }} reply{{ else }} replies{{ end }}){{ end }} {{ .TimeAgo -}}
 {{ end -}}
 

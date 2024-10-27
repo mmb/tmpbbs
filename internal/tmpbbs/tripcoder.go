@@ -28,16 +28,15 @@ func NewTripCoder(salt string) (*tripCoder, error) {
 	return &tc, nil
 }
 
-func (tc tripCoder) code(s string) string {
+func (tc tripCoder) code(s string) (string, string) {
 	parts := strings.SplitN(s, "#", 2)
 	if len(parts) != 2 {
-		return s
+		return s, ""
 	}
 
 	hash := sha256.New()
 	hash.Write(tc.salt)
 	hash.Write([]byte(s))
-	hash.Sum(nil)
 
-	return fmt.Sprintf("%s !%.10s", parts[0], hex.EncodeToString(hash.Sum(nil)))
+	return parts[0], fmt.Sprintf("%.10s", hex.EncodeToString(hash.Sum(nil)))
 }
