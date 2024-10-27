@@ -2,10 +2,17 @@ package tmpbbs
 
 import (
 	"html/template"
+	"io"
 	"net/http"
 	"strconv"
-	"strings"
 )
+
+type postGetHandler struct {
+	title     string
+	cssURLs   []string
+	postStore *postStore
+	template  *template.Template
+}
 
 const html = `
 {{- define "post_title" -}}
@@ -91,44 +98,29 @@ const html = `
 </html>
 `
 
-func CreatePostPostHandler(postStore *postStore, tripCoder *tripCoder) func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		parentID, err := castID(r.PathValue("parentID"))
-		if err != nil {
-			http.NotFound(w, r)
-			return
-		}
-
-		// The body has CRLF line endings which blackfriday doesn't handle well. Convert to CR.
-		body := strings.Replace(r.FormValue("body"), "\r\n", "\n", -1)
-		p := newPost(r.FormValue("title"), r.FormValue("author"), body, tripCoder)
-		postStore.put(p, parentID)
-
-		http.Redirect(w, r, r.URL.String(), http.StatusSeeOther)
+func NewPostGetHandler(title string, cssURLs []string, postStore *postStore) *postGetHandler {
+	return &postGetHandler{
+		title:     title,
+		cssURLs:   cssURLs,
+		postStore: postStore,
+		template:  template.Must(template.New("index").Parse(html)),
 	}
 }
 
-func CreateGetPostHandler(postStore *postStore, cssURLs []string, title string) func(http.ResponseWriter, *http.Request) {
-	t := template.Must(template.New("index").Parse(html))
+func (pgh postGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	id, err := castID(r.PathValue("id"))
+	if err != nil {
+		http.NotFound(w, r)
+		return
+	}
 
-	return func(w http.ResponseWriter, r *http.Request) {
-		id, err := castID(r.PathValue("id"))
+	if !pgh.postStore.get(id, func(post *post) {
+		err = pgh.renderPost(post, w)
 		if err != nil {
-			http.NotFound(w, r)
-			return
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-
-		found := postStore.get(id, func(post *post) {
-			err = t.Execute(w, map[string]interface{}{
-				"cssURLs": cssURLs,
-				"post":    post,
-				"title":   title,
-			})
-		})
-
-		if !found {
-			http.NotFound(w, r)
-		}
+	}) {
+		http.NotFound(w, r)
 	}
 }
 
@@ -138,4 +130,12 @@ func castID(id string) (int, error) {
 	}
 
 	return strconv.Atoi(id)
+}
+
+func (pgh postGetHandler) renderPost(post *post, w io.Writer) error {
+	return pgh.template.Execute(w, map[string]interface{}{
+		"title":   pgh.title,
+		"cssURLs": pgh.cssURLs,
+		"post":    post,
+	})
 }

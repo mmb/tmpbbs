@@ -2,7 +2,9 @@ package tmpbbs
 
 import "net/http"
 
-func CSSHandler(w http.ResponseWriter, r *http.Request) {
+type CSSHandler struct{}
+
+func (rh CSSHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "text/css")
 	_, err := w.Write([]byte(`
 label {

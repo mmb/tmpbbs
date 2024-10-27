@@ -59,14 +59,14 @@ func main() {
 		}
 	}
 
-	postPostHandler := tmpbbs.CreatePostPostHandler(postStore, tripCoder)
-	http.HandleFunc("POST /", postPostHandler)
-	http.HandleFunc("POST /{parentID}", postPostHandler)
-	getPostHandler := tmpbbs.CreateGetPostHandler(postStore, viper.GetStringSlice("css-urls"), title)
-	http.HandleFunc("GET /", getPostHandler)
-	http.HandleFunc("GET /{id}", getPostHandler)
-	http.HandleFunc("GET /css", tmpbbs.CSSHandler)
-	http.HandleFunc("GET /robots.txt", tmpbbs.RobotsHandler)
+	postPostHandler := tmpbbs.NewPostPostHandler(postStore, tripCoder)
+	http.Handle("POST /", postPostHandler)
+	http.Handle("POST /{parentID}", postPostHandler)
+	getPostHandler := tmpbbs.NewPostGetHandler(title, viper.GetStringSlice("css-urls"), postStore)
+	http.Handle("GET /", getPostHandler)
+	http.Handle("GET /{id}", getPostHandler)
+	http.Handle("GET /css", new(tmpbbs.CSSHandler))
+	http.Handle("GET /robots.txt", new(tmpbbs.RobotsHandler))
 
 	tlsCert := viper.GetString("tls-cert")
 	tlsKey := viper.GetString("tls-key")
