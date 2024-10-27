@@ -5,15 +5,15 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 )
 
 const html = `
 {{- define "post_title" -}}
 <a href="{{ .URL }}">{{ .DisplayTitle }}</a>
-{{- if .Author }} by {{ .Author }}{{ if .TripCode }} !{{ .TripCode }}{{ end }}{{ end -}}
-{{ if .Replies }} ({{ len .Replies }}{{ if eq (len .Replies) 1 }} reply{{ else }} replies{{ end }}){{ end }} {{ .TimeAgo -}}
-{{ end -}}
+{{- if .Author }} by <span class="author">{{ .Author }}</span>
+{{- if .TripCode }} <span class="trip-code">!{{ .TripCode }}</span>{{ end }}{{ end -}}
+{{ if .Replies }} ({{ len .Replies }}{{ if eq (len .Replies) 1 }} reply{{ else }} replies{{ end }}){{ end }} <span class="time">{{ .TimeAgo }}</span>
+{{- end -}}
 
 {{ define "post" -}}
 <div class="post">
@@ -120,10 +120,9 @@ func CreateGetPostHandler(postStore *postStore, cssURLs []string, title string) 
 
 		found := postStore.get(id, func(post *post) {
 			err = t.Execute(w, map[string]interface{}{
-				"cssURLs":    cssURLs,
-				"post":       post,
-				"title":      title,
-				"timeFormat": time.DateTime,
+				"cssURLs": cssURLs,
+				"post":    post,
+				"title":   title,
 			})
 		})
 
