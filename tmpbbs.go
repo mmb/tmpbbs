@@ -12,13 +12,13 @@ import (
 )
 
 func init() {
-	pflag.StringSliceP("css-urls", "u", []string{"/css"}, "comma-separated list of CSS URLs ($TMPBBS_CSS_URLS)")
 	pflag.StringP("listen-address", "l", ":8080", "<host>:port to listen on ($TMPBBS_LISTEN_ADDRESS)")
-	pflag.StringP("title", "t", "tmpbbs", "site title ($TMPBBS_TITLE)")
 	pflag.StringP("tls-cert", "c", "", "path to PEM server certificate ($TMPBBS_TLS_CERT)")
 	pflag.StringP("tls-key", "k", "", "path to PEM server key ($TMPBBS_TLS_KEY)")
+	pflag.StringP("title", "t", "tmpbbs", "site title ($TMPBBS_TITLE)")
 	pflag.StringP("trip-code-salt", "a", "", "random salt to use for generating trip codes ($TMPBBS_TRIP_CODE_SALT)")
 	pflag.StringP("load-posts", "p", "", "path to YAML or JSON file of posts to load ($TMPBBS_LOAD_POSTS)")
+	pflag.StringSliceP("css-urls", "u", []string{"/css"}, "comma-separated list of CSS URLs ($TMPBBS_CSS_URLS)")
 	pflag.BoolP("help", "h", false, "usage help")
 
 	pflag.Parse()
@@ -34,6 +34,7 @@ func init() {
 
 func main() {
 	if viper.GetBool("help") {
+		pflag.CommandLine.SortFlags = false
 		pflag.Usage()
 		os.Exit(0)
 	}
