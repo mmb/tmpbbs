@@ -9,8 +9,12 @@ import (
 
 var blackfridayExtensions = blackfriday.WithExtensions(
 	blackfriday.Autolink |
+		blackfriday.DefinitionLists |
 		blackfriday.FencedCode |
-		blackfriday.HardLineBreak)
+		blackfriday.HardLineBreak |
+		blackfriday.NoIntraEmphasis |
+		blackfriday.Strikethrough |
+		blackfriday.Tables)
 
 var bluemondayPolicy = bluemonday.UGCPolicy()
 
