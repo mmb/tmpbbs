@@ -16,6 +16,13 @@ var blackfridayExtensions = blackfriday.WithExtensions(
 		blackfriday.Strikethrough |
 		blackfriday.Tables)
 
+var blackfridayRenderer = blackfriday.WithRenderer(
+	blackfriday.NewHTMLRenderer(
+		blackfriday.HTMLRendererParameters{
+			// disable XHTML
+			Flags: blackfriday.CommonHTMLFlags &^ blackfriday.UseXHTML,
+		}))
+
 var bluemondayPolicy = bluemonday.UGCPolicy()
 
 func init() {
@@ -24,7 +31,7 @@ func init() {
 }
 
 func markdownToHTML(markdown []byte) []byte {
-	unsafe := blackfriday.Run(markdown, blackfridayExtensions)
+	unsafe := blackfriday.Run(markdown, blackfridayExtensions, blackfridayRenderer)
 
 	return bluemondayPolicy.SanitizeBytes(unsafe)
 }
