@@ -8,10 +8,11 @@ import (
 )
 
 type postGetHandler struct {
-	title     string
-	cssURLs   []string
-	postStore *postStore
-	template  *template.Template
+	title          string
+	cssURLs        []string
+	repliesEnabled bool
+	template       *template.Template
+	postStore      *postStore
 }
 
 const html = `
@@ -64,7 +65,8 @@ const html = `
 <li>
 {{ template "post" . }}
 </li>
-{{- end }}
+{{- end -}}
+{{ if .repliesEnabled }}
 <li>
 <div class="post">
 <form action="{{ .post.URL }}" method="post">
@@ -87,6 +89,7 @@ const html = `
 </form>
 </div>
 </li>
+{{- end }}
 </ul>
 {{- if .post.Parent }}
 </li>
@@ -98,12 +101,13 @@ const html = `
 </html>
 `
 
-func NewPostGetHandler(title string, cssURLs []string, postStore *postStore) *postGetHandler {
+func NewPostGetHandler(title string, cssURLs []string, repliesEnabled bool, postStore *postStore) *postGetHandler {
 	return &postGetHandler{
-		title:     title,
-		cssURLs:   cssURLs,
-		postStore: postStore,
-		template:  template.Must(template.New("index").Parse(html)),
+		title:          title,
+		cssURLs:        cssURLs,
+		repliesEnabled: repliesEnabled,
+		template:       template.Must(template.New("index").Parse(html)),
+		postStore:      postStore,
 	}
 }
 
@@ -134,8 +138,9 @@ func castID(id string) (int, error) {
 
 func (pgh postGetHandler) renderPost(post *post, w io.Writer) error {
 	return pgh.template.Execute(w, map[string]interface{}{
-		"title":   pgh.title,
-		"cssURLs": pgh.cssURLs,
-		"post":    post,
+		"title":          pgh.title,
+		"cssURLs":        pgh.cssURLs,
+		"repliesEnabled": pgh.repliesEnabled,
+		"post":           post,
 	})
 }
