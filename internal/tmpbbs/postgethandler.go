@@ -52,23 +52,25 @@ const html = `
 {{ template "post_title" .post.Parent }}
 </p>
 </div>
-</li>
-<li>
 <ul class="post">
 {{- end }}
 <li>
 {{ template "post" .post }}
-</li>
-<li>
 <ul class="post">
 {{- range .post.Replies }}
 <li>
-{{ template "post" . }}
+<details open>
+<summary>{{ template "post_title" . }}</summary>
+{{- if .Body }}
+{{ .BodyHTML }}
+{{- end }}
+</details>
 </li>
 {{- end -}}
 {{ if .repliesEnabled }}
 <li>
-<div class="post">
+<details open>
+<summary>Reply</summary>
 <form action="{{ .post.URL }}" method="post">
 <p>
 <label for="title">Title</label>
@@ -87,14 +89,12 @@ const html = `
 <input type="submit" value="Reply">
 </p>
 </form>
-</div>
+</details>
 </li>
 {{- end }}
 </ul>
 {{- if .post.Parent }}
-</li>
 </ul>
-</li>
 {{- end }}
 </ul>
 </body>
