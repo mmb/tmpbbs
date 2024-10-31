@@ -53,8 +53,8 @@ const html = `
 <li>
 {{ template "post" .post }}
 <ul class="post">
-{{- range .post.Replies }}
-<li>
+{{- range $i, $e := .post.Replies }}
+<li class="{{ if even $i }}even{{ else }}odd{{ end }}">
 <details open>
 <summary>{{ template "post_title" . }}</summary>
 {{- if .Body }}
@@ -64,7 +64,7 @@ const html = `
 </li>
 {{- end -}}
 {{ if .repliesEnabled }}
-<li>
+<li class="{{ if even (len .post.Replies) }}even{{ else }}odd{{ end }}">
 <details open>
 <summary>Reply</summary>
 <form action="{{ .post.URL }}" method="post">
@@ -98,11 +98,16 @@ const html = `
 `
 
 func NewPostGetHandler(title string, cssURLs []string, repliesEnabled bool, postStore *postStore) *postGetHandler {
+	template := template.Must(template.New("index").Funcs(template.FuncMap{
+		"even": func(i int) bool {
+			return i%2 == 0
+		}}).Parse(html))
+
 	return &postGetHandler{
 		title:          title,
 		cssURLs:        cssURLs,
 		repliesEnabled: repliesEnabled,
-		template:       template.Must(template.New("index").Parse(html)),
+		template:       template,
 		postStore:      postStore,
 	}
 }

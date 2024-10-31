@@ -31,4 +31,12 @@ textarea, input {
 ul.post {
   list-style-type: none;
 }
+
+li.odd {
+  background-color: #eee;
+}
+
+li.odd, li.even {
+  padding: 1em;
+}
 `
