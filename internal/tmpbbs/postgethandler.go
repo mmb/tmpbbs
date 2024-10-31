@@ -24,14 +24,12 @@ const html = `
 {{- end -}}
 
 {{ define "post" -}}
-<div class="post">
 <p>
 {{ template "post_title" . }}
 </p>
 {{- if .Body }}
 {{ .BodyHTML }}
 {{- end }}
-</div>
 {{- end -}}
 
 <!DOCTYPE html>
@@ -47,11 +45,9 @@ const html = `
 <ul class="post">
 {{- if .post.Parent }}
 <li>
-<div class="post">
 <p>
 {{ template "post_title" .post.Parent }}
 </p>
-</div>
 <ul class="post">
 {{- end }}
 <li>
