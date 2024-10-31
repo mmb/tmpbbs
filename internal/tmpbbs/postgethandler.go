@@ -69,19 +69,13 @@ const html = `
 <summary>Reply</summary>
 <form action="{{ .post.URL }}" method="post">
 <p>
-<label for="title">Title</label>
-<input type="text" id="title" name="title">
+<input type="text" id="title" name="title" placeholder="Title">
+<input type="text" id="author" name="author" placeholder="Author">
 </p>
 <p>
-<label for="author">Author</label>
-<input type="text" id="author" name="author">
-</p>
-<p>
-<label for="body"></label>
 <textarea id="body" name="body"></textarea>
 </p>
 <p>
-<label for="body"></label>
 <input type="submit" value="Reply">
 </p>
 </form>

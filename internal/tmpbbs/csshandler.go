@@ -14,20 +14,6 @@ func (rh CSSHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 var css = `
-label {
-  display: inline-block;
-  width: 50px;
-  text-align: right;
-}
-
-textarea {
-  height: 200px;
-}
-
-textarea, input {
-  width: 400px;
-}
-
 ul.post {
   list-style-type: none;
 }
@@ -38,5 +24,10 @@ li.odd {
 
 li.odd, li.even {
   padding: 1em;
+}
+
+textarea {
+  width: 100%;
+  height: 7em;
 }
 `
