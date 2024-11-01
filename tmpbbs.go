@@ -66,9 +66,9 @@ func main() {
 		http.Handle("POST /", postPostHandler)
 		http.Handle("POST /{parentID}", postPostHandler)
 	}
-	getPostHandler := tmpbbs.NewPostGetHandler(title, viper.GetStringSlice("css-urls"), repliesEnabled, postStore)
-	http.Handle("GET /", getPostHandler)
-	http.Handle("GET /{id}", getPostHandler)
+	postGetHandler := tmpbbs.NewPostGetHandler(title, viper.GetStringSlice("css-urls"), repliesEnabled, postStore)
+	http.Handle("GET /", postGetHandler)
+	http.Handle("GET /{id}", postGetHandler)
 	http.Handle("GET /css", new(tmpbbs.CSSHandler))
 	http.Handle("GET /robots.txt", new(tmpbbs.RobotsHandler))
 
