@@ -19,6 +19,7 @@ func init() {
 	pflag.StringP("title", "t", "tmpbbs", "site title ($TMPBBS_TITLE)")
 	pflag.StringP("trip-code-salt", "a", "", "random salt to use for generating trip codes ($TMPBBS_TRIP_CODE_SALT)")
 	pflag.StringP("load-posts", "p", "", `path to YAML or JSON file of posts to load, format [{"title":"","author":"","body":""}] ($TMPBBS_LOAD_POSTS)`)
+	pflag.IntP("replies-per-page", "e", 10, "Number of replies to show per page ($TMPBBS_REPLIES_PER_PAGE)")
 	pflag.StringSliceP("css-urls", "u", []string{"/css"}, "comma-separated list of CSS URLs ($TMPBBS_CSS_URLS)")
 	pflag.BoolP("replies", "r", true, "Enable replies ($TMPBBS_REPLIES)")
 	pflag.BoolP("help", "h", false, "usage help")
@@ -66,7 +67,7 @@ func main() {
 		http.Handle("POST /", postPostHandler)
 		http.Handle("POST /{parentID}", postPostHandler)
 	}
-	postGetHandler := tmpbbs.NewPostGetHandler(title, viper.GetStringSlice("css-urls"), repliesEnabled, postStore)
+	postGetHandler := tmpbbs.NewPostGetHandler(title, viper.GetInt("replies-per-page"), viper.GetStringSlice("css-urls"), repliesEnabled, postStore)
 	http.Handle("GET /", postGetHandler)
 	http.Handle("GET /{id}", postGetHandler)
 	http.Handle("GET /css", new(tmpbbs.CSSHandler))

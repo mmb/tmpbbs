@@ -59,3 +59,34 @@ func (p post) DisplayTitle() string {
 func (p post) URL() string {
 	return fmt.Sprintf("/%d", p.id)
 }
+
+func (p post) BeginRepliesPageURL() string {
+	return p.repliesPageURL(1)
+}
+
+func (p post) PrevRepliesPageURL(page int) string {
+	return p.repliesPageURL(max(page-1, 1))
+}
+
+func (p post) NextRepliesPageURL(page int, perPage int) string {
+	return p.repliesPageURL(min(p.repliesLastPage(perPage), page+1))
+}
+
+func (p post) EndRepliesPageURL(perPage int) string {
+	return p.repliesPageURL(p.repliesLastPage(perPage))
+}
+
+func (p post) RepliesPage(page int, perPage int) []*post {
+	start := min((max(0, page-1))*perPage, len(p.Replies))
+	end := min(start+perPage, len(p.Replies))
+
+	return p.Replies[start:end]
+}
+
+func (p post) repliesPageURL(page int) string {
+	return fmt.Sprintf("/%d?p=%d", p.id, page)
+}
+
+func (p post) repliesLastPage(perPage int) int {
+	return int(math.Ceil(float64(len(p.Replies)) / float64(perPage)))
+}

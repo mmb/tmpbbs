@@ -9,6 +9,7 @@ import (
 
 type postGetHandler struct {
 	title          string
+	repliesPerPage int
 	cssURLs        []string
 	repliesEnabled bool
 	template       *template.Template
@@ -53,7 +54,7 @@ const html = `
 <li>
 {{ template "post" .post }}
 <ul class="post">
-{{- range $i, $e := .post.Replies }}
+{{- range $i, $e := .post.RepliesPage .repliesPage .repliesPerPage }}
 <li class="{{ if even $i }}even{{ else }}odd{{ end }}">
 <details open>
 <summary>{{ template "post_title" . }}</summary>
@@ -63,10 +64,16 @@ const html = `
 </details>
 </li>
 {{- end -}}
-{{ if .repliesEnabled }}
 <li class="{{ if even (len .post.Replies) }}even{{ else }}odd{{ end }}">
 <details open>
-<summary>Reply</summary>
+<summary>
+Replies
+<a href="{{ .post.BeginRepliesPageURL }}">begin</a>
+<a href="{{ .post.PrevRepliesPageURL .repliesPage }}">prev</a>
+<a href="{{ .post.NextRepliesPageURL .repliesPage .repliesPerPage }}">next</a>
+<a href="{{ .post.EndRepliesPageURL .repliesPerPage }}">end</a>
+</summary>
+{{ if .repliesEnabled }}
 <form action="{{ .post.URL }}" method="post">
 <p>
 <input type="text" id="title" name="title" placeholder="Title">
@@ -79,9 +86,9 @@ const html = `
 <input type="submit" value="Reply">
 </p>
 </form>
+{{- end }}
 </details>
 </li>
-{{- end }}
 </ul>
 {{- if .post.Parent }}
 </ul>
@@ -91,7 +98,7 @@ const html = `
 </html>
 `
 
-func NewPostGetHandler(title string, cssURLs []string, repliesEnabled bool, postStore *postStore) *postGetHandler {
+func NewPostGetHandler(title string, repliesPerPage int, cssURLs []string, repliesEnabled bool, postStore *postStore) *postGetHandler {
 	template := template.Must(template.New("index").Funcs(template.FuncMap{
 		"even": func(i int) bool {
 			return i%2 == 0
@@ -99,6 +106,7 @@ func NewPostGetHandler(title string, cssURLs []string, repliesEnabled bool, post
 
 	return &postGetHandler{
 		title:          title,
+		repliesPerPage: repliesPerPage,
 		cssURLs:        cssURLs,
 		repliesEnabled: repliesEnabled,
 		template:       template,
@@ -113,8 +121,13 @@ func (pgh postGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	repliesPage, err := strconv.Atoi(r.URL.Query().Get("p"))
+	if err != nil {
+		repliesPage = 1
+	}
+
 	if !pgh.postStore.get(id, func(post *post) {
-		err = pgh.renderPost(post, w)
+		err = pgh.renderPost(post, w, repliesPage)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
@@ -131,11 +144,13 @@ func castID(id string) (int, error) {
 	return strconv.Atoi(id)
 }
 
-func (pgh postGetHandler) renderPost(post *post, w io.Writer) error {
+func (pgh postGetHandler) renderPost(post *post, w io.Writer, repliesPage int) error {
 	return pgh.template.Execute(w, map[string]interface{}{
 		"title":          pgh.title,
+		"repliesPerPage": pgh.repliesPerPage,
 		"cssURLs":        pgh.cssURLs,
 		"repliesEnabled": pgh.repliesEnabled,
 		"post":           post,
+		"repliesPage":    repliesPage,
 	})
 }
