@@ -44,13 +44,13 @@ const html = `
 </head>
 <body>
 <ul class="post">
-{{- if .post.Parent }}
 <li>
-<p>
+{{- if .post.Parent }}
 {{ template "post_title" .post.Parent }}
-</p>
-<ul class="post">
+{{- else }}
+&nbsp;
 {{- end }}
+<ul class="post">
 <li>
 {{ template "post" .post }}
 <ul class="post">
@@ -96,9 +96,7 @@ Replies
 </li>
 {{- end }}
 </ul>
-{{- if .post.Parent }}
 </ul>
-{{- end }}
 </ul>
 </body>
 </html>

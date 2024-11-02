@@ -61,13 +61,14 @@ func main() {
 		}
 	}
 
-	postPostHandler := tmpbbs.NewPostPostHandler(postStore, tripCoder)
+	repliesPerPage := viper.GetInt("replies-per-page")
+	postPostHandler := tmpbbs.NewPostPostHandler(repliesPerPage, postStore, tripCoder)
 	repliesEnabled := viper.GetBool("replies")
 	if repliesEnabled {
 		http.Handle("POST /", postPostHandler)
 		http.Handle("POST /{parentID}", postPostHandler)
 	}
-	postGetHandler := tmpbbs.NewPostGetHandler(title, viper.GetInt("replies-per-page"), viper.GetStringSlice("css-urls"), repliesEnabled, postStore)
+	postGetHandler := tmpbbs.NewPostGetHandler(title, repliesPerPage, viper.GetStringSlice("css-urls"), repliesEnabled, postStore)
 	http.Handle("GET /", postGetHandler)
 	http.Handle("GET /{id}", postGetHandler)
 	http.Handle("GET /css", new(tmpbbs.CSSHandler))
