@@ -76,12 +76,12 @@ func (dp displayPost) RepliesPageEndURL(perPage int) string {
 func (dp displayPost) TimeAgo() string {
 	age := time.Since(dp.time)
 	if age.Hours() < 1 {
-		return fmt.Sprintf("%dm ago", int64(math.Round(age.Minutes())))
+		return dp.printer.Sprintf("%dm ago", int64(math.Round(age.Minutes())))
 	}
 	if age.Hours() >= 24 {
-		return fmt.Sprintf("%dd ago", int64(math.Round(age.Hours()/24)))
+		return dp.printer.Sprintf("%dd ago", int64(math.Round(age.Hours()/24)))
 	} else {
-		return fmt.Sprintf("%dh ago", int64(math.Round(age.Hours())))
+		return dp.printer.Sprintf("%dh ago", int64(math.Round(age.Hours())))
 	}
 }
 
