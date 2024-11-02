@@ -132,7 +132,14 @@ func (pgh postGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if !pgh.postStore.get(id, func(post *post) {
 		printer := message.NewPrinter(message.MatchLanguage(r.Header.Get("Accept-Language"), "en"))
 
-		err = pgh.renderPost(newDisplayPost(post, printer), w, repliesPage)
+		displayPost := newDisplayPost(post, printer)
+		if !displayPost.HasRepliesPage(repliesPage, pgh.repliesPerPage) {
+			http.NotFound(w, r)
+
+			return
+		}
+
+		err = pgh.renderPost(displayPost, w, repliesPage)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}

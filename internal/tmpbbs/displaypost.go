@@ -36,6 +36,10 @@ func (dp displayPost) DisplayTitle() string {
 	return dp.Title
 }
 
+func (dp displayPost) HasRepliesPage(page int, perPage int) bool {
+	return page > 0 && page <= dp.repliesLastPage(perPage)
+}
+
 func (dp displayPost) NumRepliesLocalized() string {
 	if len(dp.Replies) == 1 {
 		return dp.printer.Sprintf("%d reply", 1)
