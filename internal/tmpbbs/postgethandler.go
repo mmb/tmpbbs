@@ -54,7 +54,7 @@ const html = `
 <li>
 {{ template "post" .post }}
 <ul class="post">
-{{ $class := "even" }}
+{{- $class := "even" }}
 {{- range .post.RepliesPage .repliesPage .repliesPerPage }}
 <li class="{{ $class }}">
 <details open>
@@ -64,18 +64,21 @@ const html = `
 {{- end }}
 </details>
 </li>
-{{ if eq $class "even" }}{{ $class = "odd" }}{{ else }}{{ $class = "even" }}{{ end }}
-{{- end -}}
+{{- if eq $class "even" }}{{ $class = "odd" }}{{ else }}{{ $class = "even" }}{{ end -}}
+{{ end -}}
+{{ if or .post.Replies .repliesEnabled }}
 <li class="{{ $class }}">
 <details open>
 <summary>
 Replies
+{{- if .post.Replies }}
 <a href="{{ .post.BeginRepliesPageURL }}">begin</a>
 <a href="{{ .post.PrevRepliesPageURL .repliesPage }}">prev</a>
 <a href="{{ .post.NextRepliesPageURL .repliesPage .repliesPerPage }}">next</a>
 <a href="{{ .post.EndRepliesPageURL .repliesPerPage }}">end</a>
+{{- end }}
 </summary>
-{{ if .repliesEnabled }}
+{{- if .repliesEnabled }}
 <form action="{{ .post.URL }}" method="post">
 <p>
 <input type="text" id="title" name="title" placeholder="Title">
@@ -91,6 +94,7 @@ Replies
 {{- end }}
 </details>
 </li>
+{{- end }}
 </ul>
 {{- if .post.Parent }}
 </ul>
