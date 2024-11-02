@@ -22,9 +22,13 @@ const html = `
 {{- define "post_title" -}}
 <a href="{{ .URL }}">{{ .DisplayTitle }}</a>
 {{- if .Author }} by <span class="author">{{ .Author }}</span>
-{{- if .TripCode }} <span class="trip-code">!{{ .TripCode }}</span>{{ end }}{{ end -}}
-{{ if .Replies }} ({{ .NumRepliesLocalized }}){{ end }} <span class="time">{{ .TimeAgo }}</span>
+{{- if .TripCode }} <span class="trip-code">!{{ .TripCode }}</span>{{ end }}{{ end }} <span class="time">{{ .TimeAgo }}</span>
 {{- end -}}
+
+{{ define "post_title_with_replies" -}}
+{{ template "post_title" . -}}
+{{ if .Replies }} ({{ .NumRepliesLocalized }}){{ end -}}
+{{ end -}}
 
 {{ define "post" -}}
 <p>
@@ -48,19 +52,22 @@ const html = `
 <ul class="post">
 <li>
 {{- if .post.Parent }}
-{{ template "post_title" .post.ParentDisplayPost }}
+{{ template "post_title_with_replies" .post.ParentDisplayPost }}
 {{- else }}
 &nbsp;
 {{- end }}
 <ul class="post">
 <li>
 {{ template "post" .post }}
+{{ .post.RepliesNav .repliesPage .repliesPerPage }}
 <ul class="post">
 {{- $class := "even" }}
 {{- range .post.RepliesPage .repliesPage .repliesPerPage }}
 <li class="{{ $class }}">
 <details open>
-<summary>{{ template "post_title" . }}</summary>
+<summary>
+{{ template "post_title_with_replies" . }}
+</summary>
 {{- if .Body }}
 {{ .BodyHTML }}
 {{- end }}
@@ -68,19 +75,12 @@ const html = `
 </li>
 {{- if eq $class "even" }}{{ $class = "odd" }}{{ else }}{{ $class = "even" }}{{ end -}}
 {{ end -}}
-{{ if or .post.Replies .repliesEnabled }}
+{{ if .repliesEnabled }}
 <li class="{{ $class }}">
 <details open>
 <summary>
-Replies
-{{- if .post.Replies }}
-<a href="{{ .post.RepliesPageBeginURL }}">begin</a>
-<a href="{{ .post.RepliesPagePrevURL .repliesPage }}">prev</a>
-<a href="{{ .post.RepliesPageNextURL .repliesPage .repliesPerPage }}">next</a>
-<a href="{{ .post.RepliesPageEndURL .repliesPerPage }}">end</a>
-{{- end }}
+Reply
 </summary>
-{{- if .repliesEnabled }}
 <form action="{{ .post.URL }}" method="post">
 <p>
 <input type="text" id="title" name="title" placeholder="Title">
@@ -93,11 +93,11 @@ Replies
 <input type="submit" value="Reply">
 </p>
 </form>
-{{- end }}
 </details>
 </li>
 {{- end }}
 </ul>
+{{ .post.RepliesNav .repliesPage .repliesPerPage }}
 </ul>
 </ul>
 </body>

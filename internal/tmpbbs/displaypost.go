@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"html/template"
 	"math"
+	"sort"
+	"strings"
+
 	"time"
 
 	"golang.org/x/text/message"
@@ -57,20 +60,43 @@ func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
 	return result
 }
 
-func (dp displayPost) RepliesPageBeginURL() string {
-	return dp.repliesPageURL(1)
-}
+func (dp displayPost) RepliesNav(currentPage int, perPage int) template.HTML {
+	if len(dp.Replies) == 0 {
+		return ""
+	}
 
-func (dp displayPost) RepliesPagePrevURL(page int) string {
-	return dp.repliesPageURL(max(page-1, 1))
-}
+	firstPage := 1
+	prevPage := max(currentPage-1, 1)
+	nextPage := min(dp.repliesLastPage(perPage), currentPage+1)
+	lastPage := dp.repliesLastPage(perPage)
 
-func (dp displayPost) RepliesPageNextURL(page int, perPage int) string {
-	return dp.repliesPageURL(min(dp.repliesLastPage(perPage), page+1))
-}
+	show := make(map[int]bool, 5)
+	show[firstPage] = true
+	show[prevPage] = true
+	show[nextPage] = true
+	show[lastPage] = true
+	show[currentPage] = false
 
-func (dp displayPost) RepliesPageEndURL(perPage int) string {
-	return dp.repliesPageURL(dp.repliesLastPage(perPage))
+	if len(show) == 1 {
+		return template.HTML(dp.NumRepliesLocalized())
+	}
+
+	var pages []int
+	for page := range show {
+		pages = append(pages, page)
+	}
+	sort.Ints(pages)
+
+	var links []string
+	for _, page := range pages {
+		if show[page] {
+			links = append(links, dp.printer.Sprintf(`<a href="%s">page %d</a>`, dp.repliesPageURL(page), page))
+		} else {
+			links = append(links, dp.printer.Sprintf("page %d", page))
+		}
+	}
+
+	return template.HTML(fmt.Sprintf("%s, %s", dp.NumRepliesLocalized(), strings.Join(links, " / ")))
 }
 
 func (dp displayPost) TimeAgo() string {
@@ -95,4 +121,8 @@ func (p post) repliesPageURL(page int) string {
 
 func (p post) repliesLastPage(perPage int) int {
 	return max(1, int(math.Ceil(float64(len(p.Replies))/float64(perPage))))
+}
+
+func (dp displayPost) repliesPageEndURL(perPage int) string {
+	return dp.repliesPageURL(dp.repliesLastPage(perPage))
 }
