@@ -54,8 +54,9 @@ const html = `
 <li>
 {{ template "post" .post }}
 <ul class="post">
-{{- range $i, $e := .post.RepliesPage .repliesPage .repliesPerPage }}
-<li class="{{ if even $i }}even{{ else }}odd{{ end }}">
+{{ $class := "even" }}
+{{- range .post.RepliesPage .repliesPage .repliesPerPage }}
+<li class="{{ $class }}">
 <details open>
 <summary>{{ template "post_title" . }}</summary>
 {{- if .Body }}
@@ -63,8 +64,9 @@ const html = `
 {{- end }}
 </details>
 </li>
+{{ if eq $class "even" }}{{ $class = "odd" }}{{ else }}{{ $class = "even" }}{{ end }}
 {{- end -}}
-<li class="{{ if even (len .post.Replies) }}even{{ else }}odd{{ end }}">
+<li class="{{ $class }}">
 <details open>
 <summary>
 Replies

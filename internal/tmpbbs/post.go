@@ -88,5 +88,5 @@ func (p post) repliesPageURL(page int) string {
 }
 
 func (p post) repliesLastPage(perPage int) int {
-	return int(math.Ceil(float64(len(p.Replies)) / float64(perPage)))
+	return max(1, int(math.Ceil(float64(len(p.Replies))/float64(perPage))))
 }
