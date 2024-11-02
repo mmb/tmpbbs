@@ -59,7 +59,7 @@ const html = `
 <ul class="post">
 <li>
 {{ template "post" .post }}
-{{ .post.RepliesNav .repliesPage .repliesPerPage }}
+{{ .post.RepliesNav .repliesPage .repliesPerPage false }}
 <ul class="post">
 {{- $class := "even" }}
 {{- range .post.RepliesPage .repliesPage .repliesPerPage }}
@@ -97,7 +97,7 @@ Reply
 </li>
 {{- end }}
 </ul>
-{{ .post.RepliesNav .repliesPage .repliesPerPage }}
+{{ .post.RepliesNav .repliesPage .repliesPerPage true }}
 </ul>
 </ul>
 </body>

@@ -64,7 +64,7 @@ func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
 	return result
 }
 
-func (dp displayPost) RepliesNav(currentPage int, perPage int) template.HTML {
+func (dp displayPost) RepliesNav(currentPage int, perPage int, onlyIfLinks bool) template.HTML {
 	if len(dp.Replies) == 0 {
 		return ""
 	}
@@ -82,6 +82,9 @@ func (dp displayPost) RepliesNav(currentPage int, perPage int) template.HTML {
 	show[currentPage] = false
 
 	if len(show) == 1 {
+		if onlyIfLinks {
+			return ""
+		}
 		return template.HTML(dp.NumRepliesLocalized())
 	}
 
