@@ -81,7 +81,7 @@ const html = `
 <summary>
 Reply
 </summary>
-<form action="{{ .post.URL }}" method="post">
+<form id="reply" action="{{ .post.URL }}" method="post">
 <p>
 <input type="text" id="title" name="title" placeholder="Title">
 <input type="text" id="author" name="author" placeholder="Author">

@@ -31,5 +31,5 @@ func (pph postPostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	p := newPost(r.FormValue("title"), r.FormValue("author"), body, pph.tripCoder)
 	pph.postStore.put(p, parentID)
 
-	http.Redirect(w, r, newDisplayPost(p.Parent, nil).repliesPageEndURL(pph.repliesPerPage), http.StatusSeeOther)
+	http.Redirect(w, r, newDisplayPost(p.Parent, nil).repliesPageEndURL(pph.repliesPerPage, "reply"), http.StatusSeeOther)
 }

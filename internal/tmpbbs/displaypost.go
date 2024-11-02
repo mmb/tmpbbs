@@ -93,7 +93,7 @@ func (dp displayPost) RepliesNav(currentPage int, perPage int, onlyIfLinks bool)
 	var links []string
 	for _, page := range pages {
 		if show[page] {
-			links = append(links, dp.printer.Sprintf(`<a href="%s">page %d</a>`, dp.repliesPageURL(page), page))
+			links = append(links, dp.printer.Sprintf(`<a href="%s">page %d</a>`, dp.repliesPageURL(page, ""), page))
 		} else {
 			links = append(links, dp.printer.Sprintf("page %d", page))
 		}
@@ -118,14 +118,17 @@ func (dp displayPost) URL() string {
 	return fmt.Sprintf("/%d", dp.id)
 }
 
-func (p post) repliesPageURL(page int) string {
-	return fmt.Sprintf("/%d?p=%d", p.id, page)
+func (p post) repliesPageURL(page int, anchor string) string {
+	if anchor != "" {
+		anchor = fmt.Sprintf("#%s", anchor)
+	}
+	return fmt.Sprintf("/%d?p=%d%s", p.id, page, anchor)
 }
 
 func (p post) repliesLastPage(perPage int) int {
 	return max(1, int(math.Ceil(float64(len(p.Replies))/float64(perPage))))
 }
 
-func (dp displayPost) repliesPageEndURL(perPage int) string {
-	return dp.repliesPageURL(dp.repliesLastPage(perPage))
+func (dp displayPost) repliesPageEndURL(perPage int, anchor string) string {
+	return dp.repliesPageURL(dp.repliesLastPage(perPage), anchor)
 }
