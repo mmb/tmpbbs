@@ -5,6 +5,8 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+
+	"golang.org/x/text/message"
 )
 
 type postGetHandler struct {
@@ -21,7 +23,7 @@ const html = `
 <a href="{{ .URL }}">{{ .DisplayTitle }}</a>
 {{- if .Author }} by <span class="author">{{ .Author }}</span>
 {{- if .TripCode }} <span class="trip-code">!{{ .TripCode }}</span>{{ end }}{{ end -}}
-{{ if .Replies }} ({{ len .Replies }}{{ if eq (len .Replies) 1 }} reply{{ else }} replies{{ end }}){{ end }} <span class="time">{{ .TimeAgo }}</span>
+{{ if .Replies }} ({{ .NumRepliesLocalized }}){{ end }} <span class="time">{{ .TimeAgo }}</span>
 {{- end -}}
 
 {{ define "post" -}}
@@ -46,7 +48,7 @@ const html = `
 <ul class="post">
 <li>
 {{- if .post.Parent }}
-{{ template "post_title" .post.Parent }}
+{{ template "post_title" .post.ParentDisplayPost }}
 {{- else }}
 &nbsp;
 {{- end }}
@@ -72,10 +74,10 @@ const html = `
 <summary>
 Replies
 {{- if .post.Replies }}
-<a href="{{ .post.BeginRepliesPageURL }}">begin</a>
-<a href="{{ .post.PrevRepliesPageURL .repliesPage }}">prev</a>
-<a href="{{ .post.NextRepliesPageURL .repliesPage .repliesPerPage }}">next</a>
-<a href="{{ .post.EndRepliesPageURL .repliesPerPage }}">end</a>
+<a href="{{ .post.RepliesPageBeginURL }}">begin</a>
+<a href="{{ .post.RepliesPagePrevURL .repliesPage }}">prev</a>
+<a href="{{ .post.RepliesPageNextURL .repliesPage .repliesPerPage }}">next</a>
+<a href="{{ .post.RepliesPageEndURL .repliesPerPage }}">end</a>
 {{- end }}
 </summary>
 {{- if .repliesEnabled }}
@@ -103,10 +105,7 @@ Replies
 `
 
 func NewPostGetHandler(title string, repliesPerPage int, cssURLs []string, repliesEnabled bool, postStore *postStore) *postGetHandler {
-	template := template.Must(template.New("index").Funcs(template.FuncMap{
-		"even": func(i int) bool {
-			return i%2 == 0
-		}}).Parse(html))
+	template := template.Must(template.New("index").Parse(html))
 
 	return &postGetHandler{
 		title:          title,
@@ -131,7 +130,9 @@ func (pgh postGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !pgh.postStore.get(id, func(post *post) {
-		err = pgh.renderPost(post, w, repliesPage)
+		printer := message.NewPrinter(message.MatchLanguage(r.Header.Get("Accept-Language"), "en"))
+
+		err = pgh.renderPost(newDisplayPost(post, printer), w, repliesPage)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
@@ -148,13 +149,13 @@ func castID(id string) (int, error) {
 	return strconv.Atoi(id)
 }
 
-func (pgh postGetHandler) renderPost(post *post, w io.Writer, repliesPage int) error {
+func (pgh postGetHandler) renderPost(displayPost *displayPost, w io.Writer, repliesPage int) error {
 	return pgh.template.Execute(w, map[string]interface{}{
 		"title":          pgh.title,
 		"repliesPerPage": pgh.repliesPerPage,
 		"cssURLs":        pgh.cssURLs,
 		"repliesEnabled": pgh.repliesEnabled,
-		"post":           post,
+		"post":           displayPost,
 		"repliesPage":    repliesPage,
 	})
 }
