@@ -41,11 +41,7 @@ func (dp displayPost) HasRepliesPage(page int, perPage int) bool {
 }
 
 func (dp displayPost) NumRepliesLocalized() string {
-	if len(dp.Replies) == 1 {
-		return dp.printer.Sprintf("%d reply", 1)
-	} else {
-		return dp.printer.Sprintf("%d replies", len(dp.Replies))
-	}
+	return dp.printer.Sprintf("%d replies", len(dp.Replies))
 }
 
 func (dp displayPost) ParentDisplayPost() *displayPost {
