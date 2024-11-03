@@ -28,3 +28,7 @@ func newPost(title string, author string, body string, tripCoder *tripCoder) *po
 		time:     time.Now(),
 	}
 }
+
+func (p post) IsOriginalPoster() bool {
+	return p.Parent != nil && p.Parent.TripCode != "" && p.TripCode == p.Parent.TripCode
+}
