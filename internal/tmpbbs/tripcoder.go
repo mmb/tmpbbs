@@ -33,6 +33,9 @@ func (tc tripCoder) code(s string) (string, string) {
 	if len(parts) != 2 {
 		return s, ""
 	}
+	if parts[1] == "" {
+		return s[:len(s)-1], ""
+	}
 
 	hash := sha256.New()
 	hash.Write(tc.salt)

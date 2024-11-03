@@ -21,9 +21,9 @@ type postGetHandler struct {
 const html = `
 {{- define "post_title" -}}
 <a href="{{ .URL }}">{{ .DisplayTitle }}</a>
-{{- if .Author }} by <span class="author">{{ .Author }}</span>
-{{- if .TripCode }} <span class="trip-code">!{{ .TripCode }}</span>{{ end -}}
-{{ if .IsOriginalPoster }} <span title="Original Poster" class="op">&#127793;</span>{{ end -}}
+{{- if .Author }} by <span class="author">{{ .Author }}</span>{{ end -}}
+{{ if .TripCode }} <span class="trip-code">!{{ .TripCode }}</span>
+{{- if .IsOriginalPoster }} <span title="Original Poster" class="op">&#127793;</span>{{ end -}}
 {{ end }} <span class="time">{{ .TimeAgo }}</span>
 {{- if .Replies }} ({{ .NumRepliesLocalized }}){{ end -}}
 {{ end -}}
