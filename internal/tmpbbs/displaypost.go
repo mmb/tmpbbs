@@ -60,7 +60,7 @@ func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
 	return result
 }
 
-func (dp displayPost) RepliesNav(currentPage int, perPage int, onlyIfLinks bool) template.HTML {
+func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) template.HTML {
 	if len(dp.Replies) == 0 {
 		return ""
 	}
@@ -78,10 +78,7 @@ func (dp displayPost) RepliesNav(currentPage int, perPage int, onlyIfLinks bool)
 	show[currentPage] = false
 
 	if len(show) == 1 {
-		if onlyIfLinks {
-			return ""
-		}
-		return template.HTML(dp.NumRepliesLocalized())
+		return ""
 	}
 
 	var pages []int
@@ -93,13 +90,13 @@ func (dp displayPost) RepliesNav(currentPage int, perPage int, onlyIfLinks bool)
 	var links []string
 	for _, page := range pages {
 		if show[page] {
-			links = append(links, dp.printer.Sprintf(`<a href="%s">page %d</a>`, dp.repliesPageURL(page, ""), page))
+			links = append(links, dp.printer.Sprintf(`<a href="%s">page %d</a>`, dp.repliesPageURL(page, "replies"), page))
 		} else {
 			links = append(links, dp.printer.Sprintf("page %d", page))
 		}
 	}
 
-	return template.HTML(fmt.Sprintf("%s, %s", dp.NumRepliesLocalized(), strings.Join(links, " / ")))
+	return template.HTML(fmt.Sprintf(`<li class="%s">%s</li>`, liClass, strings.Join(links, " / ")))
 }
 
 func (dp displayPost) TimeAgo() string {

@@ -18,7 +18,7 @@ ul.post {
   list-style-type: none;
 }
 
-li.odd {
+li.even {
   background-color: #eee;
 }
 

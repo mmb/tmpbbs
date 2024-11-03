@@ -23,11 +23,7 @@ const html = `
 <a href="{{ .URL }}">{{ .DisplayTitle }}</a>
 {{- if .Author }} by <span class="author">{{ .Author }}</span>
 {{- if .TripCode }} <span class="trip-code">!{{ .TripCode }}</span>{{ end }}{{ end }} <span class="time">{{ .TimeAgo }}</span>
-{{- end -}}
-
-{{ define "post_title_with_replies" -}}
-{{ template "post_title" . -}}
-{{ if .Replies }} ({{ .NumRepliesLocalized }}){{ end -}}
+{{- if .Replies }} ({{ .NumRepliesLocalized }}){{ end -}}
 {{ end -}}
 
 {{ define "post" -}}
@@ -52,21 +48,20 @@ const html = `
 <ul class="post">
 <li>
 {{- if .post.Parent }}
-{{ template "post_title_with_replies" .post.ParentDisplayPost }}
+{{ template "post_title" .post.ParentDisplayPost }}
 {{- else }}
 &nbsp;
 {{- end }}
 <ul class="post">
 <li>
 {{ template "post" .post }}
-{{ .post.RepliesNav .repliesPage .repliesPerPage false }}
-<ul class="post">
+<ul id="replies" class="post">
 {{- $class := "even" }}
 {{- range .post.RepliesPage .repliesPage .repliesPerPage }}
 <li class="{{ $class }}">
 <details open>
 <summary>
-{{ template "post_title_with_replies" . }}
+{{ template "post_title" . }}
 </summary>
 {{- if .Body }}
 {{ .BodyHTML }}
@@ -75,6 +70,7 @@ const html = `
 </li>
 {{- if eq $class "even" }}{{ $class = "odd" }}{{ else }}{{ $class = "even" }}{{ end -}}
 {{ end -}}
+{{ .post.RepliesNav .repliesPage .repliesPerPage $class -}}
 {{ if .repliesEnabled }}
 <li class="{{ $class }}">
 <details open>
@@ -97,7 +93,6 @@ Reply
 </li>
 {{- end }}
 </ul>
-{{ .post.RepliesNav .repliesPage .repliesPerPage true }}
 </ul>
 </ul>
 </body>
