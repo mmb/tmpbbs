@@ -14,8 +14,8 @@ func (rh CSSHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 var css = `
-ul.post {
-  list-style-type: none;
+img {
+  max-width: 100%;
 }
 
 li.even {
@@ -29,5 +29,9 @@ li.odd, li.even {
 textarea {
   width: 100%;
   height: 7em;
+}
+
+ul.post {
+  list-style-type: none;
 }
 `
