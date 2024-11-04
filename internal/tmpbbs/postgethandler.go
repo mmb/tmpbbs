@@ -58,29 +58,14 @@ const html = `
 <ul class="post">
 <li>
 {{ template "post" .post }}
-<ul id="replies" class="post">
-{{- $class := "even" }}
-{{- range .post.RepliesPage .repliesPage .repliesPerPage }}
-<li class="{{ $class }}">
-<details open>
-<summary>
-{{ template "post_title" . }}
-</summary>
-{{- if .Body }}
-{{ .BodyHTML }}
-{{- end }}
-</details>
-</li>
-{{- if eq $class "even" }}{{ $class = "odd" }}{{ else }}{{ $class = "even" }}{{ end -}}
-{{ end -}}
-{{ .post.RepliesNav .repliesPage .repliesPerPage $class -}}
-{{ if .repliesEnabled }}
-<li class="{{ $class }}">
+<ul class="post">
+{{- if .repliesEnabled }}
+<li class="odd">
 <details open>
 <summary>
 Reply
 </summary>
-<form id="reply" action="{{ .post.URL }}" method="post">
+<form action="{{ .post.URL }}" method="post">
 <p>
 <input type="text" id="title" name="title" placeholder="Title">
 <input type="text" id="author" name="author" placeholder="Author">
@@ -95,6 +80,23 @@ Reply
 </details>
 </li>
 {{- end }}
+<li id="replies-start"></li>
+{{- $class := "even" -}}
+{{ range .post.RepliesPage .repliesPage .repliesPerPage }}
+<li class="{{ $class }}">
+<details open>
+<summary>
+{{ template "post_title" . }}
+</summary>
+{{- if .Body }}
+{{ .BodyHTML }}
+{{- end }}
+</details>
+</li>
+{{- if eq $class "even" }}{{ $class = "odd" }}{{ else }}{{ $class = "even" }}{{ end -}}
+{{ end }}
+{{ .post.RepliesNav .repliesPage .repliesPerPage $class }}
+<li id="replies-end"></li>
 </ul>
 </ul>
 </ul>

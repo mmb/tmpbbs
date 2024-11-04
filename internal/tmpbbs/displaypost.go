@@ -97,7 +97,7 @@ func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) t
 	var links []string
 	for _, page := range pages {
 		if show[page] {
-			links = append(links, dp.printer.Sprintf(`<a href="%s">page %d</a>`, dp.repliesPageURL(page, "replies"), page))
+			links = append(links, dp.printer.Sprintf(`<a href="%s">page %d</a>`, dp.repliesPageURL(page, "replies-start"), page))
 		} else {
 			links = append(links, dp.printer.Sprintf("page %d", page))
 		}
