@@ -122,6 +122,14 @@ func (dp displayPost) URL() string {
 	return fmt.Sprintf("/%d", dp.id)
 }
 
+func (dp displayPost) expandEmoji(s string) string {
+	if !dp.emojiEnabled {
+		return s
+	}
+
+	return emoji.Parse(s)
+}
+
 func (p post) repliesPageURL(page int, anchor string) string {
 	if anchor != "" {
 		anchor = fmt.Sprintf("#%s", anchor)
@@ -135,12 +143,4 @@ func (p post) repliesLastPage(perPage int) int {
 
 func (dp displayPost) repliesPageEndURL(perPage int, anchor string) string {
 	return dp.repliesPageURL(dp.repliesLastPage(perPage), anchor)
-}
-
-func (dp displayPost) expandEmoji(s string) string {
-	if !dp.emojiEnabled {
-		return s
-	}
-
-	return emoji.Sprint(s)
 }
