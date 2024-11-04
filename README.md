@@ -2,9 +2,10 @@ Ephemeral internet forum software. All data is stored in memory only and when
 the process ends all posts are gone.
 
 # Features
-  * Markdown support
+  * Markdown
+  * emoji shortcodes
   * optional TLS (using `--tls-cert` and `--tls-key` options)
-  * trip code support in `username#secret` format
+  * trip codes in `username#secret` format
 
 # Installation
 
@@ -26,6 +27,7 @@ Usage of tmpbbs:
   -e, --replies-per-page int    Number of replies to show per page ($TMPBBS_REPLIES_PER_PAGE) (default 10)
   -u, --css-urls strings        comma-separated list of CSS URLs ($TMPBBS_CSS_URLS) (default [/css])
   -r, --replies                 Enable replies ($TMPBBS_REPLIES) (default true)
+  -m, --emoji                   Enable emoji shortcode expansion ($TMPBBS_EMOJI) (default true)
   -h, --help                    usage help
 ```
 

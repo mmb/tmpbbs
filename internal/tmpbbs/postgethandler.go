@@ -14,6 +14,7 @@ type postGetHandler struct {
 	repliesPerPage int
 	cssURLs        []string
 	repliesEnabled bool
+	emojiEnabled   bool
 	template       *template.Template
 	postStore      *postStore
 }
@@ -21,7 +22,7 @@ type postGetHandler struct {
 const html = `
 {{- define "post_title" -}}
 <a href="{{ .URL }}">{{ .DisplayTitle }}</a>
-{{- if .Author }} by <span class="author">{{ .Author }}</span>{{ end -}}
+{{- if .Author }} by <span class="author">{{ .DisplayAuthor }}</span>{{ end -}}
 {{ if .TripCode }} <span class="trip-code">!{{ .TripCode }}</span>
 {{- if .IsOriginalPoster }} <span title="Original Poster" class="op">&#127793;</span>{{ end -}}
 {{ end }} <span class="time">{{ .TimeAgo }}</span>
@@ -101,7 +102,7 @@ Reply
 </html>
 `
 
-func NewPostGetHandler(title string, repliesPerPage int, cssURLs []string, repliesEnabled bool, postStore *postStore) *postGetHandler {
+func NewPostGetHandler(title string, repliesPerPage int, cssURLs []string, repliesEnabled bool, emojiEnabled bool, postStore *postStore) *postGetHandler {
 	template := template.Must(template.New("index").Parse(html))
 
 	return &postGetHandler{
@@ -109,6 +110,7 @@ func NewPostGetHandler(title string, repliesPerPage int, cssURLs []string, repli
 		repliesPerPage: repliesPerPage,
 		cssURLs:        cssURLs,
 		repliesEnabled: repliesEnabled,
+		emojiEnabled:   emojiEnabled,
 		template:       template,
 		postStore:      postStore,
 	}
@@ -129,7 +131,7 @@ func (pgh postGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if !pgh.postStore.get(id, func(post *post) {
 		printer := message.NewPrinter(message.MatchLanguage(r.Header.Get("Accept-Language"), "en"))
 
-		displayPost := newDisplayPost(post, printer)
+		displayPost := newDisplayPost(post, printer, pgh.emojiEnabled)
 		if !displayPost.HasRepliesPage(repliesPage, pgh.repliesPerPage) {
 			http.NotFound(w, r)
 

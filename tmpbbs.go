@@ -22,6 +22,7 @@ func init() {
 	pflag.IntP("replies-per-page", "e", 10, "Number of replies to show per page ($TMPBBS_REPLIES_PER_PAGE)")
 	pflag.StringSliceP("css-urls", "u", []string{"/css"}, "comma-separated list of CSS URLs ($TMPBBS_CSS_URLS)")
 	pflag.BoolP("replies", "r", true, "Enable replies ($TMPBBS_REPLIES)")
+	pflag.BoolP("emoji", "m", true, "Enable emoji shortcode expansion ($TMPBBS_EMOJI)")
 	pflag.BoolP("help", "h", false, "usage help")
 
 	pflag.Parse()
@@ -68,7 +69,7 @@ func main() {
 		http.Handle("POST /", postPostHandler)
 		http.Handle("POST /{parentID}", postPostHandler)
 	}
-	postGetHandler := tmpbbs.NewPostGetHandler(title, repliesPerPage, viper.GetStringSlice("css-urls"), repliesEnabled, postStore)
+	postGetHandler := tmpbbs.NewPostGetHandler(title, repliesPerPage, viper.GetStringSlice("css-urls"), repliesEnabled, viper.GetBool("emoji"), postStore)
 	http.Handle("GET /", postGetHandler)
 	http.Handle("GET /{id}", postGetHandler)
 	http.Handle("GET /css", new(tmpbbs.CSSHandler))

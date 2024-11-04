@@ -9,23 +9,30 @@ import (
 
 	"time"
 
+	"github.com/enescakir/emoji"
 	"golang.org/x/text/message"
 )
 
 type displayPost struct {
 	*post
-	printer *message.Printer
+	printer      *message.Printer
+	emojiEnabled bool
 }
 
-func newDisplayPost(post *post, printer *message.Printer) *displayPost {
+func newDisplayPost(post *post, printer *message.Printer, emojiEnabled bool) *displayPost {
 	return &displayPost{
-		post:    post,
-		printer: printer,
+		post:         post,
+		printer:      printer,
+		emojiEnabled: emojiEnabled,
 	}
 }
 
 func (dp displayPost) BodyHTML() template.HTML {
-	return template.HTML(markdownToHTML([]byte(dp.Body)))
+	return template.HTML(markdownToHTML([]byte(dp.expandEmoji(dp.Body))))
+}
+
+func (dp displayPost) DisplayAuthor() string {
+	return dp.expandEmoji(dp.Author)
 }
 
 func (dp displayPost) DisplayTitle() string {
@@ -33,7 +40,7 @@ func (dp displayPost) DisplayTitle() string {
 		return fmt.Sprintf("#%d", dp.id)
 	}
 
-	return dp.Title
+	return dp.expandEmoji(dp.Title)
 }
 
 func (dp displayPost) HasRepliesPage(page int, perPage int) bool {
@@ -45,7 +52,7 @@ func (dp displayPost) NumRepliesLocalized() string {
 }
 
 func (dp displayPost) ParentDisplayPost() *displayPost {
-	return newDisplayPost(dp.Parent, dp.printer)
+	return newDisplayPost(dp.Parent, dp.printer, dp.emojiEnabled)
 }
 
 func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
@@ -54,7 +61,7 @@ func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
 
 	var result []*displayPost
 	for _, reply := range dp.Replies[start:end] {
-		result = append(result, newDisplayPost(reply, dp.printer))
+		result = append(result, newDisplayPost(reply, dp.printer, dp.emojiEnabled))
 	}
 
 	return result
@@ -128,4 +135,12 @@ func (p post) repliesLastPage(perPage int) int {
 
 func (dp displayPost) repliesPageEndURL(perPage int, anchor string) string {
 	return dp.repliesPageURL(dp.repliesLastPage(perPage), anchor)
+}
+
+func (dp displayPost) expandEmoji(s string) string {
+	if !dp.emojiEnabled {
+		return s
+	}
+
+	return emoji.Sprint(s)
 }
