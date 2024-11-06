@@ -13,6 +13,12 @@ the process ends all posts are gone.
 go install github.com/mmb/tmpbbs@latest
 ```
 
+# Container Image
+
+```sh
+docker run --publish 8080:8080 mm62/tmpbbs
+```
+
 # Options
 
 ```
