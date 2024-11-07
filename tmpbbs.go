@@ -14,6 +14,9 @@ import (
 	"github.com/spf13/viper"
 )
 
+//go:embed static
+var staticFS embed.FS
+
 func init() {
 	pflag.StringP("listen-address", "l", ":8080", "<host>:port to listen on ($TMPBBS_LISTEN_ADDRESS)")
 	pflag.StringP("tls-cert", "c", "", "path to PEM server certificate ($TMPBBS_TLS_CERT)")
@@ -37,9 +40,6 @@ func init() {
 	viper.SetEnvPrefix("tmpbbs")
 	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
 }
-
-//go:embed static
-var staticFS embed.FS
 
 func main() {
 	if viper.GetBool("help") {
