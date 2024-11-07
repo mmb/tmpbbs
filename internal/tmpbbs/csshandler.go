@@ -18,6 +18,10 @@ img {
   max-width: 100%;
 }
 
+li#replies-start, li#replies-end {
+  height: 0em;
+}
+
 li.even {
   background-color: #eee;
 }
