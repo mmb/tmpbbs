@@ -2,6 +2,8 @@ package main
 
 import (
 	"crypto/rand"
+	"embed"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
@@ -20,7 +22,7 @@ func init() {
 	pflag.StringP("trip-code-salt", "a", "", "random salt to use for generating trip codes ($TMPBBS_TRIP_CODE_SALT)")
 	pflag.StringP("load-posts", "p", "", `path to YAML or JSON file of posts to load, format [{"title":"","author":"","body":""}] ($TMPBBS_LOAD_POSTS)`)
 	pflag.IntP("replies-per-page", "e", 10, "Number of replies to show per page ($TMPBBS_REPLIES_PER_PAGE)")
-	pflag.StringSliceP("css-urls", "u", []string{"/css"}, "comma-separated list of CSS URLs ($TMPBBS_CSS_URLS)")
+	pflag.StringSliceP("css-urls", "u", []string{"/static/main.css"}, "comma-separated list of CSS URLs ($TMPBBS_CSS_URLS)")
 	pflag.BoolP("replies", "r", true, "Enable replies ($TMPBBS_REPLIES)")
 	pflag.BoolP("emoji", "m", true, "Enable emoji shortcode expansion ($TMPBBS_EMOJI)")
 	pflag.BoolP("help", "h", false, "usage help")
@@ -35,6 +37,9 @@ func init() {
 	viper.SetEnvPrefix("tmpbbs")
 	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
 }
+
+//go:embed static
+var staticFS embed.FS
 
 func main() {
 	if viper.GetBool("help") {
@@ -72,8 +77,13 @@ func main() {
 	postGetHandler := tmpbbs.NewPostGetHandler(title, repliesPerPage, viper.GetStringSlice("css-urls"), repliesEnabled, viper.GetBool("emoji"), postStore)
 	http.Handle("GET /", postGetHandler)
 	http.Handle("GET /{id}", postGetHandler)
-	http.Handle("GET /css", new(tmpbbs.CSSHandler))
-	http.Handle("GET /robots.txt", new(tmpbbs.RobotsHandler))
+
+	staticDir, err := fs.Sub(staticFS, "static")
+	if err != nil {
+		log.Fatal(err)
+	}
+	http.Handle("GET /static/", http.StripPrefix("/static/", http.FileServerFS(staticDir)))
+	http.Handle("GET /robots.txt", http.FileServerFS(staticDir))
 
 	tlsCert := viper.GetString("tls-cert")
 	tlsKey := viper.GetString("tls-key")

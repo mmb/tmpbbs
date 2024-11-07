@@ -31,7 +31,7 @@ Usage of tmpbbs:
   -a, --trip-code-salt string   random salt to use for generating trip codes ($TMPBBS_TRIP_CODE_SALT)
   -p, --load-posts string       path to YAML or JSON file of posts to load, format [{"title":"","author":"","body":""}] ($TMPBBS_LOAD_POSTS)
   -e, --replies-per-page int    Number of replies to show per page ($TMPBBS_REPLIES_PER_PAGE) (default 10)
-  -u, --css-urls strings        comma-separated list of CSS URLs ($TMPBBS_CSS_URLS) (default [/css])
+  -u, --css-urls strings        comma-separated list of CSS URLs ($TMPBBS_CSS_URLS) (default [/static/main.css])
   -r, --replies                 Enable replies ($TMPBBS_REPLIES) (default true)
   -m, --emoji                   Enable emoji shortcode expansion ($TMPBBS_EMOJI) (default true)
   -h, --help                    usage help

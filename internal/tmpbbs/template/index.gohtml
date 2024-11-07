@@ -1,0 +1,83 @@
+{{- define "post_title" -}}
+<a href="{{ .URL }}">{{ .DisplayTitle }}</a>
+{{- if .Author }} by <span class="author">{{ .DisplayAuthor }}</span>{{ end -}}
+{{ if .TripCode }} <span class="trip-code">!{{ .TripCode }}</span>
+{{- if .IsOriginalPoster }} <span title="Original Poster" class="op">&#127793;</span>{{ end -}}
+{{ end }} <span class="time">{{ .TimeAgo }}</span>
+{{- if .Replies }} ({{ .NumRepliesLocalized }}){{ end -}}
+{{ end -}}
+
+{{ define "post" -}}
+<p>
+{{ template "post_title" . }}
+</p>
+{{- if .Body }}
+{{ .BodyHTML }}
+{{- end }}
+{{- end -}}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>{{ .title }}</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{{- range .cssURLs }}
+<link rel="stylesheet" href="{{ . }}">
+{{- end }}
+</head>
+<body>
+<ul class="post">
+<li>
+{{- if .post.Parent }}
+{{ template "post_title" .post.ParentDisplayPost }}
+{{- else }}
+&nbsp;
+{{- end }}
+<ul class="post">
+<li>
+{{ template "post" .post }}
+<ul class="post replies">
+{{- if .repliesEnabled }}
+<li class="odd">
+<details open>
+<summary>
+Reply
+</summary>
+<form action="{{ .post.URL }}" method="post">
+<p>
+<input type="text" id="title" name="title" placeholder="Title">
+<input type="text" id="author" name="author" placeholder="Author">
+</p>
+<p>
+<textarea id="body" name="body"></textarea>
+</p>
+<p>
+<input type="submit" value="Reply">
+</p>
+</form>
+</details>
+</li>
+{{- end }}
+<li id="replies-start"></li>
+{{- $class := "even" -}}
+{{ range .post.RepliesPage .repliesPage .repliesPerPage }}
+<li class="{{ $class }}">
+<details open>
+<summary>
+{{ template "post_title" . }}
+</summary>
+{{- if .Body }}
+{{ .BodyHTML }}
+{{- end }}
+</details>
+</li>
+{{- if eq $class "even" }}{{ $class = "odd" }}{{ else }}{{ $class = "even" }}{{ end -}}
+{{ end }}
+{{ .post.RepliesNav .repliesPage .repliesPerPage $class }}
+<li id="replies-end"></li>
+</ul>
+</ul>
+</ul>
+</body>
+</html>
