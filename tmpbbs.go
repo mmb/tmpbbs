@@ -82,7 +82,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	http.Handle("GET /static/", http.StripPrefix("/static/", http.FileServerFS(staticDir)))
+	http.Handle("GET /static/", http.StripPrefix("/static", http.FileServerFS(staticDir)))
 	http.Handle("GET /robots.txt", http.FileServerFS(staticDir))
 
 	tlsCert := viper.GetString("tls-cert")
