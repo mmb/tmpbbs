@@ -11,7 +11,6 @@ var blackfridayExtensions = blackfriday.WithExtensions(
 	blackfriday.Autolink |
 		blackfriday.DefinitionLists |
 		blackfriday.FencedCode |
-		blackfriday.HardLineBreak |
 		blackfriday.NoIntraEmphasis |
 		blackfriday.Strikethrough |
 		blackfriday.Tables)

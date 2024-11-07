@@ -43,6 +43,7 @@ const html = `
 <head>
 <title>{{ .title }}</title>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 {{- range .cssURLs }}
 <link rel="stylesheet" href="{{ . }}">
 {{- end }}
@@ -58,7 +59,7 @@ const html = `
 <ul class="post">
 <li>
 {{ template "post" .post }}
-<ul class="post">
+<ul class="post replies">
 {{- if .repliesEnabled }}
 <li class="odd">
 <details open>

@@ -18,6 +18,10 @@ img {
   max-width: 100%;
 }
 
+input[type=text] {
+  width: 11em;
+}
+
 li#replies-start, li#replies-end {
   height: 0em;
 }
@@ -37,5 +41,10 @@ textarea {
 
 ul.post {
   list-style-type: none;
+  padding: 0em 0.5em 0em 1em;
+}
+
+ul.replies {
+   padding: 0em;
 }
 `
