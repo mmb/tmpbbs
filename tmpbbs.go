@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/rand"
 	"embed"
+	"fmt"
 	"io/fs"
 	"log"
 	"net/http"
@@ -24,6 +25,7 @@ func init() {
 	pflag.StringP("title", "t", "tmpbbs", "site title ($TMPBBS_TITLE)")
 	pflag.StringP("trip-code-salt", "a", "", "random salt to use for generating trip codes ($TMPBBS_TRIP_CODE_SALT)")
 	pflag.StringP("load-posts", "p", "", `path to YAML or JSON file of posts to load, format [{"title":"","author":"","body":""}] ($TMPBBS_LOAD_POSTS)`)
+	pflag.StringSliceP("serve-fs-paths", "f", []string{}, "comma-separated list of urlprefix=/local/dir to serve ($TMPBBS_SERVE_FS_PATHS)")
 	pflag.IntP("replies-per-page", "e", 10, "Number of replies to show per page ($TMPBBS_REPLIES_PER_PAGE)")
 	pflag.StringSliceP("css-urls", "u", []string{"/static/main.css"}, "comma-separated list of CSS URLs ($TMPBBS_CSS_URLS)")
 	pflag.BoolP("replies", "r", true, "Enable replies ($TMPBBS_REPLIES)")
@@ -84,6 +86,12 @@ func main() {
 	}
 	http.Handle("GET /static/", http.StripPrefix("/static", http.FileServerFS(staticDir)))
 	http.Handle("GET /robots.txt", http.FileServerFS(staticDir))
+
+	for _, dirMapping := range viper.GetStringSlice("serve-fs-paths") {
+		parts := strings.SplitN(dirMapping, "=", 2)
+		urlPrefix, dir := fmt.Sprintf("/%s", parts[0]), parts[1]
+		http.Handle(fmt.Sprintf("GET %s/", urlPrefix), http.StripPrefix(urlPrefix, http.FileServer(http.Dir(dir))))
+	}
 
 	tlsCert := viper.GetString("tls-cert")
 	tlsKey := viper.GetString("tls-key")
