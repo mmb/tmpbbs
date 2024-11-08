@@ -11,7 +11,7 @@ li#replies-start, li#replies-end {
 }
 
 li.even {
-  background-color: #eee;
+  background-color: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.08));
 }
 
 li.odd, li.even {
