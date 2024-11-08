@@ -10,7 +10,6 @@ import (
 )
 
 type postGetHandler struct {
-	title          string
 	repliesPerPage int
 	cssURLs        []string
 	repliesEnabled bool
@@ -18,9 +17,8 @@ type postGetHandler struct {
 	postStore      *postStore
 }
 
-func NewPostGetHandler(title string, repliesPerPage int, cssURLs []string, repliesEnabled bool, emojiEnabled bool, postStore *postStore) *postGetHandler {
+func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool, emojiEnabled bool, postStore *postStore) *postGetHandler {
 	return &postGetHandler{
-		title:          title,
 		repliesPerPage: repliesPerPage,
 		cssURLs:        cssURLs,
 		repliesEnabled: repliesEnabled,
@@ -41,8 +39,10 @@ func (pgh postGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		repliesPage = 1
 	}
 
-	if !pgh.postStore.get(id, func(post *post) {
+	if !pgh.postStore.get(id, func(rootPost *post, post *post) {
 		printer := message.NewPrinter(message.MatchLanguage(r.Header.Get("Accept-Language"), "en"))
+
+		rootDisplayPost := newDisplayPost(rootPost, printer, pgh.emojiEnabled)
 
 		displayPost := newDisplayPost(post, printer, pgh.emojiEnabled)
 		if !displayPost.HasRepliesPage(repliesPage, pgh.repliesPerPage) {
@@ -51,7 +51,7 @@ func (pgh postGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = pgh.renderPost(displayPost, w, repliesPage)
+		err = pgh.renderPost(displayPost, rootDisplayPost.DisplayTitle(), repliesPage, w)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
@@ -68,13 +68,13 @@ func castID(id string) (int, error) {
 	return strconv.Atoi(id)
 }
 
-func (pgh postGetHandler) renderPost(displayPost *displayPost, w io.Writer, repliesPage int) error {
+func (pgh postGetHandler) renderPost(displayPost *displayPost, pageTitle string, repliesPage int, w io.Writer) error {
 	return templates.ExecuteTemplate(w, "index.gohtml", map[string]interface{}{
-		"title":          pgh.title,
-		"repliesPerPage": pgh.repliesPerPage,
 		"cssURLs":        pgh.cssURLs,
 		"repliesEnabled": pgh.repliesEnabled,
+		"repliesPerPage": pgh.repliesPerPage,
 		"post":           displayPost,
+		"title":          pageTitle,
 		"repliesPage":    repliesPage,
 	})
 }

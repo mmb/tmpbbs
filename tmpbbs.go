@@ -50,8 +50,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	title := viper.GetString("title")
-	postStore, err := tmpbbs.NewPostStore(title)
+	postStore, err := tmpbbs.NewPostStore(viper.GetString("title"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -76,7 +75,7 @@ func main() {
 		http.Handle("POST /{$}", postPostHandler)
 		http.Handle("POST /{parentID}", postPostHandler)
 	}
-	postGetHandler := tmpbbs.NewPostGetHandler(title, repliesPerPage, viper.GetStringSlice("css-urls"), repliesEnabled, viper.GetBool("emoji"), postStore)
+	postGetHandler := tmpbbs.NewPostGetHandler(repliesPerPage, viper.GetStringSlice("css-urls"), repliesEnabled, viper.GetBool("emoji"), postStore)
 	http.Handle("GET /{$}", postGetHandler)
 	http.Handle("GET /{id}", postGetHandler)
 
