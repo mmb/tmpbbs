@@ -73,11 +73,11 @@ func main() {
 	postPostHandler := tmpbbs.NewPostPostHandler(repliesPerPage, postStore, tripCoder)
 	repliesEnabled := viper.GetBool("replies")
 	if repliesEnabled {
-		http.Handle("POST /", postPostHandler)
+		http.Handle("POST /{$}", postPostHandler)
 		http.Handle("POST /{parentID}", postPostHandler)
 	}
 	postGetHandler := tmpbbs.NewPostGetHandler(title, repliesPerPage, viper.GetStringSlice("css-urls"), repliesEnabled, viper.GetBool("emoji"), postStore)
-	http.Handle("GET /", postGetHandler)
+	http.Handle("GET /{$}", postGetHandler)
 	http.Handle("GET /{id}", postGetHandler)
 
 	staticDir, err := fs.Sub(staticFS, "static")
