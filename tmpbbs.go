@@ -24,7 +24,7 @@ func init() {
 	pflag.StringP("tls-key", "k", "", "path to PEM server key ($TMPBBS_TLS_KEY)")
 	pflag.StringP("title", "t", "tmpbbs", "site title ($TMPBBS_TITLE)")
 	pflag.StringP("trip-code-salt", "a", "", "random salt to use for generating trip codes ($TMPBBS_TRIP_CODE_SALT)")
-	pflag.StringP("load-posts", "p", "", `path to YAML or JSON file of posts to load, format [{"title":"","author":"","body":""}] ($TMPBBS_LOAD_POSTS)`)
+	pflag.StringSliceP("load-posts", "p", []string{}, `comma-separated paths of YAML or JSON files of posts to load, format [{"title":"","author":"","body":""}] ($TMPBBS_LOAD_POSTS)`)
 	pflag.StringSliceP("serve-fs-paths", "f", []string{}, "comma-separated list of urlprefix=/local/dir to serve ($TMPBBS_SERVE_FS_PATHS)")
 	pflag.IntP("replies-per-page", "e", 10, "Number of replies to show per page ($TMPBBS_REPLIES_PER_PAGE)")
 	pflag.StringSliceP("css-urls", "u", []string{"/static/main.css"}, "comma-separated list of CSS URLs ($TMPBBS_CSS_URLS)")
@@ -60,8 +60,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	loadPath := viper.GetString("load-posts")
-	if loadPath != "" {
+	for _, loadPath := range viper.GetStringSlice("load-posts") {
 		err = postStore.LoadYAML(loadPath, tripCoder)
 		if err != nil {
 			log.Fatal(err)
