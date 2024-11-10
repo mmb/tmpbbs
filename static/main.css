@@ -2,16 +2,16 @@ img {
   max-width: 100%;
 }
 
-input[type=text] {
+input[type="text"] {
   width: 11em;
 }
 
 li#replies-start, li#replies-end {
-  height: 0em;
+  height: 0;
 }
 
 li.even {
-  background-color: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.08));
+  background-color: light-dark(rgb(0 0 0 / 8%), rgb(255 255 255 / 8%));
 }
 
 li.odd, li.even {
@@ -25,9 +25,9 @@ textarea {
 
 ul.post {
   list-style-type: none;
-  padding: 0em 0.5em 0em 1em;
+  padding: 0 0.5em 0 1em;
 }
 
 ul.replies {
-   padding: 0em;
+   padding: 0;
 }
