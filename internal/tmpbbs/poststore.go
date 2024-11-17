@@ -29,10 +29,14 @@ func (ps *postStore) put(post *post, parentID int) {
 }
 
 func (ps *postStore) get(id int, callback func(*post, *post)) bool {
+	if id < 0 {
+		return false
+	}
+
 	ps.mutex.RLock()
 	defer ps.mutex.RUnlock()
 
-	if id < 0 || id > len(ps.posts)-1 {
+	if id > len(ps.posts)-1 {
 		return false
 	}
 	callback(ps.posts[0], ps.posts[id])
