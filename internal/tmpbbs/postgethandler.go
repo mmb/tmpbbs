@@ -51,6 +51,7 @@ func (pgh postGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		w.Header().Set("Cache-Control", "no-store")
 		err = pgh.renderPost(displayPost, rootDisplayPost.DisplayTitle(), repliesPage, w)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
