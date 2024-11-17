@@ -3,8 +3,9 @@ package tmpbbs
 import (
 	"fmt"
 	"html/template"
+	"maps"
 	"math"
-	"sort"
+	"slices"
 	"strings"
 
 	"time"
@@ -88,18 +89,14 @@ func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) t
 		return ""
 	}
 
-	var pages []int
-	for page := range show {
-		pages = append(pages, page)
-	}
-	sort.Ints(pages)
+	pages := slices.Sorted(maps.Keys(show))
 
-	var links []string
-	for _, page := range pages {
+	links := make([]string, len(pages))
+	for i, page := range pages {
 		if show[page] {
-			links = append(links, dp.printer.Sprintf(`<a href="%s">page %d</a>`, dp.repliesPageURL(page, "replies-start"), page))
+			links[i] = dp.printer.Sprintf(`<a href="%s">page %d</a>`, dp.repliesPageURL(page, "replies-start"), page)
 		} else {
-			links = append(links, dp.printer.Sprintf("page %d", page))
+			links[i] = dp.printer.Sprintf("page %d", page)
 		}
 	}
 
