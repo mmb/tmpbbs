@@ -1,7 +1,9 @@
 package tmpbbs
 
 import (
+	"embed"
 	_ "embed"
+	"html/template"
 	"io"
 	"net/http"
 	"strconv"
@@ -68,6 +70,11 @@ func castID(id string) (int, error) {
 
 	return strconv.Atoi(id)
 }
+
+//go:embed template
+var templateFS embed.FS
+
+var templates = template.Must(template.New("templates").ParseFS(templateFS, "template/*.gohtml"))
 
 func (pgh postGetHandler) renderPost(displayPost *displayPost, pageTitle string, repliesPage int, w io.Writer) error {
 	return templates.ExecuteTemplate(w, "index.gohtml", map[string]interface{}{
