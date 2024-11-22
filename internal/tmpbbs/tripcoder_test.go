@@ -65,7 +65,7 @@ var _ = Describe("tripcoder", func() {
 				})
 
 				It("returns the error", func() {
-					_, err := tmpbbs.NewTripCoder("", fakeReader)
+					_, err := tmpbbs.NewTripCoder(salt, fakeReader)
 					Expect(err).To(Equal(err))
 					Expect(fakeReader.ReadCallCount()).To(Equal(1))
 				})
