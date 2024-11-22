@@ -12,10 +12,10 @@ type postStore struct {
 	mutex sync.RWMutex
 }
 
-func NewPostStore(title string) (*postStore, error) {
+func NewPostStore(title string) *postStore {
 	return &postStore{
 		posts: []*post{newPost(title, "", "", nil)},
-	}, nil
+	}
 }
 
 func (ps *postStore) put(post *post, parentID int) {

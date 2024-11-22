@@ -50,10 +50,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	postStore, err := tmpbbs.NewPostStore(viper.GetString("title"))
-	if err != nil {
-		log.Fatal(err)
-	}
+	postStore := tmpbbs.NewPostStore(viper.GetString("title"))
 
 	tripCoder, err := tmpbbs.NewTripCoder(viper.GetString("trip-code-salt"), rand.Reader)
 	if err != nil {
