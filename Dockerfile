@@ -10,7 +10,7 @@ COPY . .
 ENV CGO_ENABLED=0
 ENV GOARCH=${TARGETARCH}
 ENV GOOS=${TARGETOS}
-RUN go build -ldflags "-s -w" -v
+RUN go build -ldflags "-s -w -X main.version=$(git tag --points-at HEAD)-$(git rev-parse HEAD)" -v
 
 FROM scratch
 ARG UID
