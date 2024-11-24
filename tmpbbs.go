@@ -15,6 +15,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+var version string = "unspecified"
+
 //go:embed static
 var staticFS embed.FS
 
@@ -30,6 +32,7 @@ func init() {
 	pflag.StringSliceP("css-urls", "u", []string{"/static/main.css"}, "comma-separated list of CSS URLs ($TMPBBS_CSS_URLS)")
 	pflag.BoolP("replies", "r", true, "Enable replies ($TMPBBS_REPLIES)")
 	pflag.BoolP("emoji", "m", true, "Enable emoji shortcode expansion ($TMPBBS_EMOJI)")
+	pflag.BoolP("version", "v", false, "print version")
 	pflag.BoolP("help", "h", false, "usage help")
 
 	pflag.Parse()
@@ -47,6 +50,11 @@ func main() {
 	if viper.GetBool("help") {
 		pflag.CommandLine.SortFlags = false
 		pflag.Usage()
+		os.Exit(0)
+	}
+
+	if viper.GetBool("version") {
+		fmt.Println(version)
 		os.Exit(0)
 	}
 

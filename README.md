@@ -35,6 +35,7 @@ Usage of tmpbbs:
   -u, --css-urls strings         comma-separated list of CSS URLs ($TMPBBS_CSS_URLS) (default [/static/main.css])
   -r, --replies                  Enable replies ($TMPBBS_REPLIES) (default true)
   -m, --emoji                    Enable emoji shortcode expansion ($TMPBBS_EMOJI) (default true)
+  -v, --version                  print version
   -h, --help                     usage help
 ```
 

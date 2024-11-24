@@ -2,5 +2,5 @@
 .github
 Dockerfile
 README.md
-release-*
+release
 tmpbbs
