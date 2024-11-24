@@ -10,6 +10,8 @@ mkdir -p "$RELEASE_DIR"
 
 BUILD_ARGS=(-ldflags "-s -w -X main.version=$TAG-$COMMIT")
 
+export CGO_ENABLED=0
+
 export GOOS=darwin
 export GOARCH=amd64
 go build "${BUILD_ARGS[@]}" -o "$RELEASE_DIR/tmpbbs-$TAG-$GOOS-$GOARCH"
