@@ -1,11 +1,25 @@
 ---
 name: Release a new version
 on:
-  release:
-    types:
-      - published
+  push:
+    tags:
+      - v*.*.*
 jobs:
-  build-publish:
+  create-release:
+    name: Create a GitHub release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+      - name: Install golang
+        uses: actions/setup-go@v5
+      - name: Build binaries
+        run: ./build-release-binaries.sh "${{ github.ref_name }}" "${{ github.sha }}"
+      - name: Create release
+        uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974
+        with:
+          files: release/*
+  publish-container-image:
     name: Build container image and publish to Docker Hub
     runs-on: ubuntu-latest
     permissions:
