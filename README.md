@@ -1,5 +1,7 @@
-Ephemeral internet forum software. All data is stored in memory only and when
-the process ends all posts are gone.
+tmpbbs is an ephemeral, anonymous forum site. All posts are stored in memory
+and lost when the process stops. It's a single static binary and does not require the
+internet or any disk. It runs on a wide variety of hardware including
+older wireless routers.
 
 # Features
   * Markdown
