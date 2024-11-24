@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/mmb/tmpbbs/internal/tmpbbs"
-	"github.com/mmb/tmpbbs/tmpbbsfakes"
+	"github.com/mmb/tmpbbs/internal/tmpbbsfakes"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
