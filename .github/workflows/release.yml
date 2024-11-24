@@ -8,6 +8,8 @@ jobs:
   create-release:
     name: Create a GitHub release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
