@@ -44,14 +44,14 @@ func (pgh postGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	printer := message.NewPrinter(message.MatchLanguage(r.Header.Get("Accept-Language"), "en"))
 
 	if !pgh.postStore.get(id, func(rootPost *post, post *post) {
-		displayPost := newDisplayPost(post, printer, pgh.emojiParser)
+		displayPost := newDisplayPost(post, printer, pgh.emojiParser, markdownToHTML)
 		if !displayPost.HasRepliesPage(repliesPage, pgh.repliesPerPage) {
 			http.NotFound(w, r)
 
 			return
 		}
 
-		rootDisplayPost := newDisplayPost(rootPost, printer, pgh.emojiParser)
+		rootDisplayPost := newDisplayPost(rootPost, printer, pgh.emojiParser, markdownToHTML)
 
 		w.Header().Set("Cache-Control", "no-store")
 		err = pgh.renderPost(displayPost, rootDisplayPost.DisplayTitle(), repliesPage, w)

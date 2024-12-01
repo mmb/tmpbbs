@@ -14,23 +14,26 @@ import (
 )
 
 type emojiParser func(string) string
+type markdownParser func([]byte) []byte
 
 type displayPost struct {
 	*post
-	printer     *message.Printer
-	emojiParser emojiParser
+	printer        *message.Printer
+	emojiParser    emojiParser
+	markdownParser markdownParser
 }
 
-func newDisplayPost(post *post, printer *message.Printer, emojiParser emojiParser) *displayPost {
+func newDisplayPost(post *post, printer *message.Printer, emojiParser emojiParser, markdownParser markdownParser) *displayPost {
 	return &displayPost{
-		post:        post,
-		printer:     printer,
-		emojiParser: emojiParser,
+		post:           post,
+		printer:        printer,
+		emojiParser:    emojiParser,
+		markdownParser: markdownParser,
 	}
 }
 
 func (dp displayPost) BodyHTML() template.HTML {
-	return template.HTML(markdownToHTML([]byte(dp.expandEmoji(dp.Body))))
+	return template.HTML(dp.markdownParser([]byte(dp.expandEmoji(dp.Body))))
 }
 
 func (dp displayPost) DisplayAuthor() string {
@@ -54,7 +57,7 @@ func (dp displayPost) NumRepliesLocalized() string {
 }
 
 func (dp displayPost) ParentDisplayPost() *displayPost {
-	return newDisplayPost(dp.Parent, dp.printer, dp.emojiParser)
+	return newDisplayPost(dp.Parent, dp.printer, dp.emojiParser, dp.markdownParser)
 }
 
 func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
@@ -63,7 +66,7 @@ func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
 
 	var result []*displayPost
 	for _, reply := range dp.Replies[start:end] {
-		result = append(result, newDisplayPost(reply, dp.printer, dp.emojiParser))
+		result = append(result, newDisplayPost(reply, dp.printer, dp.emojiParser, dp.markdownParser))
 	}
 
 	return result
