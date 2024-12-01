@@ -7,22 +7,24 @@ import (
 	"github.com/russross/blackfriday/v2"
 )
 
-var blackfridayExtensions = blackfriday.WithExtensions(
-	blackfriday.Autolink |
-		blackfriday.DefinitionLists |
-		blackfriday.FencedCode |
-		blackfriday.NoIntraEmphasis |
-		blackfriday.Strikethrough |
-		blackfriday.Tables)
+var (
+	blackfridayExtensions = blackfriday.WithExtensions(
+		blackfriday.Autolink |
+			blackfriday.DefinitionLists |
+			blackfriday.FencedCode |
+			blackfriday.NoIntraEmphasis |
+			blackfriday.Strikethrough |
+			blackfriday.Tables)
 
-var blackfridayRenderer = blackfriday.WithRenderer(
-	blackfriday.NewHTMLRenderer(
-		blackfriday.HTMLRendererParameters{
-			// disable XHTML
-			Flags: blackfriday.CommonHTMLFlags &^ blackfriday.UseXHTML,
-		}))
+	blackfridayRenderer = blackfriday.WithRenderer(
+		blackfriday.NewHTMLRenderer(
+			blackfriday.HTMLRendererParameters{
+				// disable XHTML
+				Flags: blackfriday.CommonHTMLFlags &^ blackfriday.UseXHTML,
+			}))
 
-var bluemondayPolicy = bluemonday.UGCPolicy()
+	bluemondayPolicy = bluemonday.UGCPolicy()
+)
 
 func init() {
 	bluemondayPolicy.RequireNoReferrerOnLinks(true)
