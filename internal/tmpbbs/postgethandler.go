@@ -15,16 +15,16 @@ type postGetHandler struct {
 	repliesPerPage int
 	cssURLs        []string
 	repliesEnabled bool
-	emojiEnabled   bool
+	emojiParser    emojiParser
 	postStore      *postStore
 }
 
-func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool, emojiEnabled bool, postStore *postStore) *postGetHandler {
+func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool, emojiParser emojiParser, postStore *postStore) *postGetHandler {
 	return &postGetHandler{
 		repliesPerPage: repliesPerPage,
 		cssURLs:        cssURLs,
 		repliesEnabled: repliesEnabled,
-		emojiEnabled:   emojiEnabled,
+		emojiParser:    emojiParser,
 		postStore:      postStore,
 	}
 }
@@ -44,14 +44,14 @@ func (pgh postGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	printer := message.NewPrinter(message.MatchLanguage(r.Header.Get("Accept-Language"), "en"))
 
 	if !pgh.postStore.get(id, func(rootPost *post, post *post) {
-		displayPost := newDisplayPost(post, printer, pgh.emojiEnabled)
+		displayPost := newDisplayPost(post, printer, pgh.emojiParser)
 		if !displayPost.HasRepliesPage(repliesPage, pgh.repliesPerPage) {
 			http.NotFound(w, r)
 
 			return
 		}
 
-		rootDisplayPost := newDisplayPost(rootPost, printer, pgh.emojiEnabled)
+		rootDisplayPost := newDisplayPost(rootPost, printer, pgh.emojiParser)
 
 		w.Header().Set("Cache-Control", "no-store")
 		err = pgh.renderPost(displayPost, rootDisplayPost.DisplayTitle(), repliesPage, w)

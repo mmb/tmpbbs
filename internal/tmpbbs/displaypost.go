@@ -10,21 +10,22 @@ import (
 
 	"time"
 
-	"github.com/enescakir/emoji"
 	"golang.org/x/text/message"
 )
 
+type emojiParser func(string) string
+
 type displayPost struct {
 	*post
-	printer      *message.Printer
-	emojiEnabled bool
+	printer     *message.Printer
+	emojiParser emojiParser
 }
 
-func newDisplayPost(post *post, printer *message.Printer, emojiEnabled bool) *displayPost {
+func newDisplayPost(post *post, printer *message.Printer, emojiParser emojiParser) *displayPost {
 	return &displayPost{
-		post:         post,
-		printer:      printer,
-		emojiEnabled: emojiEnabled,
+		post:        post,
+		printer:     printer,
+		emojiParser: emojiParser,
 	}
 }
 
@@ -53,7 +54,7 @@ func (dp displayPost) NumRepliesLocalized() string {
 }
 
 func (dp displayPost) ParentDisplayPost() *displayPost {
-	return newDisplayPost(dp.Parent, dp.printer, dp.emojiEnabled)
+	return newDisplayPost(dp.Parent, dp.printer, dp.emojiParser)
 }
 
 func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
@@ -62,7 +63,7 @@ func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
 
 	var result []*displayPost
 	for _, reply := range dp.Replies[start:end] {
-		result = append(result, newDisplayPost(reply, dp.printer, dp.emojiEnabled))
+		result = append(result, newDisplayPost(reply, dp.printer, dp.emojiParser))
 	}
 
 	return result
@@ -120,11 +121,11 @@ func (dp displayPost) URL() string {
 }
 
 func (dp displayPost) expandEmoji(s string) string {
-	if !dp.emojiEnabled {
+	if dp.emojiParser == nil {
 		return s
 	}
 
-	return emoji.Parse(s)
+	return dp.emojiParser(s)
 }
 
 func (p post) repliesPageURL(page int, anchor string) string {
