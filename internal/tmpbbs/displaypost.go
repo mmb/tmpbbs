@@ -14,7 +14,7 @@ import (
 )
 
 type emojiParser func(string) string
-type markdownParser func([]byte) []byte
+type markdownParser func(string) string
 
 type displayPost struct {
 	*post
@@ -33,7 +33,7 @@ func newDisplayPost(post *post, printer *message.Printer, emojiParser emojiParse
 }
 
 func (dp displayPost) BodyHTML() template.HTML {
-	return template.HTML(dp.markdownParser([]byte(dp.expandEmoji(dp.Body))))
+	return template.HTML(dp.markdownParser(dp.expandEmoji(dp.Body)))
 }
 
 func (dp displayPost) DisplayAuthor() string {

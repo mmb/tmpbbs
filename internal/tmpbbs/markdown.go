@@ -31,8 +31,8 @@ func init() {
 	bluemondayPolicy.AllowAttrs("class").Matching(regexp.MustCompile("^language-[a-zA-Z0-9]+$")).OnElements("code")
 }
 
-func markdownToHTML(markdown []byte) []byte {
-	unsafe := blackfriday.Run(markdown, blackfridayExtensions, blackfridayRenderer)
+func markdownToHTML(markdown string) string {
+	unsafe := blackfriday.Run([]byte(markdown), blackfridayExtensions, blackfridayRenderer)
 
-	return bluemondayPolicy.SanitizeBytes(unsafe)
+	return string(bluemondayPolicy.SanitizeBytes(unsafe))
 }
