@@ -43,7 +43,7 @@ func (pgh postGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	printer := message.NewPrinter(message.MatchLanguage(r.Header.Get("Accept-Language"), "en"))
 
-	if !pgh.postStore.get(id, func(rootPost *post, post *post) {
+	if !pgh.postStore.get(id, func(post *post) {
 		displayPost := newDisplayPost(post, printer, pgh.emojiParser, markdownToHTML)
 		if !displayPost.HasRepliesPage(repliesPage, pgh.repliesPerPage) {
 			http.NotFound(w, r)
@@ -51,10 +51,8 @@ func (pgh postGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		rootDisplayPost := newDisplayPost(rootPost, printer, pgh.emojiParser, markdownToHTML)
-
 		w.Header().Set("Cache-Control", "no-store")
-		err = pgh.renderPost(displayPost, rootDisplayPost.DisplayTitle(), repliesPage, w)
+		err = pgh.renderPost(displayPost, repliesPage, w)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
@@ -76,13 +74,12 @@ var templateFS embed.FS
 
 var templates = template.Must(template.New("templates").ParseFS(templateFS, "template/*.gohtml"))
 
-func (pgh postGetHandler) renderPost(displayPost *displayPost, pageTitle string, repliesPage int, w io.Writer) error {
+func (pgh postGetHandler) renderPost(displayPost *displayPost, repliesPage int, w io.Writer) error {
 	return templates.ExecuteTemplate(w, "index.gohtml", map[string]interface{}{
 		"cssURLs":        pgh.cssURLs,
 		"repliesEnabled": pgh.repliesEnabled,
 		"repliesPerPage": pgh.repliesPerPage,
 		"post":           displayPost,
-		"title":          pageTitle,
 		"repliesPage":    repliesPage,
 	})
 }

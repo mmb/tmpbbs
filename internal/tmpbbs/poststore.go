@@ -28,7 +28,7 @@ func (ps *postStore) put(post *post, parentID int) {
 	ps.posts = append(ps.posts, post)
 }
 
-func (ps *postStore) get(id int, callback func(*post, *post)) bool {
+func (ps *postStore) get(id int, callback func(*post)) bool {
 	if id < 0 {
 		return false
 	}
@@ -39,7 +39,7 @@ func (ps *postStore) get(id int, callback func(*post, *post)) bool {
 	if id > len(ps.posts)-1 {
 		return false
 	}
-	callback(ps.posts[0], ps.posts[id])
+	callback(ps.posts[id])
 
 	return true
 }
