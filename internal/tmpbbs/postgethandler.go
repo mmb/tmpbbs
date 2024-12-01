@@ -30,6 +30,8 @@ func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool
 }
 
 func (pgh postGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "no-store")
+
 	id, err := castID(r.PathValue("id"))
 	if err != nil {
 		http.NotFound(w, r)
@@ -51,7 +53,6 @@ func (pgh postGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		w.Header().Set("Cache-Control", "no-store")
 		err = pgh.renderPost(displayPost, repliesPage, w)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
