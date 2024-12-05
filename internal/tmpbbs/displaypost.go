@@ -64,9 +64,9 @@ func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
 	start := min((max(0, page-1))*perPage, len(dp.Replies))
 	end := min(start+perPage, len(dp.Replies))
 
-	var result []*displayPost
-	for _, reply := range dp.Replies[start:end] {
-		result = append(result, newDisplayPost(reply, dp.printer, dp.emojiParser, dp.markdownParser))
+	result := make([]*displayPost, end-start)
+	for i, reply := range dp.Replies[start:end] {
+		result[i] = newDisplayPost(reply, dp.printer, dp.emojiParser, dp.markdownParser)
 	}
 
 	return result
