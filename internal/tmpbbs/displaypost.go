@@ -97,10 +97,11 @@ func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) t
 
 	links := make([]string, len(pages))
 	for i, page := range pages {
+		pageText := dp.printer.Sprintf("page %d", page)
 		if show[page] {
-			links[i] = dp.printer.Sprintf(`<a href="%s">page %d</a>`, dp.repliesPageURL(page, "replies-start"), page)
+			links[i] = fmt.Sprintf(`<a href="%s">%s</a>`, dp.repliesPageURL(page, "replies-start"), pageText)
 		} else {
-			links[i] = dp.printer.Sprintf("page %d", page)
+			links[i] = pageText
 		}
 	}
 
