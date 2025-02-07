@@ -1,0 +1,103 @@
+{
+    "language": "en-US",
+    "messages": [
+        {
+            "id": "{Replies} replies",
+            "message": "{Replies} replies",
+            "translation": {
+                "select": {
+                    "feature": "plural",
+                    "arg": "Replies",
+                    "cases": {
+                        "=1": {
+                            "msg": "{Replies} reply"
+                        },
+                        "other": {
+                            "msg": "{Replies} replies"
+                        }
+                    }
+                }
+            },
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Replies",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "len(dp.Replies)"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "page {Page}",
+            "message": "page {Page}",
+            "translation": "page {Page}",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Page",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "page"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "{Minutes}m ago",
+            "message": "{Minutes}m ago",
+            "translation": "{Minutes}m ago",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Minutes",
+                    "string": "%[1]d",
+                    "type": "int64",
+                    "underlyingType": "int64",
+                    "argNum": 1,
+                    "expr": "int64(math.Round(age.Minutes()))"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "{Hours__24}d ago",
+            "message": "{Hours__24}d ago",
+            "translation": "{Hours__24}d ago",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Hours__24",
+                    "string": "%[1]d",
+                    "type": "int64",
+                    "underlyingType": "int64",
+                    "argNum": 1,
+                    "expr": "int64(math.Round(age.Hours() / 24))"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "{Hours}h ago",
+            "message": "{Hours}h ago",
+            "translation": "{Hours}h ago",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Hours",
+                    "string": "%[1]d",
+                    "type": "int64",
+                    "underlyingType": "int64",
+                    "argNum": 1,
+                    "expr": "int64(math.Round(age.Hours()))"
+                }
+            ],
+            "fuzzy": true
+        }
+    ]
+}

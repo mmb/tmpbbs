@@ -11,6 +11,8 @@ import (
 	"golang.org/x/text/message"
 )
 
+//go:generate gotext update -lang en-US -out catalog.go github.com/mmb/tmpbbs/internal/tmpbbs
+
 type postGetHandler struct {
 	repliesPerPage int
 	cssURLs        []string
