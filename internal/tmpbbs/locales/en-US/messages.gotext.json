@@ -98,6 +98,34 @@
                 }
             ],
             "fuzzy": true
+        },
+        {
+            "id": "Title",
+            "message": "Title",
+            "translation": "Title",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Author#tripcode-secret",
+            "message": "Author#tripcode-secret",
+            "translation": "Author#tripcode-secret",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Markdown is supported. Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "message": "Markdown is supported. Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "translation": "Markdown is supported. Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Reply",
+            "message": "Reply",
+            "translation": "Reply",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
         }
     ]
 }

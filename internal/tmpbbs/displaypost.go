@@ -18,7 +18,7 @@ type markdownParser func(string) string
 
 type displayPost struct {
 	*post
-	printer        *message.Printer
+	Printer        *message.Printer
 	emojiParser    emojiParser
 	markdownParser markdownParser
 }
@@ -26,7 +26,7 @@ type displayPost struct {
 func newDisplayPost(post *post, printer *message.Printer, emojiParser emojiParser, markdownParser markdownParser) *displayPost {
 	return &displayPost{
 		post:           post,
-		printer:        printer,
+		Printer:        printer,
 		emojiParser:    emojiParser,
 		markdownParser: markdownParser,
 	}
@@ -53,11 +53,11 @@ func (dp displayPost) HasRepliesPage(page int, perPage int) bool {
 }
 
 func (dp displayPost) NumRepliesLocalized() string {
-	return dp.printer.Sprintf("%d replies", len(dp.Replies))
+	return dp.Printer.Sprintf("%d replies", len(dp.Replies))
 }
 
 func (dp displayPost) ParentDisplayPost() *displayPost {
-	return newDisplayPost(dp.Parent, dp.printer, dp.emojiParser, dp.markdownParser)
+	return newDisplayPost(dp.Parent, dp.Printer, dp.emojiParser, dp.markdownParser)
 }
 
 func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
@@ -66,7 +66,7 @@ func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
 
 	result := make([]*displayPost, end-start)
 	for i, reply := range dp.Replies[start:end] {
-		result[i] = newDisplayPost(reply, dp.printer, dp.emojiParser, dp.markdownParser)
+		result[i] = newDisplayPost(reply, dp.Printer, dp.emojiParser, dp.markdownParser)
 	}
 
 	return result
@@ -97,7 +97,7 @@ func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) t
 
 	links := make([]string, len(pages))
 	for i, page := range pages {
-		pageText := dp.printer.Sprintf("page %d", page)
+		pageText := dp.Printer.Sprintf("page %d", page)
 		if show[page] {
 			links[i] = fmt.Sprintf(`<a href="%s">%s</a>`, dp.repliesPageURL(page, "replies-start"), pageText)
 		} else {
@@ -111,12 +111,12 @@ func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) t
 func (dp displayPost) TimeAgo() string {
 	age := time.Since(dp.time)
 	if age.Hours() < 1 {
-		return dp.printer.Sprintf("%dm ago", int64(math.Round(age.Minutes())))
+		return dp.Printer.Sprintf("%dm ago", int64(math.Round(age.Minutes())))
 	}
 	if age.Hours() >= 24 {
-		return dp.printer.Sprintf("%dd ago", int64(math.Round(age.Hours()/24)))
+		return dp.Printer.Sprintf("%dd ago", int64(math.Round(age.Hours()/24)))
 	} else {
-		return dp.printer.Sprintf("%dh ago", int64(math.Round(age.Hours())))
+		return dp.Printer.Sprintf("%dh ago", int64(math.Round(age.Hours())))
 	}
 }
 

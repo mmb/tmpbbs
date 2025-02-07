@@ -38,20 +38,27 @@ func init() {
 }
 
 var messageKeyToIndex = map[string]int{
-	"%d replies": 0,
-	"%dd ago":    3,
-	"%dh ago":    4,
-	"%dm ago":    2,
-	"page %d":    1,
+	"%d replies":             0,
+	"%dd ago":                3,
+	"%dh ago":                4,
+	"%dm ago":                2,
+	"Author#tripcode-secret": 6,
+	"Markdown is supported. Insert emoji using shortcode between colons (:mushroom: becomes 🍄).": 7,
+	"Reply":   8,
+	"Title":   5,
+	"page %d": 1,
 }
 
-var en_USIndex = []uint32{ // 6 elements
+var en_USIndex = []uint32{ // 10 elements
 	0x00000000, 0x00000024, 0x0000002f, 0x0000003a,
-	0x00000045, 0x00000050,
-} // Size: 48 bytes
+	0x00000045, 0x00000050, 0x00000056, 0x0000006d,
+	0x000000cb, 0x000000d1,
+} // Size: 64 bytes
 
-const en_USData string = "" + // Size: 80 bytes
+const en_USData string = "" + // Size: 209 bytes
 	"\x14\x01\x81\x01\x00=\x01\x0c\x02%[1]d reply\x00\x0e\x02%[1]d replies" +
-	"\x02page %[1]d\x02%[1]dm ago\x02%[1]dd ago\x02%[1]dh ago"
+	"\x02page %[1]d\x02%[1]dm ago\x02%[1]dd ago\x02%[1]dh ago\x02Title\x02Aut" +
+	"hor#tripcode-secret\x02Markdown is supported. Insert emoji using shortco" +
+	"de between colons (:mushroom: becomes 🍄).\x02Reply"
 
-	// Total table size 128 bytes (0KiB); checksum: 47934EDC
+	// Total table size 273 bytes (0KiB); checksum: BF7F00E6
