@@ -45,7 +45,7 @@ func (pgh postGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		repliesPage = 1
 	}
 
-	printer := message.NewPrinter(message.MatchLanguage(r.Header.Get("Accept-Language"), "en"))
+	printer := message.NewPrinter(message.MatchLanguage(r.Header.Get("Accept-Language"), "en-US"))
 
 	if !pgh.postStore.get(id, func(post *post) {
 		displayPost := newDisplayPost(post, printer, pgh.emojiParser, markdownToHTML)
