@@ -10,7 +10,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/enescakir/emoji"
 	"github.com/mmb/tmpbbs/internal/tmpbbs"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -81,12 +80,7 @@ func main() {
 		http.Handle("POST /{parentID}", postPostHandler)
 	}
 
-	var emojiParser func(string) string
-	if viper.GetBool("emoji") {
-		emojiParser = emoji.Parse
-	}
-
-	postGetHandler := tmpbbs.NewPostGetHandler(repliesPerPage, viper.GetStringSlice("css-urls"), repliesEnabled, emojiParser, postStore)
+	postGetHandler := tmpbbs.NewPostGetHandler(repliesPerPage, viper.GetStringSlice("css-urls"), repliesEnabled, viper.GetBool("emoji"), postStore)
 	http.Handle("GET /{$}", postGetHandler)
 	http.Handle("GET /{id}", postGetHandler)
 

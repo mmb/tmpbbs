@@ -52,7 +52,7 @@ Reply
 <input type="text" id="author" name="author" placeholder="{{ .post.Printer.Sprintf "Author#tripcode-secret" }}">
 </p>
 <p>
-<textarea id="body" name="body" placeholder="{{ .post.Printer.Sprintf "Markdown is supported. Insert emoji using shortcode between colons (:mushroom: becomes 🍄)." }}"></textarea>
+<textarea id="body" name="body" placeholder="{{ .post.Printer.Sprintf "Markdown is supported." }}{{ if .emojiEnabled }} {{ .post.Printer.Sprintf "Insert emoji using shortcode between colons (:mushroom: becomes 🍄)." }}{{ end }}"></textarea>
 </p>
 <p>
 <input type="submit" value="{{ .post.Printer.Sprintf "Reply" }}">

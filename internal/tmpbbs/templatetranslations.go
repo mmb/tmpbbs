@@ -11,6 +11,7 @@ func neverCalled() { //nolint:unused
 
 	printer.Sprintf("Title")
 	printer.Sprintf("Author#tripcode-secret")
-	printer.Sprintf("Markdown is supported. Insert emoji using shortcode between colons (:mushroom: becomes 🍄).")
+	printer.Sprintf("Markdown is supported.")
+	printer.Sprintf("Insert emoji using shortcode between colons (:mushroom: becomes 🍄).")
 	printer.Sprintf("Reply")
 }

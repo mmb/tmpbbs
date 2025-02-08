@@ -114,9 +114,16 @@
             "fuzzy": true
         },
         {
-            "id": "Markdown is supported. Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
-            "message": "Markdown is supported. Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
-            "translation": "Markdown is supported. Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "id": "Markdown is supported.",
+            "message": "Markdown is supported.",
+            "translation": "Markdown is supported.",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "message": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "translation": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
             "translatorComment": "Copied from source.",
             "fuzzy": true
         },

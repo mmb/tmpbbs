@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/enescakir/emoji"
 	"golang.org/x/text/message"
 )
 
@@ -17,15 +18,22 @@ type postGetHandler struct {
 	repliesPerPage int
 	cssURLs        []string
 	repliesEnabled bool
+	emojiEnabled   bool
 	emojiParser    emojiParser
 	postStore      *postStore
 }
 
-func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool, emojiParser emojiParser, postStore *postStore) *postGetHandler {
+func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool, emojiEnabled bool, postStore *postStore) *postGetHandler {
+	var emojiParser func(string) string
+	if emojiEnabled {
+		emojiParser = emoji.Parse
+	}
+
 	return &postGetHandler{
 		repliesPerPage: repliesPerPage,
 		cssURLs:        cssURLs,
 		repliesEnabled: repliesEnabled,
+		emojiEnabled:   emojiEnabled,
 		emojiParser:    emojiParser,
 		postStore:      postStore,
 	}
@@ -80,6 +88,7 @@ var templates = template.Must(template.New("templates").ParseFS(templateFS, "tem
 func (pgh postGetHandler) renderPost(displayPost *displayPost, repliesPage int, w io.Writer) error {
 	return templates.ExecuteTemplate(w, "index.gohtml", map[string]interface{}{
 		"cssURLs":        pgh.cssURLs,
+		"emojiEnabled":   pgh.emojiEnabled,
 		"repliesEnabled": pgh.repliesEnabled,
 		"repliesPerPage": pgh.repliesPerPage,
 		"post":           displayPost,
