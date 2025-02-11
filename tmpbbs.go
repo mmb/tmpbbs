@@ -28,10 +28,10 @@ func init() {
 	pflag.StringP("trip-code-salt", "a", "", "random salt to use for generating trip codes ($TMPBBS_TRIP_CODE_SALT)")
 	pflag.StringSliceP("load-posts", "p", []string{}, `comma-separated paths of YAML or JSON files of posts to load, format [{"title":"","author":"","body":""}] ($TMPBBS_LOAD_POSTS)`)
 	pflag.StringSliceP("serve-fs-paths", "f", []string{}, "comma-separated list of urlprefix=/local/dir to serve ($TMPBBS_SERVE_FS_PATHS)")
-	pflag.IntP("replies-per-page", "e", 10, "Number of replies to show per page ($TMPBBS_REPLIES_PER_PAGE)")
+	pflag.IntP("replies-per-page", "e", 10, "number of replies to show per page ($TMPBBS_REPLIES_PER_PAGE)")
 	pflag.StringSliceP("css-urls", "u", []string{"/static/main.css"}, "comma-separated list of CSS URLs ($TMPBBS_CSS_URLS)")
-	pflag.BoolP("replies", "r", true, "Enable replies ($TMPBBS_REPLIES)")
-	pflag.BoolP("emoji", "m", true, "Enable emoji shortcode expansion ($TMPBBS_EMOJI)")
+	pflag.BoolP("replies", "r", true, "enable replies ($TMPBBS_REPLIES)")
+	pflag.BoolP("emoji", "m", true, "enable emoji shortcode expansion ($TMPBBS_EMOJI)")
 	pflag.BoolP("version", "v", false, "print version")
 	pflag.BoolP("help", "h", false, "usage help")
 
