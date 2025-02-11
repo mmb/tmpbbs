@@ -20,7 +20,13 @@ jobs:
       - name: Create release
         uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974
         with:
+          body: |
+            ### Container Images
+
+            - ghcr.io/mmb/tmpbbs:${{ github.ref_name }}
+            - mm62/tmpbbs:${{ github.ref_name }}
           files: release/*
+          generate_release_notes: true
   publish-container-image:
     name: Build container image and publish to Docker Hub
     runs-on: ubuntu-latest
