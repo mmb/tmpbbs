@@ -30,18 +30,26 @@ jobs:
       id-token: write
       packages: write
     steps:
-      - name: Login to registry
+      - name: Log in to Docker Hub
         uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Check out repo
         uses: actions/checkout@v4
       - name: Extract image metadata
         id: metadata
         uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81
         with:
-          images: mm62/tmpbbs
+          images: |
+            ghcr.io/${{ github.repository }}
+            mm62/tmpbbs
       - name: Set up QEMU
         uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf
       - name: Set up buildx
@@ -58,6 +66,6 @@ jobs:
       - name: Generate signed build provenance attestation
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: index.docker.io/mm62/tmpbbs
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true

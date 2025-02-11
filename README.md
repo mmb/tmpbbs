@@ -18,6 +18,12 @@ go install github.com/mmb/tmpbbs@latest
 # Container Image
 
 ```sh
+docker run --publish 8080:8080 ghcr.io/mmb/tmpbbs
+```
+
+or
+
+```sh
 docker run --publish 8080:8080 mm62/tmpbbs
 ```
 
