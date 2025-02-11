@@ -23,8 +23,8 @@ jobs:
           body: |
             ### Container Images
 
-            - ghcr.io/mmb/tmpbbs:${{ github.ref_name }}
             - mm62/tmpbbs:${{ github.ref_name }}
+            - ghcr.io/mmb/tmpbbs:${{ github.ref_name }}
           files: release/*
           generate_release_notes: true
   publish-container-image:
@@ -54,8 +54,8 @@ jobs:
         uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81
         with:
           images: |
-            ghcr.io/${{ github.repository }}
             mm62/tmpbbs
+            ghcr.io/${{ github.repository }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf
       - name: Set up buildx
@@ -69,9 +69,15 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           push: true
-      - name: Generate signed build provenance attestation
-        uses: actions/attest-build-provenance@v1
+      - name: Generate signed build provenance attestation for Docker Hub
+        uses: actions/attest-build-provenance@v2
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
+          subject-name: index.docker.io/mm62/tmpbbs
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
+      - name: Generate signed build provenance attestation for GitHub Container Registry
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ghcr.io/mmb/tmpbbs
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
