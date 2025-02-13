@@ -53,6 +53,9 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm,linux/arm64
+          build-args: |
+            VERSION=${{ steps.metadata.outputs.version }}
+            COMMIT=${{ github.sha }}
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           push: true
