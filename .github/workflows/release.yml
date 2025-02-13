@@ -4,35 +4,17 @@ on:
   push:
     tags:
       - v*.*.*
+
+env:
+  DOCKER_HUB_IMAGE: mm62/tmpbbs
+
 jobs:
   create-release:
-    name: Create a GitHub release
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Check out repo
-        uses: actions/checkout@v4
-      - name: Install golang
-        uses: actions/setup-go@v5
-      - name: Build binaries
-        run: ./build-release-binaries.sh "${{ github.ref_name }}" "${{ github.sha }}"
-      - name: Create release
-        uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974
-        with:
-          body: |
-            ### Container Images
-
-            - mm62/tmpbbs:${{ github.ref_name }}
-            - ghcr.io/mmb/tmpbbs:${{ github.ref_name }}
-          files: release/*
-          generate_release_notes: true
-  publish-container-image:
-    name: Build container image and publish to Docker Hub
+    name: Build and publish a container image and create a GitHub release
     runs-on: ubuntu-latest
     permissions:
       attestations: write
-      contents: read
+      contents: write
       id-token: write
       packages: write
     steps:
@@ -54,13 +36,13 @@ jobs:
         uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81
         with:
           images: |
-            mm62/tmpbbs
+            ${{ env.DOCKER_HUB_IMAGE }}
             ghcr.io/${{ github.repository }}
           tags: |
-            type=semver,pattern={{raw}}
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
+            type=semver,pattern={{raw}}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf
       - name: Set up buildx
@@ -77,12 +59,26 @@ jobs:
       - name: Generate signed build provenance attestation for Docker Hub
         uses: actions/attest-build-provenance@v2
         with:
-          subject-name: index.docker.io/mm62/tmpbbs
+          subject-name: index.docker.io/${{ env.DOCKER_HUB_IMAGE }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
       - name: Generate signed build provenance attestation for GitHub Container Registry
         uses: actions/attest-build-provenance@v2
         with:
-          subject-name: ghcr.io/mmb/tmpbbs
+          subject-name: ghcr.io/${{ github.repository }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
+      - name: Install golang
+        uses: actions/setup-go@v5
+      - name: Build binaries
+        run: ./build-release-binaries.sh "${{ steps.metadata.outputs.version }}" "${{ github.sha }}"
+      - name: Create release
+        uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974
+        with:
+          body: |
+            ### Container Images
+
+            - ${{ env.DOCKER_HUB_IMAGE }}:${{ steps.metadata.outputs.version }}
+            - ghcr.io/${{ github.repository }}:${{ steps.metadata.outputs.version }}
+          files: release/*
+          generate_release_notes: true
