@@ -4,7 +4,7 @@
 {{ if .TripCode }} <span class="trip-code">!{{ .TripCode }}</span>
 {{- if .IsOriginalPoster }} <span title="Original Poster" class="op">&#127793;</span>{{ end -}}
 {{ end }} <span class="time">{{ .TimeAgo }}</span>
-{{- if .Replies }} ({{ .NumRepliesLocalized }}){{ end -}}
+{{- if .Replies }} ({{ .NumReplies }}){{ end -}}
 {{ end -}}
 
 {{ define "post" -}}

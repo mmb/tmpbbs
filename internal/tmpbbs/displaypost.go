@@ -52,7 +52,7 @@ func (dp displayPost) hasRepliesPage(page int, perPage int) bool {
 	return page > 0 && page <= dp.repliesLastPage(perPage)
 }
 
-func (dp displayPost) NumRepliesLocalized() string {
+func (dp displayPost) NumReplies() string {
 	return dp.Printer.Sprintf("%d replies", len(dp.Replies))
 }
 
