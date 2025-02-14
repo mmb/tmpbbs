@@ -76,6 +76,10 @@ jobs:
         uses: actions/setup-go@v5
       - name: Build binaries
         run: ./build-release-binaries.sh "${{ steps.metadata.outputs.version }}" "${{ github.sha }}"
+      - name: Generate signed build provenance attestation for binaries
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: release/*
       - name: Create release
         uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974
         with:
