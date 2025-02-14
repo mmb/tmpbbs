@@ -31,5 +31,6 @@ func (pph postPostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	p := newPost(r.FormValue("title"), r.FormValue("author"), body, pph.tripCoder)
 	pph.postStore.put(p, parentID)
 
-	http.Redirect(w, r, newDisplayPost(p.Parent, nil, nil, nil).repliesPageEndURL(pph.repliesPerPage, "replies-end"), http.StatusSeeOther)
+	repliesLastPage := p.Parent.repliesLastPage(pph.repliesPerPage)
+	http.Redirect(w, r, p.Parent.repliesPageURL(repliesLastPage, "replies-end"), http.StatusSeeOther)
 }

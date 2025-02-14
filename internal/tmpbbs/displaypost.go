@@ -48,10 +48,6 @@ func (dp displayPost) DisplayTitle() string {
 	return dp.expandEmoji(dp.Title)
 }
 
-func (dp displayPost) hasRepliesPage(page int, perPage int) bool {
-	return page > 0 && page <= dp.repliesLastPage(perPage)
-}
-
 func (dp displayPost) NumReplies() string {
 	return dp.Printer.Sprintf("%d replies", len(dp.Replies))
 }
@@ -120,29 +116,10 @@ func (dp displayPost) TimeAgo() string {
 	}
 }
 
-func (dp displayPost) URL() string {
-	return fmt.Sprintf("/%d", dp.id)
-}
-
 func (dp displayPost) expandEmoji(s string) string {
 	if dp.emojiParser == nil {
 		return s
 	}
 
 	return dp.emojiParser(s)
-}
-
-func (p post) repliesPageURL(page int, anchor string) string {
-	if anchor != "" {
-		anchor = fmt.Sprintf("#%s", anchor)
-	}
-	return fmt.Sprintf("/%d?p=%d%s", p.id, page, anchor)
-}
-
-func (p post) repliesLastPage(perPage int) int {
-	return max(1, int(math.Ceil(float64(len(p.Replies))/float64(perPage))))
-}
-
-func (dp displayPost) repliesPageEndURL(perPage int, anchor string) string {
-	return dp.repliesPageURL(dp.repliesLastPage(perPage), anchor)
 }
