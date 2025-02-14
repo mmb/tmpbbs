@@ -58,6 +58,7 @@ jobs:
             COMMIT=${{ github.sha }}
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
+          sbom: true
           push: true
       - name: Generate signed build provenance attestation for Docker Hub
         uses: actions/attest-build-provenance@v2
