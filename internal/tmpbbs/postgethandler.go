@@ -57,7 +57,7 @@ func (pgh postGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	if !pgh.postStore.get(id, func(post *post) {
 		displayPost := newDisplayPost(post, printer, pgh.emojiParser, markdownToHTML)
-		if !displayPost.HasRepliesPage(repliesPage, pgh.repliesPerPage) {
+		if !displayPost.hasRepliesPage(repliesPage, pgh.repliesPerPage) {
 			http.NotFound(w, r)
 
 			return

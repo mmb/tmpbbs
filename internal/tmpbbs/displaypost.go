@@ -48,7 +48,7 @@ func (dp displayPost) DisplayTitle() string {
 	return dp.expandEmoji(dp.Title)
 }
 
-func (dp displayPost) HasRepliesPage(page int, perPage int) bool {
+func (dp displayPost) hasRepliesPage(page int, perPage int) bool {
 	return page > 0 && page <= dp.repliesLastPage(perPage)
 }
 
