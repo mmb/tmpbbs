@@ -8,34 +8,42 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/enescakir/emoji"
 	"golang.org/x/text/message"
 )
 
 //go:generate gotext update -lang en-US -out catalog.go github.com/mmb/tmpbbs/internal/tmpbbs
 
 type postGetHandler struct {
-	repliesPerPage int
-	cssURLs        []string
-	repliesEnabled bool
-	emojiEnabled   bool
-	emojiParser    emojiParser
-	postStore      *postStore
+	repliesPerPage      int
+	cssURLs             []string
+	repliesEnabled      bool
+	emojiEnabled        bool
+	basicEmojiParser    parser
+	wrappingEmojiParser parser
+	markdownParser      parser
+	postStore           *postStore
 }
 
 func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool, emojiEnabled bool, postStore *postStore) *postGetHandler {
-	var emojiParser func(string) string
+	var (
+		basicEmojiParser    parser
+		wrappingEmojiParser parser
+	)
+
 	if emojiEnabled {
-		emojiParser = emoji.Parse
+		basicEmojiParser = newWrappingEmojiParser(nil)
+		wrappingEmojiParser = newWrappingEmojiParser(newEmojiSpanWrapper("emoji"))
 	}
 
 	return &postGetHandler{
-		repliesPerPage: repliesPerPage,
-		cssURLs:        cssURLs,
-		repliesEnabled: repliesEnabled,
-		emojiEnabled:   emojiEnabled,
-		emojiParser:    emojiParser,
-		postStore:      postStore,
+		repliesPerPage:      repliesPerPage,
+		cssURLs:             cssURLs,
+		repliesEnabled:      repliesEnabled,
+		emojiEnabled:        emojiEnabled,
+		basicEmojiParser:    basicEmojiParser,
+		wrappingEmojiParser: wrappingEmojiParser,
+		markdownParser:      newMarkdownParser(),
+		postStore:           postStore,
 	}
 }
 
@@ -56,7 +64,7 @@ func (pgh postGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	printer := message.NewPrinter(message.MatchLanguage(r.Header.Get("Accept-Language"), "en-US"))
 
 	if !pgh.postStore.get(id, func(post *post) {
-		displayPost := newDisplayPost(post, printer, pgh.emojiParser, markdownToHTML)
+		displayPost := newDisplayPost(post, printer, pgh.basicEmojiParser, pgh.wrappingEmojiParser, pgh.markdownParser)
 		if !displayPost.hasRepliesPage(repliesPage, pgh.repliesPerPage) {
 			http.NotFound(w, r)
 

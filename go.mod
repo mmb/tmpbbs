@@ -33,3 +33,5 @@ require (
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 )
+
+replace github.com/enescakir/emoji v1.0.0 => github.com/mmb/emoji v0.0.0-20241117080017-cb05a5915ab5

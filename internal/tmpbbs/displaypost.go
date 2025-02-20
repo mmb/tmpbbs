@@ -10,62 +10,68 @@ import (
 
 	"time"
 
+	"github.com/microcosm-cc/bluemonday"
 	"golang.org/x/text/message"
 )
 
-type emojiParser func(string) string
-type markdownParser func(string) string
+var bluemondayStrictPolicy = bluemonday.StrictPolicy()
+
+type parser interface {
+	parse(input string) string
+}
 
 type displayPost struct {
 	*post
-	Printer        *message.Printer
-	emojiParser    emojiParser
-	markdownParser markdownParser
+	Printer             *message.Printer
+	basicEmojiParser    parser
+	wrappingEmojiParser parser
+	markdownParser      parser
 }
 
-func newDisplayPost(post *post, printer *message.Printer, emojiParser emojiParser, markdownParser markdownParser) *displayPost {
+func newDisplayPost(post *post, printer *message.Printer, basicEmojiParser parser, wrappingEmojiParser parser, markdownParser parser) *displayPost {
 	return &displayPost{
-		post:           post,
-		Printer:        printer,
-		emojiParser:    emojiParser,
-		markdownParser: markdownParser,
+		post:                post,
+		Printer:             printer,
+		basicEmojiParser:    basicEmojiParser,
+		wrappingEmojiParser: wrappingEmojiParser,
+		markdownParser:      markdownParser,
 	}
 }
 
 func (dp displayPost) BodyHTML() template.HTML {
-	return template.HTML(dp.markdownParser(dp.expandEmoji(dp.Body)))
+	return template.HTML(dp.expandEmoji(dp.markdownParser.parse(dp.Body), dp.wrappingEmojiParser))
 }
 
-func (dp displayPost) DisplayAuthor() string {
-	return dp.expandEmoji(dp.Author)
+func (dp displayPost) DisplayAuthor() template.HTML {
+	return template.HTML(dp.sanitizeAndExpandEmoji(dp.Author, dp.wrappingEmojiParser))
 }
 
-func (dp displayPost) DisplayTitle() string {
-	if dp.Title == "" {
-		return fmt.Sprintf("#%d", dp.id)
+func (dp displayPost) DisplayTitle() template.HTML {
+	title := dp.sanitizeAndExpandEmoji(dp.Title, dp.wrappingEmojiParser)
+
+	if title == "" {
+		return template.HTML(dp.emptyTitle())
 	}
 
-	return dp.expandEmoji(dp.Title)
+	return template.HTML(title)
 }
 
 func (dp displayPost) NumReplies() string {
 	return dp.Printer.Sprintf("%d replies", len(dp.Replies))
 }
 
-func (dp displayPost) ParentDisplayPost() *displayPost {
-	return newDisplayPost(dp.Parent, dp.Printer, dp.emojiParser, dp.markdownParser)
-}
+func (dp displayPost) PageTitle() string {
+	title := dp.sanitizeAndExpandEmoji(dp.Title, dp.basicEmojiParser)
 
-func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
-	start := min((max(0, page-1))*perPage, len(dp.Replies))
-	end := min(start+perPage, len(dp.Replies))
-
-	result := make([]*displayPost, end-start)
-	for i, reply := range dp.Replies[start:end] {
-		result[i] = newDisplayPost(reply, dp.Printer, dp.emojiParser, dp.markdownParser)
+	if title == "" {
+		return dp.emptyTitle()
 	}
 
-	return result
+	return title
+}
+
+func (dp displayPost) ParentDisplayPost() *displayPost {
+	return newDisplayPost(dp.Parent, dp.Printer, dp.basicEmojiParser, dp.wrappingEmojiParser, dp.markdownParser)
 }
 
 func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) template.HTML {
@@ -104,6 +110,18 @@ func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) t
 	return template.HTML(fmt.Sprintf(`<li class="%s">%s</li>`, liClass, strings.Join(links, " / ")))
 }
 
+func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
+	start := min((max(0, page-1))*perPage, len(dp.Replies))
+	end := min(start+perPage, len(dp.Replies))
+
+	result := make([]*displayPost, end-start)
+	for i, reply := range dp.Replies[start:end] {
+		result[i] = newDisplayPost(reply, dp.Printer, dp.basicEmojiParser, dp.wrappingEmojiParser, dp.markdownParser)
+	}
+
+	return result
+}
+
 func (dp displayPost) TimeAgo() string {
 	age := time.Since(dp.time)
 	if age.Hours() < 1 {
@@ -116,10 +134,18 @@ func (dp displayPost) TimeAgo() string {
 	}
 }
 
-func (dp displayPost) expandEmoji(s string) string {
-	if dp.emojiParser == nil {
-		return s
+func (dp displayPost) emptyTitle() string {
+	return fmt.Sprintf("#%d", dp.id)
+}
+
+func (dp displayPost) expandEmoji(input string, parser parser) string {
+	if parser == nil {
+		return input
 	}
 
-	return dp.emojiParser(s)
+	return parser.parse(input)
+}
+
+func (dp displayPost) sanitizeAndExpandEmoji(input string, parser parser) string {
+	return dp.expandEmoji(strings.TrimSpace(string(bluemondayStrictPolicy.SanitizeBytes([]byte(input)))), parser)
 }

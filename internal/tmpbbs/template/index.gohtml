@@ -1,6 +1,6 @@
 {{- define "post_title" -}}
 <a href="{{ .URL }}">{{ .DisplayTitle }}</a>
-{{- if .Author }} by <span class="author">{{ .DisplayAuthor }}</span>{{ end -}}
+{{- if .DisplayAuthor }} by <span class="author">{{ .DisplayAuthor }}</span>{{ end -}}
 {{ if .TripCode }} <span class="trip-code">!{{ .TripCode }}</span>
 {{- if .IsOriginalPoster }} <span title="Original Poster" class="op">&#127793;</span>{{ end -}}
 {{ end }} <span class="time">{{ .TimeAgo }}</span>
@@ -26,7 +26,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <meta name="robots" content="noindex, nofollow">
-<title>{{ .post.DisplayTitle }}</title>
+<title>{{ .post.PageTitle }}</title>
 </head>
 <body>
 <ul class="post">
