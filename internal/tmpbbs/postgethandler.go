@@ -18,13 +18,14 @@ type postGetHandler struct {
 	cssURLs             []string
 	repliesEnabled      bool
 	emojiEnabled        bool
+	qrCodesEnabled      bool
 	basicEmojiParser    parser
 	wrappingEmojiParser parser
 	markdownParser      parser
 	postStore           *postStore
 }
 
-func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool, emojiEnabled bool, postStore *postStore) *postGetHandler {
+func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool, emojiEnabled bool, qrCodesEnabled bool, postStore *postStore) *postGetHandler {
 	var (
 		basicEmojiParser    parser
 		wrappingEmojiParser parser
@@ -40,6 +41,7 @@ func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool
 		cssURLs:             cssURLs,
 		repliesEnabled:      repliesEnabled,
 		emojiEnabled:        emojiEnabled,
+		qrCodesEnabled:      qrCodesEnabled,
 		basicEmojiParser:    basicEmojiParser,
 		wrappingEmojiParser: wrappingEmojiParser,
 		markdownParser:      newMarkdownParser(),
@@ -97,6 +99,7 @@ func (pgh postGetHandler) renderPost(displayPost *displayPost, repliesPage int, 
 	return templates.ExecuteTemplate(w, "index.gohtml", map[string]interface{}{
 		"cssURLs":        pgh.cssURLs,
 		"emojiEnabled":   pgh.emojiEnabled,
+		"qrCodesEnabled": pgh.qrCodesEnabled,
 		"repliesEnabled": pgh.repliesEnabled,
 		"repliesPerPage": pgh.repliesPerPage,
 		"post":           displayPost,

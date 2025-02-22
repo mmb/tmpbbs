@@ -81,5 +81,24 @@ Reply
 </ul>
 </ul>
 </ul>
+{{- if .qrCodesEnabled }}
+<dialog id="qr">
+<form method="dialog">
+<button autofocus>{{ .post.Printer.Sprintf "Close" }}</button>
+</form>
+</dialog>
+<script defer>
+dialog = document.getElementById("qr")
+
+img = document.createElement("img")
+img.src = "/qr?url=" + encodeURIComponent(window.location.href)
+dialog.prepend(img)
+
+showButton = document.createElement("button")
+showButton.innerHTML = {{ .post.Printer.Sprintf "Share URL QR Code" }}
+showButton.addEventListener("click", () => { dialog.showModal() })
+document.body.insertBefore(showButton, dialog)
+</script>
+{{- end }}
 </body>
 </html>

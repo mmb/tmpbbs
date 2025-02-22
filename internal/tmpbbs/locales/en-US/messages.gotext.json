@@ -133,6 +133,20 @@
             "translation": "Reply",
             "translatorComment": "Copied from source.",
             "fuzzy": true
+        },
+        {
+            "id": "Share URL QR Code",
+            "message": "Share URL QR Code",
+            "translation": "Share URL QR Code",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Close",
+            "message": "Close",
+            "translation": "Close",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
         }
     ]
 }

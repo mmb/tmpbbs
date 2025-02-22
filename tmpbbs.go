@@ -32,6 +32,7 @@ func init() {
 	pflag.StringSliceP("css-urls", "u", []string{"/static/main.css"}, "comma-separated list of CSS URLs ($TMPBBS_CSS_URLS)")
 	pflag.BoolP("replies", "r", true, "enable replies ($TMPBBS_REPLIES)")
 	pflag.BoolP("emoji", "m", true, "enable emoji shortcode expansion ($TMPBBS_EMOJI)")
+	pflag.BoolP("qr-codes", "q", true, "enable shareable URL QR codes ($TMPBBS_QR_CODES)")
 	pflag.BoolP("version", "v", false, "print version")
 	pflag.BoolP("help", "h", false, "usage help")
 
@@ -80,7 +81,12 @@ func main() {
 		http.Handle("POST /{parentID}", postPostHandler)
 	}
 
-	postGetHandler := tmpbbs.NewPostGetHandler(repliesPerPage, viper.GetStringSlice("css-urls"), repliesEnabled, viper.GetBool("emoji"), postStore)
+	qrCodesEnabled := viper.GetBool("qr-codes")
+	if qrCodesEnabled {
+		http.Handle("GET /qr", tmpbbs.NewQRCodeGetHandler())
+	}
+
+	postGetHandler := tmpbbs.NewPostGetHandler(repliesPerPage, viper.GetStringSlice("css-urls"), repliesEnabled, viper.GetBool("emoji"), qrCodesEnabled, postStore)
 	http.Handle("GET /{$}", postGetHandler)
 	http.Handle("GET /{id}", postGetHandler)
 

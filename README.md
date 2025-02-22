@@ -8,6 +8,7 @@ older wireless routers.
   * emoji shortcodes
   * optional TLS (using `--tls-cert` and `--tls-key` options)
   * trip codes in `username#secret` format
+  * shareable URL QR codes
 
 # Installation
 
@@ -43,9 +44,9 @@ Usage of tmpbbs:
   -u, --css-urls strings         comma-separated list of CSS URLs ($TMPBBS_CSS_URLS) (default [/static/main.css])
   -r, --replies                  enable replies ($TMPBBS_REPLIES) (default true)
   -m, --emoji                    enable emoji shortcode expansion ($TMPBBS_EMOJI) (default true)
+  -q, --qr-codes                 enable URL QR codes ($TMPBBS_QR_CODES) (default true)
   -v, --version                  print version
   -h, --help                     usage help
-
 ```
 
 # Compiling
