@@ -46,7 +46,7 @@
 <summary>
 Reply
 </summary>
-<form action="{{ .post.URL }}" method="post">
+<form action="{{ .post.URL }}" method="post" autocomplete="off">
 <p>
 <input type="text" id="title" name="title" placeholder="{{ .post.Printer.Sprintf "Title" }}">
 <input type="text" id="author" name="author" placeholder="{{ .post.Printer.Sprintf "Author#tripcode-secret" }}">
