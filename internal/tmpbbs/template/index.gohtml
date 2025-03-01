@@ -87,14 +87,14 @@ Reply
 <button autofocus>{{ .post.Printer.Sprintf "Close" }}</button>
 </form>
 </dialog>
-<script defer>
-dialog = document.getElementById("qr")
+<script type="module">
+let dialog = document.getElementById("qr")
 
-img = document.createElement("img")
+let img = document.createElement("img")
 img.src = "/qr?url=" + encodeURIComponent(window.location.href)
 dialog.prepend(img)
 
-showButton = document.createElement("button")
+let showButton = document.createElement("button")
 showButton.innerHTML = {{ .post.Printer.Sprintf "Share URL QR Code" }}
 showButton.addEventListener("click", () => { dialog.showModal() })
 document.body.insertBefore(showButton, dialog)
