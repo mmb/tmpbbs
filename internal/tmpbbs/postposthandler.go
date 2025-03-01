@@ -27,7 +27,7 @@ func (pph postPostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// The body has CRLF line endings which blackfriday doesn't handle well. Convert to CR.
-	body := strings.Replace(r.FormValue("body"), "\r\n", "\n", -1)
+	body := strings.ReplaceAll(r.FormValue("body"), "\r\n", "\n")
 	p := newPost(r.FormValue("title"), r.FormValue("author"), body, pph.tripCoder)
 	pph.postStore.put(p, parentID)
 
