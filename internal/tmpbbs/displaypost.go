@@ -128,9 +128,9 @@ func (dp displayPost) TimeAgo() string {
 	}
 	if age.Hours() >= 24 {
 		return dp.Printer.Sprintf("%dd ago", int64(math.Round(age.Hours()/24)))
-	} else {
-		return dp.Printer.Sprintf("%dh ago", int64(math.Round(age.Hours())))
 	}
+
+	return dp.Printer.Sprintf("%dh ago", int64(math.Round(age.Hours())))
 }
 
 func (dp displayPost) emptyTitle() string {

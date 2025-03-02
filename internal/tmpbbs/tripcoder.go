@@ -8,12 +8,12 @@ import (
 	"strings"
 )
 
-type tripCoder struct {
+type TripCoder struct {
 	salt []byte
 }
 
-func NewTripCoder(salt string, randReader io.Reader) (*tripCoder, error) {
-	tc := tripCoder{}
+func NewTripCoder(salt string, randReader io.Reader) (*TripCoder, error) {
+	tc := TripCoder{}
 
 	if salt != "" {
 		tc.salt = []byte(salt)
@@ -28,7 +28,7 @@ func NewTripCoder(salt string, randReader io.Reader) (*tripCoder, error) {
 	return &tc, nil
 }
 
-func (tc tripCoder) code(s string) (string, string) {
+func (tc TripCoder) code(s string) (string, string) {
 	parts := strings.SplitN(s, "#", 2)
 	if len(parts) != 2 {
 		return s, ""

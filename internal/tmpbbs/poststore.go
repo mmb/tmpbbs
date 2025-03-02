@@ -7,18 +7,18 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type postStore struct {
+type PostStore struct {
 	posts []*post
 	mutex sync.RWMutex
 }
 
-func NewPostStore(title string) *postStore {
-	return &postStore{
+func NewPostStore(title string) *PostStore {
+	return &PostStore{
 		posts: []*post{newPost(title, "", "", nil)},
 	}
 }
 
-func (ps *postStore) put(post *post, parentID int) {
+func (ps *PostStore) put(post *post, parentID int) {
 	ps.mutex.Lock()
 	defer ps.mutex.Unlock()
 
@@ -28,7 +28,7 @@ func (ps *postStore) put(post *post, parentID int) {
 	ps.posts = append(ps.posts, post)
 }
 
-func (ps *postStore) get(id int, callback func(*post)) bool {
+func (ps *PostStore) get(id int, callback func(*post)) bool {
 	if id < 0 {
 		return false
 	}
@@ -44,7 +44,7 @@ func (ps *postStore) get(id int, callback func(*post)) bool {
 	return true
 }
 
-func (ps *postStore) LoadYAML(path string, tripCoder *tripCoder) error {
+func (ps *PostStore) LoadYAML(path string, tripCoder *TripCoder) error {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return err

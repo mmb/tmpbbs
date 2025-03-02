@@ -6,13 +6,13 @@ import (
 	"github.com/skip2/go-qrcode"
 )
 
-type qrCodeGetHandler struct{}
+type QRCodeGetHandler struct{}
 
-func NewQRCodeGetHandler() *qrCodeGetHandler {
-	return &qrCodeGetHandler{}
+func NewQRCodeGetHandler() *QRCodeGetHandler {
+	return &QRCodeGetHandler{}
 }
 
-func (qcgh qrCodeGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (qcgh QRCodeGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-store")
 
 	url := r.URL.Query().Get("url")

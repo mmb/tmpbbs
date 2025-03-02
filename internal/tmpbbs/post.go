@@ -17,7 +17,7 @@ type post struct {
 	time     time.Time
 }
 
-func newPost(title string, author string, body string, tripCoder *tripCoder) *post {
+func newPost(title string, author string, body string, tripCoder *TripCoder) *post {
 	var tripCode string
 	if tripCoder != nil {
 		author, tripCode = tripCoder.code(author)

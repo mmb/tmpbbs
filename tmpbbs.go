@@ -15,7 +15,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var version string = "unspecified"
+var version = "unspecified"
 
 //go:embed static
 var staticFS embed.FS
@@ -108,7 +108,7 @@ func main() {
 	listenAddress := viper.GetString("listen-address")
 	if tlsCert != "" && tlsKey != "" {
 		log.Fatal(http.ListenAndServeTLS(listenAddress, tlsCert, tlsKey, nil))
-	} else {
-		log.Fatal(http.ListenAndServe(listenAddress, nil))
 	}
+
+	log.Fatal(http.ListenAndServe(listenAddress, nil))
 }

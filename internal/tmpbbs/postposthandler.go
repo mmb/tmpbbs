@@ -5,21 +5,21 @@ import (
 	"strings"
 )
 
-type postPostHandler struct {
+type PostPostHandler struct {
 	repliesPerPage int
-	postStore      *postStore
-	tripCoder      *tripCoder
+	postStore      *PostStore
+	tripCoder      *TripCoder
 }
 
-func NewPostPostHandler(repliesPerPage int, postStore *postStore, tripCoder *tripCoder) *postPostHandler {
-	return &postPostHandler{
+func NewPostPostHandler(repliesPerPage int, postStore *PostStore, tripCoder *TripCoder) *PostPostHandler {
+	return &PostPostHandler{
 		repliesPerPage: repliesPerPage,
 		postStore:      postStore,
 		tripCoder:      tripCoder,
 	}
 }
 
-func (pph postPostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (pph PostPostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	parentID, err := castID(r.PathValue("parentID"))
 	if err != nil {
 		http.NotFound(w, r)
