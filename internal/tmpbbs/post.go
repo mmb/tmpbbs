@@ -42,7 +42,7 @@ func (p post) URL() string {
 
 func (p post) repliesPageURL(page int, anchor string) string {
 	if anchor != "" {
-		anchor = fmt.Sprintf("#%s", anchor)
+		anchor = "#" + anchor
 	}
 
 	return fmt.Sprintf("/%d?p=%d%s", p.id, page, anchor)

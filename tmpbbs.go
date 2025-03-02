@@ -99,7 +99,7 @@ func main() {
 
 	for _, dirMapping := range viper.GetStringSlice("serve-fs-paths") {
 		parts := strings.SplitN(dirMapping, "=", 2)
-		urlPrefix, dir := fmt.Sprintf("/%s", parts[0]), parts[1]
+		urlPrefix, dir := "/"+parts[0], parts[1]
 		http.Handle(fmt.Sprintf("GET %s/", urlPrefix), http.StripPrefix(urlPrefix, http.FileServer(http.Dir(dir))))
 	}
 
