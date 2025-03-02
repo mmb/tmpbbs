@@ -7,7 +7,6 @@ import (
 	"math"
 	"slices"
 	"strings"
-
 	"time"
 
 	"github.com/microcosm-cc/bluemonday"

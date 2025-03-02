@@ -6,8 +6,7 @@ import (
 	"github.com/skip2/go-qrcode"
 )
 
-type qrCodeGetHandler struct {
-}
+type qrCodeGetHandler struct{}
 
 func NewQRCodeGetHandler() *qrCodeGetHandler {
 	return &qrCodeGetHandler{}

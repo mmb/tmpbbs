@@ -28,7 +28,7 @@ linters:
     # - forbidigo
     - forcetypeassert
     # - funlen
-    # - gci
+    - gci
     - ginkgolinter
     - gocheckcompilerdirectives
     # - gochecknoglobals
@@ -41,7 +41,7 @@ linters:
     - godot
     - godox
     - gofmt
-    # - gofumpt
+    - gofumpt
     - goheader
     - goimports
     # - gomoddirectives
