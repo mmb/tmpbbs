@@ -2,7 +2,6 @@ package tmpbbs
 
 import (
 	"embed"
-	_ "embed"
 	"html/template"
 	"io"
 	"net/http"
