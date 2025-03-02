@@ -72,7 +72,7 @@ linters:
     - nilerr
     - nilnesserr
     - nilnil
-    # - nlreturn
+    - nlreturn
     - noctx
     - nolintlint
     - nonamedreturns

@@ -55,6 +55,7 @@ func (pgh postGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	id, err := castID(r.PathValue("id"))
 	if err != nil {
 		http.NotFound(w, r)
+
 		return
 	}
 

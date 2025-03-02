@@ -22,6 +22,7 @@ func newPost(title string, author string, body string, tripCoder *tripCoder) *po
 	if tripCoder != nil {
 		author, tripCode = tripCoder.code(author)
 	}
+
 	return &post{
 		Title:    title,
 		Author:   author,
@@ -43,6 +44,7 @@ func (p post) repliesPageURL(page int, anchor string) string {
 	if anchor != "" {
 		anchor = fmt.Sprintf("#%s", anchor)
 	}
+
 	return fmt.Sprintf("/%d?p=%d%s", p.id, page, anchor)
 }
 
