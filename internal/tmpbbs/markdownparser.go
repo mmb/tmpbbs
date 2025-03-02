@@ -26,7 +26,7 @@ var (
 	bluemondayPolicy = bluemonday.UGCPolicy()
 )
 
-func init() {
+func InitBluemonday() {
 	bluemondayPolicy.RequireNoReferrerOnLinks(true)
 	bluemondayPolicy.AllowAttrs("class").Matching(regexp.MustCompile("^language-[a-zA-Z0-9]+$")).OnElements("code")
 }

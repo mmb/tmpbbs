@@ -20,6 +20,8 @@ var version = "unspecified"
 var staticFS embed.FS
 
 func main() {
+	tmpbbs.InitBluemonday()
+
 	viper, err := tmpbbs.NewViper()
 	if err != nil {
 		log.Fatal(err)
