@@ -38,13 +38,14 @@ Usage of tmpbbs:
   -k, --tls-key string           path to PEM server key ($TMPBBS_TLS_KEY)
   -t, --title string             site title ($TMPBBS_TITLE) (default "tmpbbs")
   -a, --trip-code-salt string    random salt to use for generating trip codes ($TMPBBS_TRIP_CODE_SALT)
-  -p, --load-posts strings       comma-separated paths of YAML or JSON files of posts to load, format [{"title":"","author":"","body":""}] ($TMPBBS_LOAD_POSTS)
+  -p, --load-posts strings       comma-separated paths of YAML or JSON files of posts to load, format [{"title":"","author":"","body":""}]
+                                 ($TMPBBS_LOAD_POSTS)
   -f, --serve-fs-paths strings   comma-separated list of urlprefix=/local/dir to serve ($TMPBBS_SERVE_FS_PATHS)
   -e, --replies-per-page int     number of replies to show per page ($TMPBBS_REPLIES_PER_PAGE) (default 10)
   -u, --css-urls strings         comma-separated list of CSS URLs ($TMPBBS_CSS_URLS) (default [/static/main.css])
   -r, --replies                  enable replies ($TMPBBS_REPLIES) (default true)
   -m, --emoji                    enable emoji shortcode expansion ($TMPBBS_EMOJI) (default true)
-  -q, --qr-codes                 enable URL QR codes ($TMPBBS_QR_CODES) (default true)
+  -q, --qr-codes                 enable shareable URL QR codes ($TMPBBS_QR_CODES) (default true)
   -v, --version                  print version
   -h, --help                     usage help
 ```

@@ -24,7 +24,9 @@ type PostGetHandler struct {
 	postStore           *PostStore
 }
 
-func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool, emojiEnabled bool, qrCodesEnabled bool, postStore *PostStore) *PostGetHandler {
+func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool, emojiEnabled bool,
+	qrCodesEnabled bool, postStore *PostStore,
+) *PostGetHandler {
 	var (
 		basicEmojiParser    parser
 		wrappingEmojiParser parser

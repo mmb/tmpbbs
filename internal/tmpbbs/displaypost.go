@@ -27,7 +27,9 @@ type displayPost struct {
 	markdownParser      parser
 }
 
-func newDisplayPost(post *post, printer *message.Printer, basicEmojiParser parser, wrappingEmojiParser parser, markdownParser parser) *displayPost {
+func newDisplayPost(post *post, printer *message.Printer, basicEmojiParser parser, wrappingEmojiParser parser,
+	markdownParser parser,
+) *displayPost {
 	return &displayPost{
 		post:                post,
 		Printer:             printer,

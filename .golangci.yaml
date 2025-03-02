@@ -59,7 +59,7 @@ linters:
     - interfacebloat
     - intrange
     - ireturn
-    # - lll
+    - lll
     - loggercheck
     - maintidx
     - makezero
