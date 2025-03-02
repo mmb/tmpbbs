@@ -53,10 +53,10 @@ func main() {
 	}
 
 	repliesPerPage := viper.GetInt("replies-per-page")
-	postPostHandler := tmpbbs.NewPostPostHandler(repliesPerPage, postStore, tripCoder)
 	repliesEnabled := viper.GetBool("replies")
 
 	if repliesEnabled {
+		postPostHandler := tmpbbs.NewPostPostHandler(repliesPerPage, postStore, tripCoder)
 		http.Handle("POST /{$}", postPostHandler)
 		http.Handle("POST /{parentID}", postPostHandler)
 	}
