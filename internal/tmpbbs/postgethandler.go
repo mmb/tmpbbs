@@ -48,37 +48,37 @@ func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool
 	}
 }
 
-func (pgh PostGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Cache-Control", "no-store")
+func (pgh PostGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
+	responseWriter.Header().Set("Cache-Control", "no-store")
 
-	id, err := castID(r.PathValue("id"))
+	postID, err := castID(request.PathValue("id"))
 	if err != nil {
-		http.NotFound(w, r)
+		http.NotFound(responseWriter, request)
 
 		return
 	}
 
-	repliesPage, err := strconv.Atoi(r.URL.Query().Get("p"))
+	repliesPage, err := strconv.Atoi(request.URL.Query().Get("p"))
 	if err != nil {
 		repliesPage = 1
 	}
 
-	printer := message.NewPrinter(message.MatchLanguage(r.Header.Get("Accept-Language"), "en-US"))
+	printer := message.NewPrinter(message.MatchLanguage(request.Header.Get("Accept-Language"), "en-US"))
 
-	if !pgh.postStore.get(id, func(post *post) {
+	if !pgh.postStore.get(postID, func(post *post) {
 		displayPost := newDisplayPost(post, printer, pgh.basicEmojiParser, pgh.wrappingEmojiParser, pgh.markdownParser)
 		if !displayPost.hasRepliesPage(repliesPage, pgh.repliesPerPage) {
-			http.NotFound(w, r)
+			http.NotFound(responseWriter, request)
 
 			return
 		}
 
-		err = pgh.renderPost(displayPost, repliesPage, w)
+		err = pgh.renderPost(displayPost, repliesPage, responseWriter)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
 		}
 	}) {
-		http.NotFound(w, r)
+		http.NotFound(responseWriter, request)
 	}
 }
 

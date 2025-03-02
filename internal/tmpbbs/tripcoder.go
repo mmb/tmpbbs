@@ -13,33 +13,33 @@ type TripCoder struct {
 }
 
 func NewTripCoder(salt string, randReader io.Reader) (*TripCoder, error) {
-	tc := TripCoder{}
+	tripCoder := TripCoder{}
 
 	if salt != "" {
-		tc.salt = []byte(salt)
+		tripCoder.salt = []byte(salt)
 	} else {
-		tc.salt = make([]byte, 16)
-		_, err := randReader.Read(tc.salt)
+		tripCoder.salt = make([]byte, 16)
+		_, err := randReader.Read(tripCoder.salt)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	return &tc, nil
+	return &tripCoder, nil
 }
 
-func (tc TripCoder) code(s string) (string, string) {
-	parts := strings.SplitN(s, "#", 2)
+func (tc TripCoder) code(input string) (string, string) {
+	parts := strings.SplitN(input, "#", 2)
 	if len(parts) != 2 {
-		return s, ""
+		return input, ""
 	}
 	if parts[1] == "" {
-		return s[:len(s)-1], ""
+		return input[:len(input)-1], ""
 	}
 
 	hash := sha256.New()
 	hash.Write(tc.salt)
-	hash.Write([]byte(s))
+	hash.Write([]byte(input))
 
 	return parts[0], fmt.Sprintf("%.10s", hex.EncodeToString(hash.Sum(nil)))
 }

@@ -12,18 +12,18 @@ func NewQRCodeGetHandler() *QRCodeGetHandler {
 	return &QRCodeGetHandler{}
 }
 
-func (qcgh QRCodeGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Cache-Control", "no-store")
+func (qcgh QRCodeGetHandler) ServeHTTP(reponseWriter http.ResponseWriter, request *http.Request) {
+	reponseWriter.Header().Set("Cache-Control", "no-store")
 
-	url := r.URL.Query().Get("url")
+	url := request.URL.Query().Get("url")
 
 	png, err := qrcode.Encode(url, qrcode.Medium, 256)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(reponseWriter, err.Error(), http.StatusInternalServerError)
 	}
-	w.Header().Set("Content-Type", "image/png")
-	_, err = w.Write(png)
+	reponseWriter.Header().Set("Content-Type", "image/png")
+	_, err = reponseWriter.Write(png)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(reponseWriter, err.Error(), http.StatusInternalServerError)
 	}
 }

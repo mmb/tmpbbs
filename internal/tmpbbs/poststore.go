@@ -28,18 +28,18 @@ func (ps *PostStore) put(post *post, parentID int) {
 	ps.posts = append(ps.posts, post)
 }
 
-func (ps *PostStore) get(id int, callback func(*post)) bool {
-	if id < 0 {
+func (ps *PostStore) get(postID int, callback func(*post)) bool {
+	if postID < 0 {
 		return false
 	}
 
 	ps.mutex.RLock()
 	defer ps.mutex.RUnlock()
 
-	if id > len(ps.posts)-1 {
+	if postID > len(ps.posts)-1 {
 		return false
 	}
-	callback(ps.posts[id])
+	callback(ps.posts[postID])
 
 	return true
 }

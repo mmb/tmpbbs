@@ -104,7 +104,7 @@ linters:
     - unused
     - usestdlibvars
     - usetesting
-    # - varnamelen
+    - varnamelen
     - wastedassign
     - whitespace
     # - wrapcheck
