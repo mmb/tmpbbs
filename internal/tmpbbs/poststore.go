@@ -39,6 +39,7 @@ func (ps *PostStore) get(postID int, callback func(*post)) bool {
 	if postID > len(ps.posts)-1 {
 		return false
 	}
+
 	callback(ps.posts[postID])
 
 	return true
@@ -51,6 +52,7 @@ func (ps *PostStore) LoadYAML(path string, tripCoder *TripCoder) error {
 	}
 
 	var posts []post
+
 	err = yaml.Unmarshal(data, &posts)
 	if err != nil {
 		return err

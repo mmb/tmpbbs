@@ -37,6 +37,7 @@ func init() {
 	pflag.BoolP("help", "h", false, "usage help")
 
 	pflag.Parse()
+
 	err := viper.BindPFlags(pflag.CommandLine)
 	if err != nil {
 		log.Fatal(err)
@@ -76,6 +77,7 @@ func main() {
 	repliesPerPage := viper.GetInt("replies-per-page")
 	postPostHandler := tmpbbs.NewPostPostHandler(repliesPerPage, postStore, tripCoder)
 	repliesEnabled := viper.GetBool("replies")
+
 	if repliesEnabled {
 		http.Handle("POST /{$}", postPostHandler)
 		http.Handle("POST /{parentID}", postPostHandler)
@@ -94,6 +96,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	http.Handle("GET /static/", http.StripPrefix("/static", http.FileServerFS(staticDir)))
 	http.Handle("GET /robots.txt", http.FileServerFS(staticDir))
 
@@ -106,6 +109,7 @@ func main() {
 	tlsCert := viper.GetString("tls-cert")
 	tlsKey := viper.GetString("tls-key")
 	listenAddress := viper.GetString("listen-address")
+
 	if tlsCert != "" && tlsKey != "" {
 		log.Fatal(http.ListenAndServeTLS(listenAddress, tlsCert, tlsKey, nil))
 	}

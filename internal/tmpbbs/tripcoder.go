@@ -19,6 +19,7 @@ func NewTripCoder(salt string, randReader io.Reader) (*TripCoder, error) {
 		tripCoder.salt = []byte(salt)
 	} else {
 		tripCoder.salt = make([]byte, 16)
+
 		_, err := randReader.Read(tripCoder.salt)
 		if err != nil {
 			return nil, err
@@ -33,6 +34,7 @@ func (tc TripCoder) code(input string) (string, string) {
 	if len(parts) != 2 {
 		return input, ""
 	}
+
 	if parts[1] == "" {
 		return input[:len(input)-1], ""
 	}
