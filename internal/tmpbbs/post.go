@@ -17,11 +17,12 @@ type post struct {
 	time     time.Time
 }
 
-func newPost(title string, author string, body string, tripCoder *tripCoder) *post {
+func newPost(title string, author string, body string, tripCoder *TripCoder) *post {
 	var tripCode string
 	if tripCoder != nil {
 		author, tripCode = tripCoder.code(author)
 	}
+
 	return &post{
 		Title:    title,
 		Author:   author,
@@ -41,8 +42,9 @@ func (p post) URL() string {
 
 func (p post) repliesPageURL(page int, anchor string) string {
 	if anchor != "" {
-		anchor = fmt.Sprintf("#%s", anchor)
+		anchor = "#" + anchor
 	}
+
 	return fmt.Sprintf("/%d?p=%d%s", p.id, page, anchor)
 }
 

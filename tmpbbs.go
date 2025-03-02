@@ -15,7 +15,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var version string = "unspecified"
+var version = "unspecified"
 
 //go:embed static
 var staticFS embed.FS
@@ -37,6 +37,7 @@ func init() {
 	pflag.BoolP("help", "h", false, "usage help")
 
 	pflag.Parse()
+
 	err := viper.BindPFlags(pflag.CommandLine)
 	if err != nil {
 		log.Fatal(err)
@@ -76,6 +77,7 @@ func main() {
 	repliesPerPage := viper.GetInt("replies-per-page")
 	postPostHandler := tmpbbs.NewPostPostHandler(repliesPerPage, postStore, tripCoder)
 	repliesEnabled := viper.GetBool("replies")
+
 	if repliesEnabled {
 		http.Handle("POST /{$}", postPostHandler)
 		http.Handle("POST /{parentID}", postPostHandler)
@@ -94,21 +96,23 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	http.Handle("GET /static/", http.StripPrefix("/static", http.FileServerFS(staticDir)))
 	http.Handle("GET /robots.txt", http.FileServerFS(staticDir))
 
 	for _, dirMapping := range viper.GetStringSlice("serve-fs-paths") {
 		parts := strings.SplitN(dirMapping, "=", 2)
-		urlPrefix, dir := fmt.Sprintf("/%s", parts[0]), parts[1]
+		urlPrefix, dir := "/"+parts[0], parts[1]
 		http.Handle(fmt.Sprintf("GET %s/", urlPrefix), http.StripPrefix(urlPrefix, http.FileServer(http.Dir(dir))))
 	}
 
 	tlsCert := viper.GetString("tls-cert")
 	tlsKey := viper.GetString("tls-key")
 	listenAddress := viper.GetString("listen-address")
+
 	if tlsCert != "" && tlsKey != "" {
 		log.Fatal(http.ListenAndServeTLS(listenAddress, tlsCert, tlsKey, nil))
-	} else {
-		log.Fatal(http.ListenAndServe(listenAddress, nil))
 	}
+
+	log.Fatal(http.ListenAndServe(listenAddress, nil))
 }

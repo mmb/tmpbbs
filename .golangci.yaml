@@ -28,7 +28,7 @@ linters:
     # - forbidigo
     - forcetypeassert
     # - funlen
-    # - gci
+    - gci
     - ginkgolinter
     - gocheckcompilerdirectives
     # - gochecknoglobals
@@ -41,7 +41,7 @@ linters:
     - godot
     - godox
     - gofmt
-    # - gofumpt
+    - gofumpt
     - goheader
     - goimports
     # - gomoddirectives
@@ -72,26 +72,26 @@ linters:
     - nilerr
     - nilnesserr
     - nilnil
-    # - nlreturn
+    - nlreturn
     - noctx
     - nolintlint
     - nonamedreturns
     - nosprintfhostport
     - paralleltest
-    # - perfsprint
+    - perfsprint
     - prealloc
     - predeclared
     - promlinter
     - protogetter
     - reassign
     - recvcheck
-    # - revive
+    - revive
     - rowserrcheck
     - sloglint
     - spancheck
     - sqlclosecheck
     - staticcheck
-    # - stylecheck
+    - stylecheck
     - tagalign
     - tagliatelle
     - testableexamples
@@ -104,9 +104,9 @@ linters:
     - unused
     - usestdlibvars
     - usetesting
-    # - varnamelen
+    - varnamelen
     - wastedassign
     - whitespace
     # - wrapcheck
-    # - wsl
+    - wsl
     - zerologlint

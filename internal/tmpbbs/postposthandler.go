@@ -5,32 +5,33 @@ import (
 	"strings"
 )
 
-type postPostHandler struct {
+type PostPostHandler struct {
 	repliesPerPage int
-	postStore      *postStore
-	tripCoder      *tripCoder
+	postStore      *PostStore
+	tripCoder      *TripCoder
 }
 
-func NewPostPostHandler(repliesPerPage int, postStore *postStore, tripCoder *tripCoder) *postPostHandler {
-	return &postPostHandler{
+func NewPostPostHandler(repliesPerPage int, postStore *PostStore, tripCoder *TripCoder) *PostPostHandler {
+	return &PostPostHandler{
 		repliesPerPage: repliesPerPage,
 		postStore:      postStore,
 		tripCoder:      tripCoder,
 	}
 }
 
-func (pph postPostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	parentID, err := castID(r.PathValue("parentID"))
+func (pph PostPostHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
+	parentID, err := castID(request.PathValue("parentID"))
 	if err != nil {
-		http.NotFound(w, r)
+		http.NotFound(responseWriter, request)
+
 		return
 	}
 
 	// The body has CRLF line endings which blackfriday doesn't handle well. Convert to CR.
-	body := strings.ReplaceAll(r.FormValue("body"), "\r\n", "\n")
-	p := newPost(r.FormValue("title"), r.FormValue("author"), body, pph.tripCoder)
+	body := strings.ReplaceAll(request.FormValue("body"), "\r\n", "\n")
+	p := newPost(request.FormValue("title"), request.FormValue("author"), body, pph.tripCoder)
 	pph.postStore.put(p, parentID)
 
 	repliesLastPage := p.Parent.repliesLastPage(pph.repliesPerPage)
-	http.Redirect(w, r, p.Parent.repliesPageURL(repliesLastPage, "replies-end"), http.StatusSeeOther)
+	http.Redirect(responseWriter, request, p.Parent.repliesPageURL(repliesLastPage, "replies-end"), http.StatusSeeOther)
 }

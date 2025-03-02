@@ -7,7 +7,6 @@ import (
 	"math"
 	"slices"
 	"strings"
-
 	"time"
 
 	"github.com/microcosm-cc/bluemonday"
@@ -98,6 +97,7 @@ func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) t
 	pages := slices.Sorted(maps.Keys(show))
 
 	links := make([]string, len(pages))
+
 	for i, page := range pages {
 		pageText := dp.Printer.Sprintf("page %d", page)
 		if show[page] {
@@ -127,11 +127,12 @@ func (dp displayPost) TimeAgo() string {
 	if age.Hours() < 1 {
 		return dp.Printer.Sprintf("%dm ago", int64(math.Round(age.Minutes())))
 	}
+
 	if age.Hours() >= 24 {
 		return dp.Printer.Sprintf("%dd ago", int64(math.Round(age.Hours()/24)))
-	} else {
-		return dp.Printer.Sprintf("%dh ago", int64(math.Round(age.Hours())))
 	}
+
+	return dp.Printer.Sprintf("%dh ago", int64(math.Round(age.Hours())))
 }
 
 func (dp displayPost) emptyTitle() string {
