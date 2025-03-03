@@ -75,8 +75,7 @@ func (pgh PostGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request 
 			return
 		}
 
-		err = pgh.renderPost(displayPost, repliesPage, responseWriter)
-		if err != nil {
+		if err = pgh.renderPost(displayPost, repliesPage, responseWriter); err != nil {
 			http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
 		}
 	}) {

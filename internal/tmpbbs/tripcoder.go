@@ -17,8 +17,7 @@ func NewTripCoder(salt string, randReader io.Reader) (*TripCoder, error) {
 	if salt == "" {
 		saltBytes = make([]byte, 16)
 
-		_, err := randReader.Read(saltBytes)
-		if err != nil {
+		if _, err := randReader.Read(saltBytes); err != nil {
 			return nil, err
 		}
 	} else {
