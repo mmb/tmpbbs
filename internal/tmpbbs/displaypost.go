@@ -40,21 +40,22 @@ func newDisplayPost(post *post, printer *message.Printer, basicEmojiParser parse
 }
 
 func (dp displayPost) BodyHTML() template.HTML {
-	return template.HTML(dp.expandEmoji(dp.markdownParser.parse(dp.Body), dp.wrappingEmojiParser))
+	return template.HTML(
+		dp.expandEmoji(dp.markdownParser.parse(dp.Body), dp.wrappingEmojiParser)) // #nosec G203 -- sanitized
 }
 
 func (dp displayPost) DisplayAuthor() template.HTML {
-	return template.HTML(dp.sanitizeAndExpandEmoji(dp.Author, dp.wrappingEmojiParser))
+	return template.HTML(dp.sanitizeAndExpandEmoji(dp.Author, dp.wrappingEmojiParser)) // #nosec G203 -- sanitized
 }
 
 func (dp displayPost) DisplayTitle() template.HTML {
 	title := dp.sanitizeAndExpandEmoji(dp.Title, dp.wrappingEmojiParser)
 
 	if title == "" {
-		return template.HTML(dp.emptyTitle())
+		title = dp.emptyTitle()
 	}
 
-	return template.HTML(title)
+	return template.HTML(title) // #nosec G203 -- either sanitized above or no user input if empty
 }
 
 func (dp displayPost) NumReplies() string {
@@ -109,7 +110,8 @@ func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) t
 		}
 	}
 
-	return template.HTML(fmt.Sprintf(`<li class="%s">%s</li>`, liClass, strings.Join(links, " / ")))
+	return template.HTML(
+		fmt.Sprintf(`<li class="%s">%s</li>`, liClass, strings.Join(links, " / "))) // #nosec G203 -- no user input
 }
 
 func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {

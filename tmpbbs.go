@@ -85,13 +85,5 @@ func main() {
 		http.Handle(fmt.Sprintf("GET %s/", urlPrefix), http.StripPrefix(urlPrefix, http.FileServer(http.Dir(dir))))
 	}
 
-	tlsCert := viper.GetString("tls-cert")
-	tlsKey := viper.GetString("tls-key")
-	listenAddress := viper.GetString("listen-address")
-
-	if tlsCert != "" && tlsKey != "" {
-		log.Fatal(http.ListenAndServeTLS(listenAddress, tlsCert, tlsKey, nil))
-	}
-
-	log.Fatal(http.ListenAndServe(listenAddress, nil))
+	log.Fatal(tmpbbs.Serve(viper.GetString("listen-address"), viper.GetString("tls-cert"), viper.GetString("tls-key")))
 }
