@@ -8,7 +8,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/mmb/tmpbbs/internal/tmpbbs"
 	"github.com/spf13/pflag"
@@ -79,10 +78,8 @@ func main() {
 	http.Handle("GET /static/", http.StripPrefix("/static", http.FileServerFS(staticDir)))
 	http.Handle("GET /robots.txt", http.FileServerFS(staticDir))
 
-	for _, dirMapping := range viper.GetStringSlice("serve-fs-paths") {
-		parts := strings.SplitN(dirMapping, "=", 2)
-		urlPrefix, dir := "/"+parts[0], parts[1]
-		http.Handle(fmt.Sprintf("GET %s/", urlPrefix), http.StripPrefix(urlPrefix, http.FileServer(http.Dir(dir))))
+	if err = tmpbbs.ServeFSPaths(viper.GetStringSlice("serve-fs-paths")); err != nil {
+		log.Fatal(err)
 	}
 
 	log.Fatal(tmpbbs.Serve(viper.GetString("listen-address"), viper.GetString("tls-cert"), viper.GetString("tls-key")))
