@@ -45,8 +45,7 @@ func main() {
 	}
 
 	for _, loadPath := range viper.GetStringSlice("load-posts") {
-		err = postStore.LoadYAML(loadPath, tripCoder)
-		if err != nil {
+		if err = postStore.LoadYAML(loadPath, tripCoder); err != nil {
 			log.Fatal(err)
 		}
 	}
