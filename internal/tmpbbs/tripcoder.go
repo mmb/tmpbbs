@@ -13,20 +13,19 @@ type TripCoder struct {
 }
 
 func NewTripCoder(salt string, randReader io.Reader) (*TripCoder, error) {
-	tripCoder := TripCoder{}
+	var saltBytes []byte
+	if salt == "" {
+		saltBytes = make([]byte, 16)
 
-	if salt != "" {
-		tripCoder.salt = []byte(salt)
-	} else {
-		tripCoder.salt = make([]byte, 16)
-
-		_, err := randReader.Read(tripCoder.salt)
+		_, err := randReader.Read(saltBytes)
 		if err != nil {
 			return nil, err
 		}
+	} else {
+		saltBytes = []byte(salt)
 	}
 
-	return &tripCoder, nil
+	return &TripCoder{salt: saltBytes}, nil
 }
 
 func (tc TripCoder) code(input string) (string, string) {
