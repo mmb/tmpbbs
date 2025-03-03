@@ -13,8 +13,6 @@ import (
 	"golang.org/x/text/message"
 )
 
-var bluemondayStrictPolicy = bluemonday.StrictPolicy()
-
 type parser interface {
 	parse(input string) string
 }
@@ -152,5 +150,5 @@ func (dp displayPost) expandEmoji(input string, parser parser) string {
 }
 
 func (dp displayPost) sanitizeAndExpandEmoji(input string, parser parser) string {
-	return dp.expandEmoji(strings.TrimSpace(string(bluemondayStrictPolicy.SanitizeBytes([]byte(input)))), parser)
+	return dp.expandEmoji(strings.TrimSpace(string(bluemonday.StrictPolicy().SanitizeBytes([]byte(input)))), parser)
 }

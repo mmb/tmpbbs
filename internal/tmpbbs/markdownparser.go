@@ -7,8 +7,14 @@ import (
 	"github.com/russross/blackfriday/v2"
 )
 
-var (
-	blackfridayExtensions = blackfriday.WithExtensions(
+type markdownParser struct {
+	blackfridayExtensions *blackfriday.Option
+	blackfridayRenderer   *blackfriday.Option
+	bluemondayPolicy      *bluemonday.Policy
+}
+
+func newMarkdownParser() *markdownParser {
+	blackfridayExtensions := blackfriday.WithExtensions(
 		blackfriday.Autolink |
 			blackfriday.DefinitionLists |
 			blackfriday.FencedCode |
@@ -16,29 +22,26 @@ var (
 			blackfriday.Strikethrough |
 			blackfriday.Tables)
 
-	blackfridayRenderer = blackfriday.WithRenderer(
+	blackfridayRenderer := blackfriday.WithRenderer(
 		blackfriday.NewHTMLRenderer(
 			blackfriday.HTMLRendererParameters{
 				// disable XHTML
 				Flags: blackfriday.CommonHTMLFlags &^ blackfriday.UseXHTML,
 			}))
 
-	bluemondayPolicy = bluemonday.UGCPolicy()
-)
-
-func InitBluemonday() {
+	bluemondayPolicy := bluemonday.UGCPolicy()
 	bluemondayPolicy.RequireNoReferrerOnLinks(true)
 	bluemondayPolicy.AllowAttrs("class").Matching(regexp.MustCompile("^language-[a-zA-Z0-9]+$")).OnElements("code")
-}
 
-type markdownParser struct{}
-
-func newMarkdownParser() *markdownParser {
-	return &markdownParser{}
+	return &markdownParser{
+		blackfridayExtensions: &blackfridayExtensions,
+		blackfridayRenderer:   &blackfridayRenderer,
+		bluemondayPolicy:      bluemondayPolicy,
+	}
 }
 
 func (mp markdownParser) parse(input string) string {
-	unsafe := blackfriday.Run([]byte(input), blackfridayExtensions, blackfridayRenderer)
+	unsafe := blackfriday.Run([]byte(input), *mp.blackfridayExtensions, *mp.blackfridayRenderer)
 
-	return string(bluemondayPolicy.SanitizeBytes(unsafe))
+	return string(mp.bluemondayPolicy.SanitizeBytes(unsafe))
 }
