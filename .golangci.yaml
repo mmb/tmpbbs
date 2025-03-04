@@ -65,7 +65,7 @@ linters:
     - makezero
     - mirror
     - misspell
-    # - mnd
+    - mnd
     # - musttag
     - nakedret
     - nestif

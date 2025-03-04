@@ -84,7 +84,7 @@ func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) t
 	nextPage := min(dp.repliesLastPage(perPage), currentPage+1)
 	lastPage := dp.repliesLastPage(perPage)
 
-	show := make(map[int]bool, 5)
+	show := make(map[int]bool, 5) //nolint:mnd
 	show[firstPage] = true
 	show[prevPage] = true
 	show[nextPage] = true
@@ -126,12 +126,12 @@ func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
 
 func (dp displayPost) TimeAgo() string {
 	age := time.Since(dp.time)
-	if age.Hours() < 1 {
+	if age < 1*time.Hour {
 		return dp.Printer.Sprintf("%dm ago", int64(math.Round(age.Minutes())))
 	}
 
-	if age.Hours() >= 24 {
-		return dp.Printer.Sprintf("%dd ago", int64(math.Round(age.Hours()/24)))
+	if age >= 24*time.Hour {
+		return dp.Printer.Sprintf("%dd ago", int64(math.Round(age.Hours()/24))) //nolint:mnd
 	}
 
 	return dp.Printer.Sprintf("%dh ago", int64(math.Round(age.Hours())))

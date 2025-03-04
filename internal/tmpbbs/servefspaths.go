@@ -9,7 +9,7 @@ import (
 
 func ServeFSPaths(paths []string) error {
 	for _, dirMapping := range paths {
-		parts := strings.SplitN(dirMapping, "=", 2)
+		parts := strings.SplitN(dirMapping, "=", 2) //nolint:mnd
 		urlPrefix, dir := parts[0], parts[1]
 
 		if _, err := os.Stat(dir); os.IsNotExist(err) {

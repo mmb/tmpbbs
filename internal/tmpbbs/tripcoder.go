@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+const randomSaltLength = 16
+
 type TripCoder struct {
 	salt []byte
 }
@@ -15,7 +17,7 @@ type TripCoder struct {
 func NewTripCoder(salt string, randReader io.Reader) (*TripCoder, error) {
 	var saltBytes []byte
 	if salt == "" {
-		saltBytes = make([]byte, 16)
+		saltBytes = make([]byte, randomSaltLength)
 
 		if _, err := randReader.Read(saltBytes); err != nil {
 			return nil, err
@@ -28,8 +30,8 @@ func NewTripCoder(salt string, randReader io.Reader) (*TripCoder, error) {
 }
 
 func (tc TripCoder) code(input string) (string, string) {
-	parts := strings.SplitN(input, "#", 2)
-	if len(parts) != 2 {
+	parts := strings.SplitN(input, "#", 2) //nolint:mnd
+	if len(parts) != 2 {                   //nolint:mnd
 		return input, ""
 	}
 
