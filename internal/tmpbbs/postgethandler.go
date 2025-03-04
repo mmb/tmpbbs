@@ -22,7 +22,11 @@ type PostGetHandler struct {
 	wrappingEmojiParser parser
 	markdownParser      parser
 	postStore           *PostStore
+	template            *template.Template
 }
+
+//go:embed template
+var templateFS embed.FS
 
 func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool, emojiEnabled bool,
 	qrCodesEnabled bool, postStore *PostStore,
@@ -47,6 +51,7 @@ func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool
 		wrappingEmojiParser: wrappingEmojiParser,
 		markdownParser:      newMarkdownParser(),
 		postStore:           postStore,
+		template:            template.Must(template.New("template").ParseFS(templateFS, "template/*.gohtml")),
 	}
 }
 
@@ -91,13 +96,8 @@ func castID(id string) (int, error) {
 	return strconv.Atoi(id)
 }
 
-//go:embed template
-var templateFS embed.FS
-
-var templates = template.Must(template.New("templates").ParseFS(templateFS, "template/*.gohtml"))
-
 func (pgh PostGetHandler) renderPost(displayPost *displayPost, repliesPage int, w io.Writer) error {
-	return templates.ExecuteTemplate(w, "index.gohtml", map[string]interface{}{
+	return pgh.template.ExecuteTemplate(w, "index.gohtml", map[string]interface{}{
 		"cssURLs":        pgh.cssURLs,
 		"emojiEnabled":   pgh.emojiEnabled,
 		"qrCodesEnabled": pgh.qrCodesEnabled,
