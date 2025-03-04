@@ -44,7 +44,7 @@ linters:
     - gofumpt
     - goheader
     - goimports
-    # - gomoddirectives
+    - gomoddirectives
     - gomodguard
     - goprintffuncname
     - gosec
@@ -110,3 +110,8 @@ linters:
     # - wrapcheck
     - wsl
     - zerologlint
+
+linters-settings:
+  gomoddirectives:
+    replace-allow-list:
+      - github.com/enescakir/emoji
