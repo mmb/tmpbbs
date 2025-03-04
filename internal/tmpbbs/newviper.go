@@ -34,7 +34,7 @@ func initFlags() {
 ($TMPBBS_LOAD_POSTS)`)
 	pflag.StringSliceP("serve-fs-paths", "f", []string{},
 		"comma-separated list of urlprefix=/local/dir to serve ($TMPBBS_SERVE_FS_PATHS)")
-	pflag.IntP("replies-per-page", "e", 10, "number of replies to show per page ($TMPBBS_REPLIES_PER_PAGE)")
+	pflag.IntP("replies-per-page", "e", 10, "number of replies to show per page ($TMPBBS_REPLIES_PER_PAGE)") //nolint:mnd
 	pflag.StringSliceP("css-urls", "u", []string{"/static/main.css"},
 		"comma-separated list of CSS URLs ($TMPBBS_CSS_URLS)")
 	pflag.BoolP("replies", "r", true, "enable replies ($TMPBBS_REPLIES)")

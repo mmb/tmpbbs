@@ -8,10 +8,10 @@ import (
 func Serve(listenAddress string, tlsCertFile string, tlsKeyFile string) error {
 	server := &http.Server{
 		Addr:              listenAddress,
-		IdleTimeout:       120 * time.Second,
-		ReadHeaderTimeout: 2 * time.Second,
-		ReadTimeout:       5 * time.Second,
-		WriteTimeout:      10 * time.Second,
+		IdleTimeout:       120 * time.Second, //nolint:mnd
+		ReadHeaderTimeout: 2 * time.Second,   //nolint:mnd
+		ReadTimeout:       5 * time.Second,   //nolint:mnd
+		WriteTimeout:      10 * time.Second,  //nolint:mnd
 	}
 
 	if tlsCertFile != "" && tlsKeyFile != "" {

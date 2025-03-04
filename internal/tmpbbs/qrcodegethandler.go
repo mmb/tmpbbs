@@ -6,6 +6,8 @@ import (
 	"github.com/skip2/go-qrcode"
 )
 
+const qrCodeSize = 256
+
 type QRCodeGetHandler struct{}
 
 func NewQRCodeGetHandler() *QRCodeGetHandler {
@@ -17,7 +19,7 @@ func (qcgh QRCodeGetHandler) ServeHTTP(reponseWriter http.ResponseWriter, reques
 
 	url := request.URL.Query().Get("url")
 
-	png, err := qrcode.Encode(url, qrcode.Medium, 256)
+	png, err := qrcode.Encode(url, qrcode.Medium, qrCodeSize)
 	if err != nil {
 		http.Error(reponseWriter, err.Error(), http.StatusInternalServerError)
 	}
