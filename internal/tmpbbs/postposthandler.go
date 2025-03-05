@@ -6,9 +6,9 @@ import (
 )
 
 type PostPostHandler struct {
-	repliesPerPage int
 	postStore      *PostStore
 	tripCoder      *TripCoder
+	repliesPerPage int
 }
 
 func NewPostPostHandler(repliesPerPage int, postStore *PostStore, tripCoder *TripCoder) *PostPostHandler {

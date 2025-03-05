@@ -13,16 +13,16 @@ import (
 //go:generate gotext update -lang en-US -out catalog.go github.com/mmb/tmpbbs/internal/tmpbbs
 
 type PostGetHandler struct {
-	repliesPerPage      int
-	cssURLs             []string
-	repliesEnabled      bool
-	emojiEnabled        bool
-	qrCodesEnabled      bool
 	basicEmojiParser    parser
 	wrappingEmojiParser parser
 	markdownParser      parser
 	postStore           *PostStore
 	template            *template.Template
+	cssURLs             []string
+	repliesPerPage      int
+	repliesEnabled      bool
+	emojiEnabled        bool
+	qrCodesEnabled      bool
 }
 
 //go:embed template

@@ -7,14 +7,14 @@ import (
 )
 
 type post struct {
-	id       int
+	time     time.Time
+	Parent   *post
 	Title    string
 	Author   string
 	TripCode string
 	Body     string
-	Parent   *post
 	Replies  []*post
-	time     time.Time
+	id       int
 }
 
 func newPost(title string, author string, body string, tripCoder *TripCoder) *post {
