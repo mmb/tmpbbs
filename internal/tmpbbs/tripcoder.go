@@ -8,11 +8,11 @@ import (
 	"strings"
 )
 
-const randomSaltLength = 16
-
 type TripCoder struct {
 	salt []byte
 }
+
+const randomSaltLength = 16
 
 func NewTripCoder(salt string, randReader io.Reader) (*TripCoder, error) {
 	var saltBytes []byte
