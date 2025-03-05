@@ -30,8 +30,8 @@ func NewTripCoder(salt string, randReader io.Reader) (*TripCoder, error) {
 }
 
 func (tc TripCoder) code(input string) (string, string) {
-	parts := strings.SplitN(input, "#", 2) //nolint:mnd
-	if len(parts) != 2 {                   //nolint:mnd
+	parts := strings.SplitN(input, "#", 2) //nolint:mnd // input has two parts, can't change
+	if len(parts) != 2 {                   //nolint:mnd // input has two parts, can't change
 		return input, ""
 	}
 

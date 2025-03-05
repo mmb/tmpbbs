@@ -6,7 +6,7 @@ import "golang.org/x/text/message"
 // gotext cannot find usage in templates and it will remove any translations
 // that it doesn't find used.
 // See https://github.com/golang/go/issues/51144
-func neverCalled() { //nolint:unused
+func neverCalled() { //nolint:unused // never called, see comment
 	printer := message.NewPrinter(message.MatchLanguage("en"))
 
 	printer.Sprintf("Title")
