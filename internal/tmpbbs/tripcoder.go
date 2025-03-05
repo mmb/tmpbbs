@@ -40,8 +40,8 @@ func (tc TripCoder) code(input string) (string, string) {
 	}
 
 	hash := sha256.New()
-	hash.Write(tc.salt)
-	hash.Write([]byte(input))
+	hash.Write(tc.salt)       //nolint:errcheck // can't error
+	hash.Write([]byte(input)) //nolint:errcheck // can't error
 
 	return parts[0], fmt.Sprintf("%.10s", hex.EncodeToString(hash.Sum(nil)))
 }
