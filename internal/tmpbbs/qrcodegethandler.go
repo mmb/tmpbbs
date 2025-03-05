@@ -6,9 +6,9 @@ import (
 	"github.com/skip2/go-qrcode"
 )
 
-const qrCodeSize = 256
-
 type QRCodeGetHandler struct{}
+
+const qrCodeSize = 256
 
 func NewQRCodeGetHandler() *QRCodeGetHandler {
 	return &QRCodeGetHandler{}
