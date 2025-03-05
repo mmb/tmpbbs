@@ -7,7 +7,7 @@ older wireless routers.
   * Markdown
   * emoji shortcodes
   * optional TLS (using `--tls-cert` and `--tls-key` options)
-  * trip codes in `username#secret` format
+  * tripcodes in `username#secret` format
   * shareable URL QR codes
 
 # Installation
@@ -37,7 +37,7 @@ Usage of tmpbbs:
   -c, --tls-cert string          path to PEM server certificate ($TMPBBS_TLS_CERT)
   -k, --tls-key string           path to PEM server key ($TMPBBS_TLS_KEY)
   -t, --title string             site title ($TMPBBS_TITLE) (default "tmpbbs")
-  -a, --trip-code-salt string    random salt to use for generating trip codes ($TMPBBS_TRIP_CODE_SALT)
+  -a, --tripcode-salt string     random salt to use for generating tripcodes ($TMPBBS_TRIPCODE_SALT)
   -p, --load-posts strings       comma-separated paths of YAML or JSON files of posts to load, format [{"title":"","author":"","body":""}]
                                  ($TMPBBS_LOAD_POSTS)
   -f, --serve-fs-paths strings   comma-separated list of urlprefix=/local/dir to serve ($TMPBBS_SERVE_FS_PATHS)

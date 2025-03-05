@@ -11,29 +11,29 @@ type post struct {
 	Parent   *post
 	Title    string
 	Author   string
-	TripCode string
+	Tripcode string
 	Body     string
 	Replies  []*post
 	id       int
 }
 
-func newPost(title string, author string, body string, tripCoder *TripCoder) *post {
-	var tripCode string
-	if tripCoder != nil {
-		author, tripCode = tripCoder.code(author)
+func newPost(title string, author string, body string, tripcoder *Tripcoder) *post {
+	var tripcode string
+	if tripcoder != nil {
+		author, tripcode = tripcoder.code(author)
 	}
 
 	return &post{
 		Title:    title,
 		Author:   author,
-		TripCode: tripCode,
+		Tripcode: tripcode,
 		Body:     body,
 		time:     time.Now(),
 	}
 }
 
 func (p *post) IsOriginalPoster() bool {
-	return p.Parent != nil && p.Parent.TripCode != "" && p.TripCode == p.Parent.TripCode
+	return p.Parent != nil && p.Parent.Tripcode != "" && p.Tripcode == p.Parent.Tripcode
 }
 
 func (p *post) URL() string {
