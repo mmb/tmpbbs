@@ -45,7 +45,7 @@ func (ps *PostStore) get(postID int, callback func(*post)) bool {
 	return true
 }
 
-func (ps *PostStore) LoadYAML(path string, tripCoder *TripCoder) error {
+func (ps *PostStore) LoadYAML(path string, tripcoder *Tripcoder) error {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return err
@@ -58,7 +58,7 @@ func (ps *PostStore) LoadYAML(path string, tripCoder *TripCoder) error {
 	}
 
 	for i := range posts {
-		ps.put(newPost(posts[i].Title, posts[i].Author, posts[i].Body, tripCoder), 0)
+		ps.put(newPost(posts[i].Title, posts[i].Author, posts[i].Body, tripcoder), 0)
 	}
 
 	return nil

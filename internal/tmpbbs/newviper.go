@@ -28,7 +28,7 @@ func initFlags() {
 	pflag.StringP("tls-cert", "c", "", "path to PEM server certificate ($TMPBBS_TLS_CERT)")
 	pflag.StringP("tls-key", "k", "", "path to PEM server key ($TMPBBS_TLS_KEY)")
 	pflag.StringP("title", "t", "tmpbbs", "site title ($TMPBBS_TITLE)")
-	pflag.StringP("trip-code-salt", "a", "", "random salt to use for generating trip codes ($TMPBBS_TRIP_CODE_SALT)")
+	pflag.StringP("tripcode-salt", "a", "", "random salt to use for generating tripcodes ($TMPBBS_TRIPCODE_SALT)")
 	pflag.StringSliceP("load-posts", "p", []string{},
 		`comma-separated paths of YAML or JSON files of posts to load, format [{"title":"","author":"","body":""}]
 ($TMPBBS_LOAD_POSTS)`)

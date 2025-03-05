@@ -37,13 +37,13 @@ func main() {
 
 	postStore := tmpbbs.NewPostStore(viper.GetString("title"))
 
-	tripCoder, err := tmpbbs.NewTripCoder(viper.GetString("trip-code-salt"), rand.Reader)
+	tripcoder, err := tmpbbs.NewTripcoder(viper.GetString("tripcode-salt"), rand.Reader)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	for _, loadPath := range viper.GetStringSlice("load-posts") {
-		if err = postStore.LoadYAML(loadPath, tripCoder); err != nil {
+		if err = postStore.LoadYAML(loadPath, tripcoder); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -52,7 +52,7 @@ func main() {
 	repliesEnabled := viper.GetBool("replies")
 
 	if repliesEnabled {
-		postPostHandler := tmpbbs.NewPostPostHandler(repliesPerPage, postStore, tripCoder)
+		postPostHandler := tmpbbs.NewPostPostHandler(repliesPerPage, postStore, tripcoder)
 		http.Handle("POST /{$}", postPostHandler)
 		http.Handle("POST /{parentID}", postPostHandler)
 	}

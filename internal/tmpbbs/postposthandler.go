@@ -7,15 +7,15 @@ import (
 
 type PostPostHandler struct {
 	postStore      *PostStore
-	tripCoder      *TripCoder
+	tripcoder      *Tripcoder
 	repliesPerPage int
 }
 
-func NewPostPostHandler(repliesPerPage int, postStore *PostStore, tripCoder *TripCoder) *PostPostHandler {
+func NewPostPostHandler(repliesPerPage int, postStore *PostStore, tripcoder *Tripcoder) *PostPostHandler {
 	return &PostPostHandler{
 		repliesPerPage: repliesPerPage,
 		postStore:      postStore,
-		tripCoder:      tripCoder,
+		tripcoder:      tripcoder,
 	}
 }
 
@@ -29,7 +29,7 @@ func (pph PostPostHandler) ServeHTTP(responseWriter http.ResponseWriter, request
 
 	// The body has CRLF line endings which blackfriday doesn't handle well. Convert to CR.
 	body := strings.ReplaceAll(request.FormValue("body"), "\r\n", "\n")
-	p := newPost(request.FormValue("title"), request.FormValue("author"), body, pph.tripCoder)
+	p := newPost(request.FormValue("title"), request.FormValue("author"), body, pph.tripcoder)
 	pph.postStore.put(p, parentID)
 
 	repliesLastPage := p.Parent.repliesLastPage(pph.repliesPerPage)
