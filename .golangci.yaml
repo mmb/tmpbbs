@@ -114,6 +114,10 @@ linters:
 linters-settings:
   decorder:
     disable-dec-order-check: false
+  errcheck:
+    check-blank: true
+    check-type-assertions: true
+    disable-default-exclusions: true
   gocritic:
     enable-all: true
     disabled-checks:
