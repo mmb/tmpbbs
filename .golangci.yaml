@@ -118,11 +118,17 @@ linters-settings:
     check-blank: true
     check-type-assertions: true
     disable-default-exclusions: true
+  errchkjson:
+    check-error-free-encoding: true
+  fatcontext:
+    check-struct-pointers: true
   gocritic:
     enable-all: true
     disabled-checks:
       - paramTypeCombine
       - unnamedResult
+  godot:
+    capital: true
   gomoddirectives:
     replace-allow-list:
       - github.com/enescakir/emoji
@@ -131,3 +137,15 @@ linters-settings:
     settings:
       shadow:
         strict: true
+  iface:
+    enable:
+      - identical
+      - unused
+      - opaque
+  nilnil:
+    detect-opposite: true
+  nolintlint:
+    require-explanation: true
+    require-specific: true
+  nonamedreturns:
+    report-error-in-defer: true
