@@ -122,3 +122,8 @@ linters-settings:
   gomoddirectives:
     replace-allow-list:
       - github.com/enescakir/emoji
+  govet:
+    enable-all: true
+    settings:
+      shadow:
+        strict: true
