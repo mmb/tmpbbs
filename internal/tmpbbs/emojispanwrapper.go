@@ -18,6 +18,6 @@ func newEmojiSpanWrapper(class string) *emojiSpanWrapper {
 func (esw emojiSpanWrapper) Wrap(alias string, code string) string {
 	description := strings.ReplaceAll(alias[1:len(alias)-1], "_", " ")
 
-	return fmt.Sprintf(`<span title="%s" role="img" aria-label="%s" class="%s">%s</span>`, description, description,
-		esw.class, code)
+	return fmt.Sprintf(`<span title=%q role="img" aria-label=%q class=%q>%s</span>`, description, description, esw.class,
+		code)
 }

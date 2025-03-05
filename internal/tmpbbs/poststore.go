@@ -53,12 +53,12 @@ func (ps *PostStore) LoadYAML(path string, tripCoder *TripCoder) error {
 
 	var posts []post
 
-	if err = yaml.Unmarshal(data, &posts); err != nil {
+	if err := yaml.Unmarshal(data, &posts); err != nil {
 		return err
 	}
 
-	for _, post := range posts {
-		ps.put(newPost(post.Title, post.Author, post.Body, tripCoder), 0)
+	for i := range posts {
+		ps.put(newPost(posts[i].Title, posts[i].Author, posts[i].Body, tripCoder), 0)
 	}
 
 	return nil

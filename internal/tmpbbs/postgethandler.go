@@ -55,7 +55,7 @@ func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool
 	}
 }
 
-func (pgh PostGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
+func (pgh *PostGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 	responseWriter.Header().Set("Cache-Control", "no-store")
 
 	postID, err := castID(request.PathValue("id"))
@@ -96,7 +96,7 @@ func castID(id string) (int, error) {
 	return strconv.Atoi(id)
 }
 
-func (pgh PostGetHandler) renderPost(displayPost *displayPost, repliesPage int, w io.Writer) error {
+func (pgh *PostGetHandler) renderPost(displayPost *displayPost, repliesPage int, w io.Writer) error {
 	return pgh.template.ExecuteTemplate(w, "index.gohtml", map[string]interface{}{
 		"cssURLs":        pgh.cssURLs,
 		"emojiEnabled":   pgh.emojiEnabled,

@@ -114,6 +114,11 @@ linters:
 linters-settings:
   decorder:
     disable-dec-order-check: false
+  gocritic:
+    enable-all: true
+    disabled-checks:
+      - paramTypeCombine
+      - unnamedResult
   gomoddirectives:
     replace-allow-list:
       - github.com/enescakir/emoji

@@ -32,15 +32,15 @@ func newPost(title string, author string, body string, tripCoder *TripCoder) *po
 	}
 }
 
-func (p post) IsOriginalPoster() bool {
+func (p *post) IsOriginalPoster() bool {
 	return p.Parent != nil && p.Parent.TripCode != "" && p.TripCode == p.Parent.TripCode
 }
 
-func (p post) URL() string {
+func (p *post) URL() string {
 	return fmt.Sprintf("/%d", p.id)
 }
 
-func (p post) repliesPageURL(page int, anchor string) string {
+func (p *post) repliesPageURL(page int, anchor string) string {
 	if anchor != "" {
 		anchor = "#" + anchor
 	}
@@ -48,10 +48,10 @@ func (p post) repliesPageURL(page int, anchor string) string {
 	return fmt.Sprintf("/%d?p=%d%s", p.id, page, anchor)
 }
 
-func (p post) hasRepliesPage(page int, perPage int) bool {
+func (p *post) hasRepliesPage(page int, perPage int) bool {
 	return page > 0 && page <= p.repliesLastPage(perPage)
 }
 
-func (p post) repliesLastPage(perPage int) int {
+func (p *post) repliesLastPage(perPage int) int {
 	return max(1, int(math.Ceil(float64(len(p.Replies))/float64(perPage))))
 }

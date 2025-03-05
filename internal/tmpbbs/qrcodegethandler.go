@@ -22,6 +22,8 @@ func (qcgh QRCodeGetHandler) ServeHTTP(reponseWriter http.ResponseWriter, reques
 	png, err := qrcode.Encode(url, qrcode.Medium, qrCodeSize)
 	if err != nil {
 		http.Error(reponseWriter, err.Error(), http.StatusInternalServerError)
+
+		return
 	}
 
 	reponseWriter.Header().Set("Content-Type", "image/png")

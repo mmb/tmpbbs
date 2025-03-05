@@ -84,7 +84,7 @@ func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) t
 	nextPage := min(dp.repliesLastPage(perPage), currentPage+1)
 	lastPage := dp.repliesLastPage(perPage)
 
-	show := make(map[int]bool, 5) //nolint:mnd
+	show := make(map[int]bool, 5) //nolint:mnd // max number of links in nav, can't change
 	show[firstPage] = true
 	show[prevPage] = true
 	show[nextPage] = true
@@ -102,14 +102,14 @@ func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) t
 	for i, page := range pages {
 		pageText := dp.Printer.Sprintf("page %d", page)
 		if show[page] {
-			links[i] = fmt.Sprintf(`<a href="%s">%s</a>`, dp.repliesPageURL(page, "replies-start"), pageText)
+			links[i] = fmt.Sprintf("<a href=%q>%s</a>", dp.repliesPageURL(page, "replies-start"), pageText)
 		} else {
 			links[i] = pageText
 		}
 	}
 
 	return template.HTML(
-		fmt.Sprintf(`<li class="%s">%s</li>`, liClass, strings.Join(links, " / "))) // #nosec G203 -- no user input
+		fmt.Sprintf("<li class=%q>%s</li>", liClass, strings.Join(links, " / "))) // #nosec G203 -- no user input
 }
 
 func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
@@ -131,7 +131,7 @@ func (dp displayPost) TimeAgo() string {
 	}
 
 	if age >= 24*time.Hour {
-		return dp.Printer.Sprintf("%dd ago", int64(math.Round(age.Hours()/24))) //nolint:mnd
+		return dp.Printer.Sprintf("%dd ago", int64(math.Round(age.Hours()/24))) //nolint:mnd // hours in a day, can't change
 	}
 
 	return dp.Printer.Sprintf("%dh ago", int64(math.Round(age.Hours())))
