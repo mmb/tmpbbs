@@ -15,8 +15,6 @@ func NewQRCodeGetHandler() *QRCodeGetHandler {
 }
 
 func (qcgh QRCodeGetHandler) ServeHTTP(reponseWriter http.ResponseWriter, request *http.Request) {
-	reponseWriter.Header().Set("Cache-Control", "no-store")
-
 	url := request.URL.Query().Get("url")
 
 	png, err := qrcode.Encode(url, qrcode.Medium, qrCodeSize)
