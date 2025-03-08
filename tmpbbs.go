@@ -49,21 +49,18 @@ func main() {
 	}
 
 	repliesPerPage := viper.GetInt("replies-per-page")
-	repliesEnabled := viper.GetBool("replies")
-
-	if repliesEnabled {
+	if viper.GetBool("replies") {
 		postPostHandler := tmpbbs.NewPostPostHandler(repliesPerPage, postStore, tripcoder)
 		http.Handle("POST /{$}", postPostHandler)
 		http.Handle("POST /{parentID}", postPostHandler)
 	}
 
-	qrCodesEnabled := viper.GetBool("qr-codes")
-	if qrCodesEnabled {
+	if viper.GetBool("qr-codes") {
 		http.Handle("GET /qr", tmpbbs.NewQRCodeGetHandler())
 	}
 
-	postGetHandler := tmpbbs.NewPostGetHandler(repliesPerPage, viper.GetStringSlice("css-urls"), repliesEnabled,
-		viper.GetBool("emoji"), qrCodesEnabled, postStore)
+	postGetHandler := tmpbbs.NewPostGetHandler(repliesPerPage, viper.GetStringSlice("css-urls"), viper.GetBool("replies"),
+		viper.GetBool("emoji"), viper.GetBool("qr-codes"), postStore)
 	http.Handle("GET /{$}", postGetHandler)
 	http.Handle("GET /{id}", postGetHandler)
 
