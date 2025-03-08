@@ -56,8 +56,6 @@ func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool
 }
 
 func (pgh *PostGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
-	responseWriter.Header().Set("Cache-Control", "no-store")
-
 	postID, err := castID(request.PathValue("id"))
 	if err != nil {
 		http.NotFound(responseWriter, request)
