@@ -4,9 +4,7 @@ import (
 	"crypto/rand"
 	"embed"
 	"fmt"
-	"io/fs"
 	"log"
-	"net/http"
 	"os"
 
 	"github.com/mmb/tmpbbs/internal/tmpbbs"
@@ -48,33 +46,11 @@ func main() {
 		}
 	}
 
-	repliesPerPage := viper.GetInt("replies-per-page")
-	if viper.GetBool("replies") {
-		postPostHandler := tmpbbs.NewPostPostHandler(repliesPerPage, postStore, tripcoder)
-		http.Handle("POST /{$}", postPostHandler)
-		http.Handle("POST /{parentID}", postPostHandler)
-	}
-
-	if viper.GetBool("qr-codes") {
-		http.Handle("GET /qr", tmpbbs.NewQRCodeGetHandler())
-	}
-
-	postGetHandler := tmpbbs.NewPostGetHandler(repliesPerPage, viper.GetStringSlice("css-urls"), viper.GetBool("replies"),
-		viper.GetBool("emoji"), viper.GetBool("qr-codes"), postStore)
-	http.Handle("GET /{$}", postGetHandler)
-	http.Handle("GET /{id}", postGetHandler)
-
-	staticDir, err := fs.Sub(staticFS, "static")
+	serveMux, err := tmpbbs.NewServeMux(viper, staticFS, postStore, tripcoder)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	http.Handle("GET /static/", http.StripPrefix("/static", http.FileServerFS(staticDir)))
-	http.Handle("GET /robots.txt", http.FileServerFS(staticDir))
-
-	if err = tmpbbs.ServeFSPaths(viper.GetStringSlice("serve-fs-paths")); err != nil {
-		log.Fatal(err)
-	}
-
-	log.Fatal(tmpbbs.Serve(viper.GetString("listen-address"), viper.GetString("tls-cert"), viper.GetString("tls-key")))
+	log.Fatal(tmpbbs.Serve(viper.GetString("listen-address"), viper.GetString("tls-cert"), viper.GetString("tls-key"),
+		serveMux))
 }
