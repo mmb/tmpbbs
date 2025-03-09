@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func ServeFSPaths(paths []string) error {
+func ServeFSPaths(paths []string, serveMux *http.ServeMux) error {
 	for _, dirMapping := range paths {
 		parts := strings.SplitN(dirMapping, "=", 2) //nolint:mnd // mapping has two parts, can't change
 		urlPrefix, dir := parts[0], parts[1]
@@ -20,7 +20,7 @@ func ServeFSPaths(paths []string) error {
 			urlPrefix = "/" + urlPrefix
 		}
 
-		http.Handle(fmt.Sprintf("GET %s/", urlPrefix), http.StripPrefix(urlPrefix, http.FileServer(http.Dir(dir))))
+		serveMux.Handle(fmt.Sprintf("GET %s/", urlPrefix), http.StripPrefix(urlPrefix, http.FileServer(http.Dir(dir))))
 	}
 
 	return nil

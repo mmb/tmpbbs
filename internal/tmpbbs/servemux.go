@@ -1,0 +1,44 @@
+package tmpbbs
+
+import (
+	"embed"
+	"io/fs"
+	"net/http"
+
+	"github.com/spf13/viper"
+)
+
+func NewServeMux(viper *viper.Viper, staticFS embed.FS, postStore *PostStore,
+	tripcoder *Tripcoder,
+) (*http.ServeMux, error) {
+	serveMux := http.NewServeMux()
+
+	postGetHandler := NewPostGetHandler(viper.GetInt("replies-per-page"), viper.GetStringSlice("css-urls"),
+		viper.GetBool("replies"), viper.GetBool("emoji"), viper.GetBool("qr-codes"), postStore)
+	serveMux.Handle("GET /{$}", postGetHandler)
+	serveMux.Handle("GET /{id}", postGetHandler)
+
+	staticDir, err := fs.Sub(staticFS, "static")
+	if err != nil {
+		return nil, err
+	}
+
+	serveMux.Handle("GET /static/", http.StripPrefix("/static", http.FileServerFS(staticDir)))
+	serveMux.Handle("GET /robots.txt", http.FileServerFS(staticDir))
+
+	if viper.GetBool("replies") {
+		postPostHandler := NewPostPostHandler(viper.GetInt("replies-per-page"), postStore, tripcoder)
+		serveMux.Handle("POST /{$}", postPostHandler)
+		serveMux.Handle("POST /{parentID}", postPostHandler)
+	}
+
+	if viper.GetBool("qr-codes") {
+		serveMux.Handle("GET /qr", NewQRCodeGetHandler())
+	}
+
+	if pathsErr := ServeFSPaths(viper.GetStringSlice("serve-fs-paths"), serveMux); pathsErr != nil {
+		return nil, pathsErr
+	}
+
+	return serveMux, nil
+}
