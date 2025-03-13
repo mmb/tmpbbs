@@ -82,7 +82,7 @@ Reply
 </ul>
 </ul>
 {{- if .qrCodesEnabled }}
-<button id="show-qr" style="display: none;">{{ .post.Printer.Sprintf "Share URL QR Code" }}</button>
+<button id="show-qr" title="{{ .post.Printer.Sprintf "URL QR Code" }}" style="display: none;">🔳📲</button>
 <dialog id="qr">
 <form method="dialog">
 <button autofocus>{{ .post.Printer.Sprintf "Close" }}</button>

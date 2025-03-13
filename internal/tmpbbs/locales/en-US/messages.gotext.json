@@ -135,9 +135,9 @@
             "fuzzy": true
         },
         {
-            "id": "Share URL QR Code",
-            "message": "Share URL QR Code",
-            "translation": "Share URL QR Code",
+            "id": "URL QR Code",
+            "message": "URL QR Code",
+            "translation": "URL QR Code",
             "translatorComment": "Copied from source.",
             "fuzzy": true
         },
