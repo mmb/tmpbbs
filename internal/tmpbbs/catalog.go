@@ -47,23 +47,23 @@ var messageKeyToIndex = map[string]int{
 	"Insert emoji using shortcode between colons (:mushroom: becomes 🍄).": 8,
 	"Markdown is supported.": 7,
 	"Reply":                  9,
-	"Share URL QR Code":      10,
 	"Title":                  5,
+	"URL QR Code":            10,
 	"page %d":                1,
 }
 
 var en_USIndex = []uint32{ // 13 elements
 	0x00000000, 0x00000024, 0x0000002f, 0x0000003a,
 	0x00000045, 0x00000050, 0x00000056, 0x0000006d,
-	0x00000084, 0x000000cb, 0x000000d1, 0x000000e3,
-	0x000000e9,
+	0x00000084, 0x000000cb, 0x000000d1, 0x000000dd,
+	0x000000e3,
 } // Size: 76 bytes
 
-const en_USData string = "" + // Size: 233 bytes
+const en_USData string = "" + // Size: 227 bytes
 	"\x14\x01\x81\x01\x00=\x01\x0c\x02%[1]d reply\x00\x0e\x02%[1]d replies" +
 	"\x02page %[1]d\x02%[1]dm ago\x02%[1]dd ago\x02%[1]dh ago\x02Title\x02Aut" +
 	"hor#tripcode-secret\x02Markdown is supported.\x02Insert emoji using shor" +
-	"tcode between colons (:mushroom: becomes 🍄).\x02Reply\x02Share URL QR Co" +
-	"de\x02Close"
+	"tcode between colons (:mushroom: becomes 🍄).\x02Reply\x02URL QR Code\x02" +
+	"Close"
 
-	// Total table size 309 bytes (0KiB); checksum: D9533875
+	// Total table size 303 bytes (0KiB); checksum: FF5AB438

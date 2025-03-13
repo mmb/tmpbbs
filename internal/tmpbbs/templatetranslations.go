@@ -14,6 +14,6 @@ func neverCalled() { //nolint:unused // never called, see comment
 	printer.Sprintf("Markdown is supported.")
 	printer.Sprintf("Insert emoji using shortcode between colons (:mushroom: becomes 🍄).")
 	printer.Sprintf("Reply")
-	printer.Sprintf("Share URL QR Code")
+	printer.Sprintf("URL QR Code")
 	printer.Sprintf("Close")
 }
