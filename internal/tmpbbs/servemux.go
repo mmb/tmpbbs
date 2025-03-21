@@ -36,6 +36,10 @@ func NewServeMux(viper *viper.Viper, staticFS embed.FS, postStore *PostStore,
 		serveMux.Handle("GET /qr", NewQRCodeGetHandler())
 	}
 
+	if viper.GetBool("serve-binary") {
+		serveMux.Handle("GET /self", NewSelfGetHandler())
+	}
+
 	if pathsErr := ServeFSPaths(viper.GetStringSlice("serve-fs-paths"), serveMux); pathsErr != nil {
 		return nil, pathsErr
 	}
