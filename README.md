@@ -46,6 +46,7 @@ Usage of tmpbbs:
   -r, --replies                  enable replies ($TMPBBS_REPLIES) (default true)
   -m, --emoji                    enable emoji shortcode expansion ($TMPBBS_EMOJI) (default true)
   -q, --qr-codes                 enable shareable URL QR codes ($TMPBBS_QR_CODES) (default true)
+  -b, --serve-binary             serve tmpbbs binary at /self ($TMPBBS_SERVE_BINARY) (default true)
   -v, --version                  print version
   -h, --help                     usage help
 ```

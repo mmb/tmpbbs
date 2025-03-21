@@ -41,6 +41,7 @@ func initFlags() {
 	pflag.BoolP("replies", "r", true, "enable replies ($TMPBBS_REPLIES)")
 	pflag.BoolP("emoji", "m", true, "enable emoji shortcode expansion ($TMPBBS_EMOJI)")
 	pflag.BoolP("qr-codes", "q", true, "enable shareable URL QR codes ($TMPBBS_QR_CODES)")
+	pflag.BoolP("serve-binary", "b", true, "serve tmpbbs binary at /self ($TMPBBS_SERVE_BINARY)")
 	pflag.BoolP("version", "v", false, "print version")
 	pflag.BoolP("help", "h", false, "usage help")
 }
