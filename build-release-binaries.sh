@@ -10,25 +10,18 @@ mkdir -p "$RELEASE_DIR"
 
 BUILD_ARGS=(-ldflags "-s -w -X main.version=$VERSION-$COMMIT")
 
-export CGO_ENABLED=0
+build() {
+  export GOOS=$1 GOARCH=$2 CGO_ENABLED=$3
 
-export GOOS=darwin
-export GOARCH=amd64
-go build "${BUILD_ARGS[@]}" -o "$RELEASE_DIR/tmpbbs-$VERSION-$GOOS-$GOARCH"
+  go build "${BUILD_ARGS[@]}" -o "$RELEASE_DIR/tmpbbs-$VERSION-$GOOS-$GOARCH"
+}
 
-export GOOS=linux
-export GOARCH=amd64
-go build "${BUILD_ARGS[@]}" -o "$RELEASE_DIR/tmpbbs-$VERSION-$GOOS-$GOARCH"
+build android arm64 0
+build darwin amd64 0
+build linux amd64 0
+build linux arm 0
+build linux arm64 0
+build windows amd64 0
 
-export GOARCH=arm
-go build "${BUILD_ARGS[@]}" -o "$RELEASE_DIR/tmpbbs-$VERSION-$GOOS-$GOARCH"
-
-export GOARCH=arm64
-go build "${BUILD_ARGS[@]}" -o "$RELEASE_DIR/tmpbbs-$VERSION-$GOOS-$GOARCH"
-
-export GOARCH=mips GOMIPS=softfloat
+export GOOS=linux GOARCH=mips GOMIPS=softfloat CGO_ENABLED=0
 go build "${BUILD_ARGS[@]}" -o "$RELEASE_DIR/tmpbbs-$VERSION-$GOOS-$GOARCH-$GOMIPS"
-
-export GOOS=windows
-export GOARCH=amd64
-go build "${BUILD_ARGS[@]}" -o "$RELEASE_DIR/tmpbbs-$VERSION-$GOOS-$GOARCH"
