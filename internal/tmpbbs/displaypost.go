@@ -138,7 +138,7 @@ func (dp displayPost) TimeAgo() string {
 }
 
 func (dp displayPost) emptyTitle() string {
-	return fmt.Sprintf("#%d", dp.id)
+	return dp.uuid
 }
 
 func (dp displayPost) expandEmoji(input string, parser parser) string {
