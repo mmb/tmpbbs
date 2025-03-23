@@ -20,17 +20,10 @@ func NewPostPostHandler(repliesPerPage int, postStore *PostStore, tripcoder *Tri
 }
 
 func (pph PostPostHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
-	parentID, err := castID(request.PathValue("parentID"))
-	if err != nil {
-		http.NotFound(responseWriter, request)
-
-		return
-	}
-
 	// The body has CRLF line endings which blackfriday doesn't handle well. Convert to CR.
 	body := strings.ReplaceAll(request.FormValue("body"), "\r\n", "\n")
 	p := newPost(request.FormValue("title"), request.FormValue("author"), body, pph.tripcoder)
-	pph.postStore.put(p, parentID)
+	pph.postStore.put(p, request.PathValue("parentUUID"))
 
 	repliesLastPage := p.Parent.repliesLastPage(pph.repliesPerPage)
 	http.Redirect(responseWriter, request, p.Parent.repliesPageURL(repliesLastPage, "replies-end"), http.StatusSeeOther)

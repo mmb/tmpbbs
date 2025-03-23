@@ -56,13 +56,6 @@ func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool
 }
 
 func (pgh *PostGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
-	postID, err := castID(request.PathValue("id"))
-	if err != nil {
-		http.NotFound(responseWriter, request)
-
-		return
-	}
-
 	repliesPage, err := strconv.Atoi(request.URL.Query().Get("p"))
 	if err != nil {
 		repliesPage = 1
@@ -70,7 +63,7 @@ func (pgh *PostGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request
 
 	printer := message.NewPrinter(message.MatchLanguage(request.Header.Get("Accept-Language"), "en-US"))
 
-	if !pgh.postStore.get(postID, func(post *post) {
+	if !pgh.postStore.get(request.PathValue("uuid"), func(post *post) {
 		displayPost := newDisplayPost(post, printer, pgh.basicEmojiParser, pgh.wrappingEmojiParser, pgh.markdownParser)
 		if !displayPost.hasRepliesPage(repliesPage, pgh.repliesPerPage) {
 			http.NotFound(responseWriter, request)
@@ -84,14 +77,6 @@ func (pgh *PostGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request
 	}) {
 		http.NotFound(responseWriter, request)
 	}
-}
-
-func castID(id string) (int, error) {
-	if id == "" {
-		return 0, nil
-	}
-
-	return strconv.Atoi(id)
 }
 
 func (pgh *PostGetHandler) renderPost(displayPost *displayPost, repliesPage int, w io.Writer) error {

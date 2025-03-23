@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"math"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type post struct {
@@ -13,8 +15,8 @@ type post struct {
 	Author   string
 	Tripcode string
 	Body     string
+	uuid     string
 	Replies  []*post
-	id       int
 }
 
 func newPost(title string, author string, body string, tripcoder *Tripcoder) *post {
@@ -29,6 +31,7 @@ func newPost(title string, author string, body string, tripcoder *Tripcoder) *po
 		Tripcode: tripcode,
 		Body:     body,
 		time:     time.Now(),
+		uuid:     uuid.New().String(),
 	}
 }
 
@@ -37,7 +40,7 @@ func (p *post) IsOriginalPoster() bool {
 }
 
 func (p *post) URL() string {
-	return fmt.Sprintf("/%d", p.id)
+	return "/p/" + p.uuid
 }
 
 func (p *post) repliesPageURL(page int, anchor string) string {
@@ -45,7 +48,7 @@ func (p *post) repliesPageURL(page int, anchor string) string {
 		anchor = "#" + anchor
 	}
 
-	return fmt.Sprintf("/%d?p=%d%s", p.id, page, anchor)
+	return fmt.Sprintf("%s?p=%d%s", p.URL(), page, anchor)
 }
 
 func (p *post) hasRepliesPage(page int, perPage int) bool {
