@@ -46,6 +46,13 @@ func main() {
 		}
 	}
 
+	if viper.GetString("grpc-listen-address") != "" {
+		go func() {
+			log.Fatal(tmpbbs.ServeGRPC(viper.GetString("grpc-listen-address"), viper.GetString("tls-cert"),
+				viper.GetString("tls-key"), tmpbbs.NewPostSyncServer(postStore)))
+		}()
+	}
+
 	serveMux, err := tmpbbs.NewServeMux(viper, staticFS, postStore, tripcoder)
 	if err != nil {
 		log.Fatal(err)

@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option go_package = "github.com/mmb/tmpbbs/internal/tmpbbs/proto";
+
+import "google/protobuf/timestamp.proto";
+
+service PostSync {
+  rpc Get(PostSyncRequest) returns (PostSyncResponse) {}
+}
+
+message PostSyncRequest {
+  string uuid = 1;
+  int32 max_results = 2;
+}
+
+message PostSyncResponse {
+  repeated Post posts = 1;
+}
+
+message Post {
+  google.protobuf.Timestamp time = 1;
+  string title = 2;
+  string author = 3;
+  string tripcode = 4;
+  string body = 5;
+  string uuid = 6;
+  string parent_uuid = 7;
+}

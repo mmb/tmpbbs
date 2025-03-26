@@ -52,6 +52,21 @@ func (ps *PostStore) get(uuid string, callback func(*post)) bool {
 	return true
 }
 
+func (ps *PostStore) getSince(uuid string, maxPosts int) []*post {
+	ps.mutex.RLock()
+	defer ps.mutex.RUnlock()
+
+	sinceIndex, found := ps.uuidMap[uuid]
+	if !found {
+		sinceIndex = -1
+	}
+
+	start := sinceIndex + 1
+	end := min(len(ps.posts), start+maxPosts)
+
+	return ps.posts[start:end]
+}
+
 func (ps *PostStore) LoadYAML(path string, tripcoder *Tripcoder) error {
 	data, err := os.ReadFile(path)
 	if err != nil {
