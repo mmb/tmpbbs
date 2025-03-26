@@ -24,7 +24,8 @@ func NewViper() (*viper.Viper, error) {
 }
 
 func initFlags() {
-	pflag.StringP("listen-address", "l", ":8080", "<host>:port to listen on ($TMPBBS_LISTEN_ADDRESS)")
+	pflag.StringP("listen-address", "l", ":8080", "<host>:port to listen on for HTTP ($TMPBBS_LISTEN_ADDRESS)")
+	pflag.StringP("grpc-listen-address", "g", ":8081", "<host>:port to listen on for gRPC ($TMPBBS_GRPC_LISTEN_ADDRESS)")
 	pflag.StringP("tls-cert", "c", "", "path to PEM server certificate ($TMPBBS_TLS_CERT)")
 	pflag.StringP("tls-key", "k", "", "path to PEM server key ($TMPBBS_TLS_KEY)")
 	pflag.StringP("title", "t", "tmpbbs", "site title ($TMPBBS_TITLE)")
