@@ -2,6 +2,7 @@ package tmpbbs
 
 import (
 	"strings"
+	"time"
 
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -30,6 +31,10 @@ func initFlags() {
 	pflag.StringP("tls-key", "k", "", "path to PEM server key ($TMPBBS_TLS_KEY)")
 	pflag.StringP("title", "t", "tmpbbs", "site title ($TMPBBS_TITLE)")
 	pflag.StringP("tripcode-salt", "a", "", "random salt to use for generating tripcodes ($TMPBBS_TRIPCODE_SALT)")
+	pflag.StringSliceP("pull-peers", "d", []string{},
+		"comma-separated list of tmpbbs gRPC <tls://>host:gRPCport to pull posts from ($TMPBBS_PULL_PEERS)")
+	pflag.DurationP("pull-interval", "i", 30*time.Second, //nolint:mnd // default
+		"peer pull interval ($TMPBBS_PULL_INTERVAL)")
 	pflag.StringSliceP("load-posts", "p", []string{},
 		`comma-separated paths of YAML or JSON files of posts to load, format [{"title":"","author":"","body":""}]
 ($TMPBBS_LOAD_POSTS)`)
