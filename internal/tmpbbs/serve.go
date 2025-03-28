@@ -1,6 +1,7 @@
 package tmpbbs
 
 import (
+	"log/slog"
 	"net/http"
 	"time"
 )
@@ -16,8 +17,12 @@ func Serve(listenAddress string, tlsCertFile string, tlsKeyFile string, serveMux
 	}
 
 	if tlsCertFile != "" && tlsKeyFile != "" {
+		slog.Info("listening for HTTP", "address", listenAddress, "tlsEnabled", true)
+
 		return server.ListenAndServeTLS(tlsCertFile, tlsKeyFile)
 	}
+
+	slog.Info("listening for HTTP", "address", listenAddress, "tlsEnabled", false)
 
 	return server.ListenAndServe()
 }
