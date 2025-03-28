@@ -53,6 +53,11 @@ func main() {
 		}()
 	}
 
+	if err = tmpbbs.RunPullPeers(viper.GetStringSlice("pull-peers"), viper.GetDuration("pull-interval"),
+		postStore); err != nil {
+		log.Fatal(err)
+	}
+
 	serveMux, err := tmpbbs.NewServeMux(viper, staticFS, postStore, tripcoder)
 	if err != nil {
 		log.Fatal(err)

@@ -1,7 +1,12 @@
-tmpbbs is an ephemeral, anonymous forum site. All posts are stored in memory
-and lost when the process stops. It's a single static binary and does not require the
-internet or any disk. It runs on a wide variety of hardware including
-older wireless routers.
+A single instance of tmpbbs is an ephemeral, anonymous forum site. All posts
+are stored in memory and lost when the process stops. It's a single static
+binary and does not require the internet or any disk. It runs on a wide
+variety of low-powered hardware including older wireless routers.
+
+Multiple instances of tmpbbs can be linked so that posts are replicated in
+one or both directions. This enables different topologies such as a
+decentralized mesh where each instance has all the posts, trees, backup
+instances and read-only replicas.
 
 # Features
   * Markdown
@@ -9,6 +14,7 @@ older wireless routers.
   * optional TLS (using `--tls-cert` and `--tls-key` options)
   * tripcodes in `username#secret` format
   * shareable URL QR codes
+  * every instance distributes the software by serving its own binary
 
 # Installation
 
@@ -39,6 +45,8 @@ Usage of tmpbbs:
   -k, --tls-key string               path to PEM server key ($TMPBBS_TLS_KEY)
   -t, --title string                 site title ($TMPBBS_TITLE) (default "tmpbbs")
   -a, --tripcode-salt string         random salt to use for generating tripcodes ($TMPBBS_TRIPCODE_SALT)
+  -d, --pull-peers strings           comma-separated list of tmpbbs gRPC <tls://>host:gRPCport to pull posts from ($TMPBBS_PULL_PEERS)
+  -i, --pull-interval duration       peer pull interval ($TMPBBS_PULL_INTERVAL) (default 30s)
   -p, --load-posts strings           comma-separated paths of YAML or JSON files of posts to load, format [{"title":"","author":"","body":""}]
                                      ($TMPBBS_LOAD_POSTS)
   -f, --serve-fs-paths strings       comma-separated list of urlprefix=/local/dir to serve ($TMPBBS_SERVE_FS_PATHS)
@@ -52,8 +60,17 @@ Usage of tmpbbs:
   -h, --help                         usage help
 ```
 
-# Compiling
+# Peering
 
-```sh
-go build
-```
+An instance can pull posts from any number of other instances by adding their
+`host:port` to the `--pull-peers` option, where port is the port in the peer's
+`--grpc-listen-address` (default 8081).
+
+If the peer instances were started in TLS mode, their gRPC server will also be
+in TLS mode. In that case TLS must be enabled on the client instance by
+prefixing the address with `tls://` in `--pull-peers`. If the peer instances
+are not using TLS `--pull-peers` should just have their `host:grpcport` but
+in this case the gRPC traffic will not be encrypted.
+
+Two instances can pull from each other and posts will not be duplicated. UUIDs
+are used for globally unique post identifiers.
