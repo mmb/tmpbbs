@@ -57,34 +57,49 @@ func (pp *pullPeer) sync() {
 	response, _ := pp.client.Get(context.Background(), //nolint:errcheck // ignore errors and keep trying
 		&proto.PostSyncRequest{Uuid: pp.lastUUIDSynced})
 	for _, protoPost := range response.GetPosts() {
-		if protoPost.GetParentUuid() == "" { //nolint:nestif // TODO try to improve
+		// Root post of peer
+		if protoPost.GetParentUuid() == "" {
 			pp.rootUUID = protoPost.GetUuid()
-		} else if pp.postStore.getPostByUUID(protoPost.GetUuid()) == nil {
-			post := &post{
-				Title:    protoPost.GetTitle(),
-				Author:   protoPost.GetAuthor(),
-				Tripcode: protoPost.GetTripcode(),
-				Body:     protoPost.GetBody(),
-				uuid:     protoPost.GetUuid(),
-				time:     protoPost.GetTime().AsTime(),
-			}
-			// If the parent is the peer's root, add it to our root.
-			if protoPost.GetParentUuid() == pp.rootUUID {
-				pp.postStore.put(post, pp.postStore.posts[0].uuid)
-			} else {
-				// If we have the parent, add it to the parent.
-				if pp.postStore.getPostByUUID(protoPost.GetParentUuid()) != nil {
-					pp.postStore.put(post, protoPost.GetParentUuid())
-				} else {
-					// If we don't have the parent we are missing a post, start a resync from the peer root.
-					pp.lastUUIDSynced = ""
+			pp.lastUUIDSynced = protoPost.GetUuid()
 
-					return
-				}
-			}
+			continue
+		}
+		// We already have this post, do not add
+		if pp.postStore.getPostByUUID(protoPost.GetUuid()) != nil {
+			pp.lastUUIDSynced = protoPost.GetUuid()
+
+			continue
 		}
 
-		pp.lastUUIDSynced = protoPost.GetUuid()
+		post := &post{
+			Title:    protoPost.GetTitle(),
+			Author:   protoPost.GetAuthor(),
+			Tripcode: protoPost.GetTripcode(),
+			Body:     protoPost.GetBody(),
+			uuid:     protoPost.GetUuid(),
+			time:     protoPost.GetTime().AsTime(),
+		}
+
+		// If the parent is the peer's root, add it to our root
+		if protoPost.GetParentUuid() == pp.rootUUID {
+			pp.postStore.put(post, pp.postStore.posts[0].uuid)
+			pp.lastUUIDSynced = protoPost.GetUuid()
+
+			continue
+		}
+
+		// If we have the parent, add it to the parent
+		if pp.postStore.getPostByUUID(protoPost.GetParentUuid()) != nil {
+			pp.postStore.put(post, protoPost.GetParentUuid())
+			pp.lastUUIDSynced = protoPost.GetUuid()
+
+			continue
+		}
+
+		// We don't have the parent, start a resync from the peer root.
+		pp.lastUUIDSynced = ""
+
+		return
 	}
 }
 
