@@ -62,6 +62,8 @@ func (pp *pullPeer) sync() {
 	response, err := pp.client.Get(context.Background(), &proto.PostSyncRequest{Uuid: pp.lastUUIDSynced})
 	if err != nil {
 		pp.logger.Error(err.Error())
+
+		return
 	}
 
 	protoPosts := response.GetPosts()
