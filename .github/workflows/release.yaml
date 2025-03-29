@@ -1,6 +1,6 @@
 ---
 name: Release a new version
-on:
+'on':
   push:
     tags:
       - v*.*.*
@@ -46,7 +46,7 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@4574d27a4764455b42196d70a065bc6853246a25
       - name: Set up buildx
-        uses: docker/setup-buildx-action@f7ce87c1d6bead3e36075b2ce75da1f6cc28aaca
+        uses: docker/setup-buildx-action@f7ce87c1d6bead3e36075b2ce75da1f6cc28aaca  # yamllint disable rule:line-length
       - name: Build and push image
         id: push
         uses: docker/build-push-action@ca877d9245402d1537745e0e356eab47c3520991
@@ -66,7 +66,8 @@ jobs:
           subject-name: index.docker.io/${{ env.DOCKER_HUB_IMAGE }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
-      - name: Generate signed build provenance attestation for GitHub Container Registry
+      - name: >-
+          Generate signed build provenance attestation for GitHub Container Registry
         uses: actions/attest-build-provenance@v2
         with:
           subject-name: ghcr.io/${{ github.repository }}
@@ -75,13 +76,15 @@ jobs:
       - name: Install golang
         uses: actions/setup-go@v5
       - name: Build binaries
-        run: ./build-release-binaries.sh "${{ steps.metadata.outputs.version }}" "${{ github.sha }}"
+        run: >-
+          ./build-release-binaries.sh "${{ steps.metadata.outputs.version }}"
+          "${{ github.sha }}"
       - name: Generate signed build provenance attestation for binaries
         uses: actions/attest-build-provenance@v2
         with:
           subject-path: release/*
       - name: Create release
-        uses: softprops/action-gh-release@c95fe1489396fe8a9eb87c0abf8aa5b2ef267fda
+        uses: softprops/action-gh-release@c95fe1489396fe8a9eb87c0abf8aa5b2ef267fda  # yamllint disable rule:line-length
         with:
           body: |
             ### Container Images
