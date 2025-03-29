@@ -77,7 +77,7 @@ func (pp *pullPeer) sync() {
 			continue
 		}
 		// We already have this post, do not add
-		if pp.postStore.getPostByUUID(protoPost.GetUuid()) != nil {
+		if pp.postStore.hasPost(protoPost.GetUuid()) {
 			pp.lastUUIDSynced = protoPost.GetUuid()
 
 			continue
@@ -101,7 +101,7 @@ func (pp *pullPeer) sync() {
 		}
 
 		// If we have the parent, add it to the parent
-		if pp.postStore.getPostByUUID(protoPost.GetParentUuid()) != nil {
+		if pp.postStore.hasPost(protoPost.GetParentUuid()) {
 			pp.postStore.put(post, protoPost.GetParentUuid())
 			pp.lastUUIDSynced = protoPost.GetUuid()
 
