@@ -138,7 +138,7 @@ func (dp displayPost) TimeAgo() string {
 }
 
 func (dp displayPost) emptyTitle() string {
-	return dp.uuid
+	return dp.uuid[:8]
 }
 
 func (dp displayPost) expandEmoji(input string, parser parser) string {
