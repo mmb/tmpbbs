@@ -3,6 +3,7 @@ package tmpbbs
 import (
 	"context"
 	"crypto/tls"
+	"log/slog"
 	"strings"
 	"time"
 
@@ -15,6 +16,8 @@ import (
 type pullPeer struct {
 	client         proto.PostSyncClient
 	postStore      *PostStore
+	logger         *slog.Logger
+	address        string
 	rootUUID       string
 	lastUUIDSynced string
 	interval       time.Duration
@@ -39,6 +42,8 @@ func newPullPeer(address string, interval time.Duration, postStore *PostStore) (
 		interval:  interval,
 		client:    proto.NewPostSyncClient(clientConn),
 		postStore: postStore,
+		logger:    slog.Default().With("serverAddress", address),
+		address:   address,
 	}, nil
 }
 
@@ -54,9 +59,16 @@ func (pp *pullPeer) run(wait time.Duration) {
 }
 
 func (pp *pullPeer) sync() {
-	response, _ := pp.client.Get(context.Background(), //nolint:errcheck // ignore errors and keep trying
-		&proto.PostSyncRequest{Uuid: pp.lastUUIDSynced})
-	for _, protoPost := range response.GetPosts() {
+	response, err := pp.client.Get(context.Background(), &proto.PostSyncRequest{Uuid: pp.lastUUIDSynced})
+	if err != nil {
+		pp.logger.Error(err.Error())
+	}
+
+	protoPosts := response.GetPosts()
+	pp.logger.Info("received response to peer sync request", "lastUUIDSynced", pp.lastUUIDSynced,
+		"numPosts", len(protoPosts))
+
+	for _, protoPost := range protoPosts {
 		// Root post of peer
 		if protoPost.GetParentUuid() == "" {
 			pp.rootUUID = protoPost.GetUuid()
@@ -98,6 +110,7 @@ func (pp *pullPeer) sync() {
 
 		// We don't have the parent, start a resync from the peer root.
 		pp.lastUUIDSynced = ""
+		pp.logger.Warn("resync from root", "missingParentUUID", protoPost.GetParentUuid())
 
 		return
 	}

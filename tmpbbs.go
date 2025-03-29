@@ -22,6 +22,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	tmpbbs.SetupLog(viper.GetBool("json-log"))
+
 	if viper.GetBool("help") {
 		pflag.CommandLine.SortFlags = false
 		pflag.Usage()

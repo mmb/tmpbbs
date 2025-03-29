@@ -2,8 +2,10 @@ package tmpbbs
 
 import (
 	"context"
+	"log/slog"
 
 	"github.com/mmb/tmpbbs/internal/tmpbbs/proto"
+	"google.golang.org/grpc/peer"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -20,7 +22,19 @@ func NewPostSyncServer(postStore *PostStore) *PostSyncServer {
 	}
 }
 
-func (pss *PostSyncServer) Get(_ context.Context, request *proto.PostSyncRequest) (*proto.PostSyncResponse, error) {
+func (pss *PostSyncServer) Get(context context.Context, request *proto.PostSyncRequest) (*proto.PostSyncResponse,
+	error,
+) {
+	var clientAddress string
+
+	peer, exists := peer.FromContext(context)
+
+	if exists {
+		clientAddress = peer.Addr.String()
+	}
+
+	logger := slog.Default().With("clientAddress", clientAddress)
+
 	maxResults := min(int(request.GetMaxResults()), maxMaxResults)
 	if maxResults == 0 {
 		maxResults = maxMaxResults
@@ -45,6 +59,9 @@ func (pss *PostSyncServer) Get(_ context.Context, request *proto.PostSyncRequest
 			ParentUuid: parentUUID,
 		}
 	}
+
+	logger.Info("responded to peer sync request", "sinceUUID", request.GetUuid(),
+		"maxResults", request.GetMaxResults(), "numResults", len(protoPosts))
 
 	return &proto.PostSyncResponse{
 		Posts: protoPosts,

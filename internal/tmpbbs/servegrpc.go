@@ -2,6 +2,7 @@ package tmpbbs
 
 import (
 	"crypto/tls"
+	"log/slog"
 	"net"
 
 	"github.com/mmb/tmpbbs/internal/tmpbbs/proto"
@@ -17,6 +18,8 @@ func ServeGRPC(listenAddress string, tlsCertFile string, tlsKeyFile string, post
 
 	var grpcServer *grpc.Server
 
+	tlsEnabled := false
+
 	if tlsCertFile != "" && tlsKeyFile != "" {
 		var certificate tls.Certificate
 
@@ -31,11 +34,14 @@ func ServeGRPC(listenAddress string, tlsCertFile string, tlsKeyFile string, post
 			MinVersion:   tls.VersionTLS12,
 		}
 		grpcServer = grpc.NewServer(grpc.Creds(credentials.NewTLS(config)))
+		tlsEnabled = true
 	} else {
 		grpcServer = grpc.NewServer()
 	}
 
 	proto.RegisterPostSyncServer(grpcServer, postSyncServer)
+
+	slog.Info("listening for gRPC", "address", listenAddress, "tlsEnabled", tlsEnabled)
 
 	return grpcServer.Serve(listener)
 }

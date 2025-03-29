@@ -30,6 +30,7 @@ func initFlags() {
 	pflag.BoolP("emoji", "m", true, "enable emoji shortcode expansion ($TMPBBS_EMOJI)")
 	pflag.StringP("grpc-listen-address", "g", ":8081", "<host>:port to listen on for gRPC ($TMPBBS_GRPC_LISTEN_ADDRESS)")
 	pflag.BoolP("help", "h", false, "usage help")
+	pflag.BoolP("json-log", "j", false, "set log output format to JSON ($TMPBBS_JSON_LOG)")
 	pflag.StringP("listen-address", "l", ":8080", "<host>:port to listen on for HTTP ($TMPBBS_LISTEN_ADDRESS)")
 	pflag.StringSliceP("load-posts", "p", []string{},
 		`comma-separated paths of YAML or JSON files of posts to load, format [{"title":"","author":"","body":""}]
