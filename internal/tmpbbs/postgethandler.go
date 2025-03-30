@@ -88,5 +88,8 @@ func (pgh *PostGetHandler) renderPost(displayPost *displayPost, repliesPage int,
 		"repliesPerPage": pgh.repliesPerPage,
 		"post":           displayPost,
 		"repliesPage":    repliesPage,
+		"maxTitleSize":   maxTitleSize,
+		"maxAuthorSize":  maxAuthorSize,
+		"maxBodySize":    maxBodySize,
 	})
 }

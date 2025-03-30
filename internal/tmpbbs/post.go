@@ -19,6 +19,12 @@ type post struct {
 	Replies  []*post
 }
 
+const (
+	maxTitleSize  = 30
+	maxAuthorSize = 28
+	maxBodySize   = 8192
+)
+
 func newPost(title string, author string, body string, tripcoder *Tripcoder) *post {
 	var tripcode string
 	if tripcoder != nil {
@@ -57,4 +63,22 @@ func (p *post) hasRepliesPage(page int, perPage int) bool {
 
 func (p *post) repliesLastPage(perPage int) int {
 	return max(1, int(math.Ceil(float64(len(p.Replies))/float64(perPage))))
+}
+
+func (p *post) validate() []string {
+	var errors []string
+
+	if len(p.Title) > maxTitleSize {
+		errors = append(errors, fmt.Sprintf("Title size cannot exceed %d characters.", maxTitleSize))
+	}
+
+	if len(p.Author) > maxAuthorSize {
+		errors = append(errors, fmt.Sprintf("Author size cannot exceed %d characters.", maxAuthorSize))
+	}
+
+	if len(p.Body) > maxBodySize {
+		errors = append(errors, fmt.Sprintf("Body size cannot exceed %d characters.", maxBodySize))
+	}
+
+	return errors
 }

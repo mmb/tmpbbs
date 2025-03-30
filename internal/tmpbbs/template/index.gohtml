@@ -48,11 +48,11 @@ Reply
 </summary>
 <form action="{{ .post.URL }}" method="post">
 <p>
-<input type="text" id="title" name="title" placeholder="{{ .post.Printer.Sprintf "Title" }}" autocomplete="off">
-<input type="text" id="author" name="author" placeholder="{{ .post.Printer.Sprintf "Author#tripcode-secret" }}">
+<input type="text" id="title" name="title" placeholder="{{ .post.Printer.Sprintf "Title" }}" autocomplete="off" maxlength="{{ .maxTitleSize }}">
+<input type="text" id="author" name="author" placeholder="{{ .post.Printer.Sprintf "Author#tripcode-secret" }}" maxlength="{{ .maxAuthorSize }}">
 </p>
 <p>
-<textarea id="body" name="body" placeholder="{{ .post.Printer.Sprintf "Markdown is supported." }}{{ if .emojiEnabled }} {{ .post.Printer.Sprintf "Insert emoji using shortcode between colons (:mushroom: becomes 🍄)." }}{{ end }}"  autocomplete="off"></textarea>
+<textarea id="body" name="body" placeholder="{{ .post.Printer.Sprintf "Markdown is supported." }}{{ if .emojiEnabled }} {{ .post.Printer.Sprintf "Insert emoji using shortcode between colons (:mushroom: becomes 🍄)." }}{{ end }}"  autocomplete="off" maxlength="{{ .maxBodySize }}"></textarea>
 </p>
 <p>
 <input type="submit" value="{{ .post.Printer.Sprintf "Reply" }}">
