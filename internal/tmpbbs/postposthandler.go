@@ -28,9 +28,16 @@ func (pph PostPostHandler) ServeHTTP(responseWriter http.ResponseWriter, request
 
 	// The body has CRLF line endings which blackfriday doesn't handle well. Convert to CR.
 	body := strings.ReplaceAll(request.FormValue("body"), "\r\n", "\n")
-	p := newPost(request.FormValue("title"), request.FormValue("author"), body, pph.tripcoder)
-	pph.postStore.put(p, request.PathValue("parentUUID"))
 
-	repliesLastPage := p.Parent.repliesLastPage(pph.repliesPerPage)
-	http.Redirect(responseWriter, request, p.Parent.repliesPageURL(repliesLastPage, "replies-end"), http.StatusSeeOther)
+	post := newPost(request.FormValue("title"), request.FormValue("author"), body, pph.tripcoder)
+	if errors := post.validate(); len(errors) > 0 {
+		http.Error(responseWriter, strings.Join(errors, "\n"), http.StatusBadRequest)
+
+		return
+	}
+
+	pph.postStore.put(post, request.PathValue("parentUUID"))
+
+	repliesLastPage := post.Parent.repliesLastPage(pph.repliesPerPage)
+	http.Redirect(responseWriter, request, post.Parent.repliesPageURL(repliesLastPage, "replies-end"), http.StatusSeeOther)
 }
