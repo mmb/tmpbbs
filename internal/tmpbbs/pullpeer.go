@@ -21,6 +21,7 @@ type pullPeer struct {
 	rootUUID       string
 	lastUUIDSynced string
 	interval       time.Duration
+	maxResults     int32
 }
 
 func newPullPeer(address string, interval time.Duration, postStore *PostStore) (*pullPeer, error) {
@@ -39,31 +40,32 @@ func newPullPeer(address string, interval time.Duration, postStore *PostStore) (
 	}
 
 	return &pullPeer{
-		interval:  interval,
-		client:    proto.NewPostSyncClient(clientConn),
-		postStore: postStore,
-		logger:    slog.Default().With("serverAddress", address),
-		address:   address,
+		interval:   interval,
+		client:     proto.NewPostSyncClient(clientConn),
+		postStore:  postStore,
+		logger:     slog.Default().With("serverAddress", address),
+		address:    address,
+		maxResults: maxMaxResults,
 	}, nil
 }
 
-func (pp *pullPeer) run(wait time.Duration) {
-	time.Sleep(wait)
-	pp.sync()
-	ticker := time.NewTicker(pp.interval)
+func (pp *pullPeer) run(initialWait time.Duration) {
+	time.Sleep(initialWait)
 
 	for {
-		<-ticker.C
-		pp.sync()
+		if pp.sync() < int(pp.maxResults) {
+			time.Sleep(pp.interval)
+		}
 	}
 }
 
-func (pp *pullPeer) sync() {
-	response, err := pp.client.Get(context.Background(), &proto.PostSyncRequest{Uuid: pp.lastUUIDSynced})
+func (pp *pullPeer) sync() int {
+	response, err := pp.client.Get(context.Background(),
+		&proto.PostSyncRequest{Uuid: pp.lastUUIDSynced, MaxResults: pp.maxResults})
 	if err != nil {
 		pp.logger.Error(err.Error())
 
-		return
+		return 0
 	}
 
 	protoPosts := response.GetPosts()
@@ -114,8 +116,10 @@ func (pp *pullPeer) sync() {
 		pp.lastUUIDSynced = ""
 		pp.logger.Warn("resync from root", "missingParentUUID", protoPost.GetParentUuid())
 
-		return
+		return 0
 	}
+
+	return len(protoPosts)
 }
 
 func RunPullPeers(addresses []string, interval time.Duration, postStore *PostStore) error {
