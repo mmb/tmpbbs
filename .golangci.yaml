@@ -1,4 +1,5 @@
 ---
+version: "2"
 linters:
   enable:
     - asasalint
@@ -28,7 +29,6 @@ linters:
     # - forbidigo
     - forcetypeassert
     - funlen
-    - gci
     - ginkgolinter
     - gocheckcompilerdirectives
     - gochecknoglobals
@@ -40,15 +40,11 @@ linters:
     - gocyclo
     - godot
     - godox
-    - gofmt
-    - gofumpt
     - goheader
-    - goimports
     - gomoddirectives
     - gomodguard
     - goprintffuncname
     - gosec
-    - gosimple
     - gosmopolitan
     - govet
     - grouper
@@ -91,7 +87,6 @@ linters:
     - spancheck
     - sqlclosecheck
     - staticcheck
-    - stylecheck
     - tagalign
     - tagliatelle
     - testableexamples
@@ -110,42 +105,52 @@ linters:
     # - wrapcheck
     - wsl
     - zerologlint
-
-linters-settings:
-  decorder:
-    disable-dec-order-check: false
-  errcheck:
-    check-blank: true
-    check-type-assertions: true
-    disable-default-exclusions: true
-  errchkjson:
-    check-error-free-encoding: true
-  fatcontext:
-    check-struct-pointers: true
-  gocritic:
-    enable-all: true
-    disabled-checks:
-      - paramTypeCombine
-      - unnamedResult
-  godot:
-    capital: true
-  gomoddirectives:
-    replace-allow-list:
-      - github.com/enescakir/emoji
-  govet:
-    enable-all: true
-    settings:
-      shadow:
-        strict: true
-  iface:
-    enable:
-      - identical
-      - unused
-      - opaque
-  nilnil:
-    detect-opposite: true
-  nolintlint:
-    require-explanation: true
-    require-specific: true
-  nonamedreturns:
-    report-error-in-defer: true
+  settings:
+    decorder:
+      disable-dec-order-check: false
+    errcheck:
+      disable-default-exclusions: true
+      check-blank: true
+      check-type-assertions: true
+    errchkjson:
+      check-error-free-encoding: true
+    fatcontext:
+      check-struct-pointers: true
+    gocritic:
+      enable-all: true
+      disabled-checks:
+        - paramTypeCombine
+        - unnamedResult
+    godot:
+      capital: true
+    gomoddirectives:
+      replace-allow-list:
+        - github.com/enescakir/emoji
+    govet:
+      enable-all: true
+      settings:
+        shadow:
+          strict: true
+    iface:
+      enable:
+        - identical
+        - unused
+        - opaque
+    nilnil:
+      detect-opposite: true
+    nolintlint:
+      require-explanation: true
+      require-specific: true
+    nonamedreturns:
+      report-error-in-defer: true
+  exclusions:
+    presets:
+      - comments
+      - common-false-positives
+      - std-error-handling
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
