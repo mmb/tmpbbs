@@ -10,6 +10,7 @@ import (
 	"google.golang.org/grpc/credentials"
 )
 
+// ServeGRPC creates and configures a grpc.Server then starts listening.
 func ServeGRPC(listenAddress string, tlsCertFile string, tlsKeyFile string, postSyncServer *PostSyncServer) error {
 	listener, err := net.Listen("tcp", listenAddress)
 	if err != nil {

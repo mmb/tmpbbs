@@ -5,8 +5,10 @@ import (
 	"os"
 )
 
+// A SelfGetHandler is an http.Handler that serves the running server binary.
 type SelfGetHandler struct{}
 
+// NewSelfGetHandler returns a new SelfGetHandler.
 func NewSelfGetHandler() *SelfGetHandler {
 	return &SelfGetHandler{}
 }

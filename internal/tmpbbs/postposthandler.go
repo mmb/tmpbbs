@@ -5,12 +5,15 @@ import (
 	"strings"
 )
 
+// PostPostHandler is an http.Handler that creates a new Post in a PostStore
+// from user input.
 type PostPostHandler struct {
 	postStore      *PostStore
 	tripcoder      *Tripcoder
 	repliesPerPage int
 }
 
+// NewPostPostHandler returns a new PostPostHandler.
 func NewPostPostHandler(repliesPerPage int, postStore *PostStore, tripcoder *Tripcoder) *PostPostHandler {
 	return &PostPostHandler{
 		repliesPerPage: repliesPerPage,

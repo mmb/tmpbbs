@@ -7,12 +7,15 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// A PostStore stores Posts in memory and provides safety for concurrent
+// access.
 type PostStore struct {
 	uuidMap map[string]int
 	posts   []*post
 	mutex   sync.RWMutex
 }
 
+// NewPostStore returns a new PostStore. It also creates the root Post.
 func NewPostStore(title string) *PostStore {
 	postStore := &PostStore{
 		uuidMap: make(map[string]int),
@@ -76,6 +79,7 @@ func (ps *PostStore) hasPost(uuid string) bool {
 	return found
 }
 
+// LoadYAML loads Posts from a YAML file on the filesystem into the PostStore.
 func (ps *PostStore) LoadYAML(path string, tripcoder *Tripcoder) error {
 	data, err := os.ReadFile(path)
 	if err != nil {

@@ -122,6 +122,9 @@ func (pp *pullPeer) sync() int {
 	return len(protoPosts)
 }
 
+// RunPullPeers creates a PullPeer for each peer address and starts syncing.
+// It calculates a time to wait before starting for each peer so they run
+// staggered.
 func RunPullPeers(addresses []string, interval time.Duration, postStore *PostStore) error {
 	var waitBetween time.Duration
 	if len(addresses) > 0 {
