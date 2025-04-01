@@ -12,6 +12,7 @@ import (
 
 //go:generate gotext update -lang en-US -out catalog.go github.com/mmb/tmpbbs/internal/tmpbbs
 
+// PostGetHandler is an http.Handler that renders a Post as an HTML page.
 type PostGetHandler struct {
 	basicEmojiParser    parser
 	wrappingEmojiParser parser
@@ -28,6 +29,7 @@ type PostGetHandler struct {
 //go:embed template
 var templateFS embed.FS
 
+// NewPostGetHandler returns a new PostGetHandler.
 func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool, emojiEnabled bool,
 	qrCodesEnabled bool, postStore *PostStore,
 ) *PostGetHandler {

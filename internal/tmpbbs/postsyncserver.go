@@ -9,6 +9,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+// A PostSyncServer is a gRPC server that returns Posts.
 type PostSyncServer struct {
 	proto.UnimplementedPostSyncServer
 	postStore *PostStore
@@ -16,12 +17,14 @@ type PostSyncServer struct {
 
 const maxMaxResults = 500
 
+// NewPostSyncServer returns a new PostSyncServer.
 func NewPostSyncServer(postStore *PostStore) *PostSyncServer {
 	return &PostSyncServer{
 		postStore: postStore,
 	}
 }
 
+// Get returns Posts in order starting from a UUID in the request.
 func (pss *PostSyncServer) Get(context context.Context, request *proto.PostSyncRequest) (*proto.PostSyncResponse,
 	error,
 ) {

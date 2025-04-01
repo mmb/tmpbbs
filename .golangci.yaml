@@ -145,7 +145,6 @@ linters:
       report-error-in-defer: true
   exclusions:
     presets:
-      - comments
       - common-false-positives
       - std-error-handling
 formatters:

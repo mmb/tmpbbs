@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// Serve creates and configures an http.Server then starts listening.
 func Serve(listenAddress string, tlsCertFile string, tlsKeyFile string, serveMux *http.ServeMux) error {
 	server := &http.Server{
 		Addr:              listenAddress,

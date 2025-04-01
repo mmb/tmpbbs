@@ -6,10 +6,12 @@ import (
 	"github.com/skip2/go-qrcode"
 )
 
+// A QRCodeGetHandler is an http.Handler that serves QR code images.
 type QRCodeGetHandler struct{}
 
 const qrCodeSize = 256
 
+// NewQRCodeGetHandler returns a new QRCodeGetHandler.
 func NewQRCodeGetHandler() *QRCodeGetHandler {
 	return &QRCodeGetHandler{}
 }

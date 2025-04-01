@@ -8,6 +8,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+// NewViper returns a new viper.Viper with flags configured and the command
+// line parsed.
 func NewViper() (*viper.Viper, error) {
 	initFlags()
 	pflag.Parse()

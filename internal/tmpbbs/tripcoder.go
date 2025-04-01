@@ -8,12 +8,15 @@ import (
 	"strings"
 )
 
+// A Tripcoder calculates tripcodes from a salt and user input.
 type Tripcoder struct {
 	salt []byte
 }
 
 const randomSaltLength = 16
 
+// NewTripcoder returns a new Tripcoder with the passed in salt. If the salt
+// is empty a random 16-byte salt is generated.
 func NewTripcoder(salt string, randReader io.Reader) (*Tripcoder, error) {
 	var saltBytes []byte
 	if salt == "" {
