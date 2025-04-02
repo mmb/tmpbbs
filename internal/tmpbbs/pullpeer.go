@@ -11,6 +11,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/encoding/gzip"
 )
 
 type pullPeer struct {
@@ -61,7 +62,7 @@ func (pp *pullPeer) run(initialWait time.Duration) {
 
 func (pp *pullPeer) sync() int {
 	response, err := pp.client.Get(context.Background(),
-		&proto.PostSyncRequest{Uuid: pp.lastUUIDSynced, MaxResults: pp.maxResults})
+		&proto.PostSyncRequest{Uuid: pp.lastUUIDSynced, MaxResults: pp.maxResults}, grpc.UseCompressor(gzip.Name))
 	if err != nil {
 		pp.logger.Error(err.Error())
 
