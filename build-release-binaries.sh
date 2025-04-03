@@ -18,9 +18,12 @@ build() {
 
 build android arm64 0
 build darwin amd64 0
+build darwin arm64 0
+build linux 386 0
 build linux amd64 0
 build linux arm 0
 build linux arm64 0
+build windows 386 0
 build windows amd64 0
 
 export GOOS=linux GOARCH=mips GOMIPS=softfloat CGO_ENABLED=0
