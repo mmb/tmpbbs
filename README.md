@@ -75,3 +75,24 @@ in this case the gRPC traffic will not be encrypted.
 
 Two instances can pull from each other and posts will not be duplicated. UUIDs
 are used for globally unique post identifiers.
+
+## Topologies
+
+* Backup - instance A pulls from instance B and vice versa, B is not actively
+used, can be used to overcome the loss of data if instance A restarts
+
+* Fork - instance A pulls from instance B, creating a "forked" forum where
+posts on B can be replied to on A but the replies don't go back to B
+
+* Full mesh - N instances all pull from each other, each instance has all the
+posts and replies are propagated to all instances
+
+* Read-only mirror / star - instance A started with `--replies=false` pulls
+from instance B, providing a read-only mirror of B, can be used to reduce load
+on instance B or distributed geographically to reduce latency for users
+
+* Ring - a closed loop of N instances each pull from one other instance, posts
+propagate in a circle in one direction
+
+* Tree - an instance has N instances pulling from it, each of those has N
+instances pulling from it, etc., posts flow down a hierarchy
