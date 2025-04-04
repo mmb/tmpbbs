@@ -48,6 +48,8 @@ func initFlags() {
 	pflag.BoolP("serve-binary", "b", true, "serve tmpbbs binary at /self ($TMPBBS_SERVE_BINARY)")
 	pflag.StringSliceP("serve-fs-paths", "f", []string{},
 		"comma-separated list of urlprefix=/local/dir to serve ($TMPBBS_SERVE_FS_PATHS)")
+	pflag.StringSliceP("superuser-tripcodes", "n", []string{},
+		"comma-separated list of superuser tripcodes ($TMPBBS_SUPERUSER_TRIPCODES)")
 	pflag.StringP("title", "t", "tmpbbs", "site title ($TMPBBS_TITLE)")
 	pflag.StringP("tls-cert", "c", "", "path to PEM server certificate ($TMPBBS_TLS_CERT)")
 	pflag.StringP("tls-key", "k", "", "path to PEM server key ($TMPBBS_TLS_KEY)")

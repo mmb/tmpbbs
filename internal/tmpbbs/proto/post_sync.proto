@@ -25,4 +25,5 @@ message Post {
   string body = 5;
   string uuid = 6;
   string parent_uuid = 7;
+  bool superuser = 8;
 }

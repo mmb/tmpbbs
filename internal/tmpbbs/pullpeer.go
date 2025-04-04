@@ -89,12 +89,13 @@ func (pp *pullPeer) sync() int {
 		}
 
 		post := &post{
-			Title:    protoPost.GetTitle(),
-			Author:   protoPost.GetAuthor(),
-			Tripcode: protoPost.GetTripcode(),
-			Body:     protoPost.GetBody(),
-			uuid:     protoPost.GetUuid(),
-			time:     protoPost.GetTime().AsTime(),
+			Title:     protoPost.GetTitle(),
+			Author:    protoPost.GetAuthor(),
+			Tripcode:  protoPost.GetTripcode(),
+			Body:      protoPost.GetBody(),
+			uuid:      protoPost.GetUuid(),
+			time:      protoPost.GetTime().AsTime(),
+			superuser: protoPost.GetSuperuser(),
 		}
 
 		// If the parent is the peer's root, add it to our root

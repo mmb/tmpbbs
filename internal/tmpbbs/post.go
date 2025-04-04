@@ -9,14 +9,15 @@ import (
 )
 
 type post struct {
-	time     time.Time
-	Parent   *post
-	Title    string
-	Author   string
-	Tripcode string
-	Body     string
-	uuid     string
-	Replies  []*post
+	time      time.Time
+	Parent    *post
+	Title     string
+	Author    string
+	Tripcode  string
+	Body      string
+	uuid      string
+	Replies   []*post
+	superuser bool
 }
 
 const (
@@ -26,18 +27,24 @@ const (
 )
 
 func newPost(title string, author string, body string, tripcoder *Tripcoder) *post {
-	var tripcode string
+	var (
+		tripcode  string
+		superuser bool
+	)
+
 	if tripcoder != nil {
 		author, tripcode = tripcoder.code(author)
+		superuser = tripcoder.isSuperuser(tripcode)
 	}
 
 	return &post{
-		Title:    title,
-		Author:   author,
-		Tripcode: tripcode,
-		Body:     body,
-		time:     time.Now(),
-		uuid:     uuid.New().String(),
+		Title:     title,
+		Author:    author,
+		Tripcode:  tripcode,
+		Body:      body,
+		time:      time.Now(),
+		uuid:      uuid.New().String(),
+		superuser: superuser,
 	}
 }
 
@@ -45,8 +52,18 @@ func (p *post) IsOriginalPoster() bool {
 	return p.Parent != nil && p.Parent.Tripcode != "" && p.Tripcode == p.Parent.Tripcode
 }
 
+func (p *post) IsSuperuser() bool {
+	return p.superuser
+}
+
 func (p *post) URL() string {
 	return "/p/" + p.uuid
+}
+
+func (p *post) delete() {
+	p.Title = ""
+	p.Author = ""
+	p.Body = "deleted"
 }
 
 func (p *post) repliesPageURL(page int, anchor string) string {

@@ -10,15 +10,20 @@ import (
 
 // A Tripcoder calculates tripcodes from a salt and user input.
 type Tripcoder struct {
-	salt []byte
+	superuserTripcodes map[string]struct{}
+	salt               []byte
 }
 
 const randomSaltLength = 16
 
 // NewTripcoder returns a new Tripcoder with the passed in salt. If the salt
 // is empty a random 16-byte salt is generated.
-func NewTripcoder(salt string, randReader io.Reader) (*Tripcoder, error) {
-	var saltBytes []byte
+func NewTripcoder(salt string, superuserTripcodes []string, randReader io.Reader) (*Tripcoder, error) {
+	var (
+		saltBytes []byte
+		nothing   struct{}
+	)
+
 	if salt == "" {
 		saltBytes = make([]byte, randomSaltLength)
 
@@ -29,7 +34,15 @@ func NewTripcoder(salt string, randReader io.Reader) (*Tripcoder, error) {
 		saltBytes = []byte(salt)
 	}
 
-	return &Tripcoder{salt: saltBytes}, nil
+	tripcoder := &Tripcoder{
+		salt:               saltBytes,
+		superuserTripcodes: make(map[string]struct{}),
+	}
+	for _, tripcode := range superuserTripcodes {
+		tripcoder.superuserTripcodes[tripcode] = nothing
+	}
+
+	return tripcoder, nil
 }
 
 func (tc Tripcoder) code(input string) (string, string) {
@@ -47,4 +60,10 @@ func (tc Tripcoder) code(input string) (string, string) {
 	hash.Write([]byte(input)) //nolint:errcheck // can't error
 
 	return parts[0], fmt.Sprintf("%.10s", hex.EncodeToString(hash.Sum(nil)))
+}
+
+func (tc Tripcoder) isSuperuser(tripcode string) bool {
+	_, found := tc.superuserTripcodes[tripcode]
+
+	return found
 }

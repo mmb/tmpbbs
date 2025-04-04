@@ -127,6 +127,7 @@ type Post struct {
 	Body          string                 `protobuf:"bytes,5,opt,name=body,proto3" json:"body,omitempty"`
 	Uuid          string                 `protobuf:"bytes,6,opt,name=uuid,proto3" json:"uuid,omitempty"`
 	ParentUuid    string                 `protobuf:"bytes,7,opt,name=parent_uuid,json=parentUuid,proto3" json:"parent_uuid,omitempty"`
+	Superuser     bool                   `protobuf:"varint,8,opt,name=superuser,proto3" json:"superuser,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -210,6 +211,13 @@ func (x *Post) GetParentUuid() string {
 	return ""
 }
 
+func (x *Post) GetSuperuser() bool {
+	if x != nil {
+		return x.Superuser
+	}
+	return false
+}
+
 var File_post_sync_proto protoreflect.FileDescriptor
 
 const file_post_sync_proto_rawDesc = "" +
@@ -220,7 +228,7 @@ const file_post_sync_proto_rawDesc = "" +
 	"\vmax_results\x18\x02 \x01(\x05R\n" +
 	"maxResults\"/\n" +
 	"\x10PostSyncResponse\x12\x1b\n" +
-	"\x05posts\x18\x01 \x03(\v2\x05.PostR\x05posts\"\xc9\x01\n" +
+	"\x05posts\x18\x01 \x03(\v2\x05.PostR\x05posts\"\xe7\x01\n" +
 	"\x04Post\x12.\n" +
 	"\x04time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04time\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12\x16\n" +
@@ -229,7 +237,8 @@ const file_post_sync_proto_rawDesc = "" +
 	"\x04body\x18\x05 \x01(\tR\x04body\x12\x12\n" +
 	"\x04uuid\x18\x06 \x01(\tR\x04uuid\x12\x1f\n" +
 	"\vparent_uuid\x18\a \x01(\tR\n" +
-	"parentUuid28\n" +
+	"parentUuid\x12\x1c\n" +
+	"\tsuperuser\x18\b \x01(\bR\tsuperuser28\n" +
 	"\bPostSync\x12,\n" +
 	"\x03Get\x12\x10.PostSyncRequest\x1a\x11.PostSyncResponse\"\x00B-Z+github.com/mmb/tmpbbs/internal/tmpbbs/protob\x06proto3"
 
