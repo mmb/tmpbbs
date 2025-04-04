@@ -56,6 +56,10 @@ func (p *post) IsSuperuser() bool {
 	return p.superuser
 }
 
+func (p *post) Time() string {
+	return p.time.UTC().Format(time.RFC3339)
+}
+
 func (p *post) URL() string {
 	return "/p/" + p.uuid
 }
