@@ -60,6 +60,7 @@ func (pss *PostSyncServer) Get(context context.Context, request *proto.PostSyncR
 			Body:       post.Body,
 			Uuid:       post.uuid,
 			ParentUuid: parentUUID,
+			Superuser:  post.IsSuperuser(),
 		}
 	}
 

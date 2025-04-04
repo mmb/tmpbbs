@@ -39,26 +39,27 @@ docker run --publish 8080:8080 ghcr.io/mmb/tmpbbs
 ```
 % tmpbbs --help
 Usage of tmpbbs:
-  -u, --css-urls strings             comma-separated list of CSS URLs ($TMPBBS_CSS_URLS) (default [/static/main.css])
-  -m, --emoji                        enable emoji shortcode expansion ($TMPBBS_EMOJI) (default true)
-  -g, --grpc-listen-address string   <host>:port to listen on for gRPC ($TMPBBS_GRPC_LISTEN_ADDRESS) (default ":8081")
-  -h, --help                         usage help
-  -j, --json-log                     set log output format to JSON ($TMPBBS_JSON_LOG)
-  -l, --listen-address string        <host>:port to listen on for HTTP ($TMPBBS_LISTEN_ADDRESS) (default ":8080")
-  -p, --load-posts strings           comma-separated paths of YAML or JSON files of posts to load, format [{"title":"","author":"","body":""}]
-                                     ($TMPBBS_LOAD_POSTS)
-  -i, --pull-interval duration       peer pull interval ($TMPBBS_PULL_INTERVAL) (default 30s)
-  -d, --pull-peers strings           comma-separated list of tmpbbs gRPC <tls://>host:gRPCport to pull posts from ($TMPBBS_PULL_PEERS)
-  -q, --qr-codes                     enable shareable URL QR codes ($TMPBBS_QR_CODES) (default true)
-  -r, --replies                      enable replies ($TMPBBS_REPLIES) (default true)
-  -e, --replies-per-page int         number of replies to show per page ($TMPBBS_REPLIES_PER_PAGE) (default 10)
-  -b, --serve-binary                 serve tmpbbs binary at /self ($TMPBBS_SERVE_BINARY) (default true)
-  -f, --serve-fs-paths strings       comma-separated list of urlprefix=/local/dir to serve ($TMPBBS_SERVE_FS_PATHS)
-  -t, --title string                 site title ($TMPBBS_TITLE) (default "tmpbbs")
-  -c, --tls-cert string              path to PEM server certificate ($TMPBBS_TLS_CERT)
-  -k, --tls-key string               path to PEM server key ($TMPBBS_TLS_KEY)
-  -a, --tripcode-salt string         random salt to use for generating tripcodes ($TMPBBS_TRIPCODE_SALT)
-  -v, --version                      print version
+  -u, --css-urls strings              comma-separated list of CSS URLs ($TMPBBS_CSS_URLS) (default [/static/main.css])
+  -m, --emoji                         enable emoji shortcode expansion ($TMPBBS_EMOJI) (default true)
+  -g, --grpc-listen-address string    <host>:port to listen on for gRPC ($TMPBBS_GRPC_LISTEN_ADDRESS) (default ":8081")
+  -h, --help                          usage help
+  -j, --json-log                      set log output format to JSON ($TMPBBS_JSON_LOG)
+  -l, --listen-address string         <host>:port to listen on for HTTP ($TMPBBS_LISTEN_ADDRESS) (default ":8080")
+  -p, --load-posts strings            comma-separated paths of YAML or JSON files of posts to load, format [{"title":"","author":"","body":""}]
+                                      ($TMPBBS_LOAD_POSTS)
+  -i, --pull-interval duration        peer pull interval ($TMPBBS_PULL_INTERVAL) (default 30s)
+  -d, --pull-peers strings            comma-separated list of tmpbbs gRPC <tls://>host:gRPCport to pull posts from ($TMPBBS_PULL_PEERS)
+  -q, --qr-codes                      enable shareable URL QR codes ($TMPBBS_QR_CODES) (default true)
+  -r, --replies                       enable replies ($TMPBBS_REPLIES) (default true)
+  -e, --replies-per-page int          number of replies to show per page ($TMPBBS_REPLIES_PER_PAGE) (default 10)
+  -b, --serve-binary                  serve tmpbbs binary at /self ($TMPBBS_SERVE_BINARY) (default true)
+  -f, --serve-fs-paths strings        comma-separated list of urlprefix=/local/dir to serve ($TMPBBS_SERVE_FS_PATHS)
+  -n, --superuser-tripcodes strings   comma-separated list of superuser tripcodes ($TMPBBS_SUPERUSER_TRIPCODES)
+  -t, --title string                  site title ($TMPBBS_TITLE) (default "tmpbbs")
+  -c, --tls-cert string               path to PEM server certificate ($TMPBBS_TLS_CERT)
+  -k, --tls-key string                path to PEM server key ($TMPBBS_TLS_KEY)
+  -a, --tripcode-salt string          random salt to use for generating tripcodes ($TMPBBS_TRIPCODE_SALT)
+  -v, --version                       print version
 ```
 
 # Peering
@@ -96,3 +97,12 @@ propagate in a circle in one direction
 
 * Tree - an instance has N instances pulling from it, each of those has N
 instances pulling from it, etc., posts flow down a hierarchy
+
+# Deleting Posts
+
+Users can delete their own posts by replying with a post that starts with
+`!delete`. The tripcodes for the post being deleted and the reply must match.
+
+A list of superuser tripcodes can be passed in with `--superuser-tripcodes`.
+Users with those tripcodes can delete any post. Tripcodes are dependent on the
+tripcode salt so this option should be used together with  `--tripcode-salt`.

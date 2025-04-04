@@ -2,6 +2,7 @@ package tmpbbs
 
 import (
 	"os"
+	"strings"
 	"sync"
 
 	"gopkg.in/yaml.v3"
@@ -36,6 +37,10 @@ func (ps *PostStore) put(post *post, parentUUID string) {
 
 	ps.uuidMap[post.uuid] = len(ps.posts)
 	ps.posts = append(ps.posts, post)
+
+	if (post.IsOriginalPoster() || post.IsSuperuser()) && strings.HasPrefix(post.Body, "!delete") {
+		post.Parent.delete()
+	}
 }
 
 func (ps *PostStore) get(uuid string, callback func(*post)) bool {

@@ -2,6 +2,7 @@
 <a href="{{ .URL }}">{{ .DisplayTitle }}</a>
 {{- if .DisplayAuthor }} by <span class="author">{{ .DisplayAuthor }}</span>{{ end -}}
 {{ if .Tripcode }} <span class="tripcode">!{{ .Tripcode }}</span>
+{{- if .IsSuperuser }} <span title="Superuser" class="superuser">&#11088;</span>{{ end -}}
 {{- if .IsOriginalPoster }} <span title="Original Poster" class="op">&#127793;</span>{{ end -}}
 {{ end }} <span class="time">{{ .TimeAgo }}</span>
 {{- if .Replies }} ({{ .NumReplies }}){{ end -}}
