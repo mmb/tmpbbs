@@ -125,7 +125,7 @@ linters:
       capital: true
     gomoddirectives:
       replace-allow-list:
-        - github.com/enescakir/emoji
+        - github.com/kyokomi/emoji/v2
     govet:
       enable-all: true
       settings:
