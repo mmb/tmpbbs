@@ -54,6 +54,7 @@ Reply
 </p>
 <p>
 <textarea id="body" name="body" placeholder="{{ .post.Printer.Sprintf "Markdown is supported." }}{{ if .emojiEnabled }} {{ .post.Printer.Sprintf "Insert emoji using shortcode between colons (:mushroom: becomes 🍄)." }}{{ end }}"  autocomplete="off" maxlength="{{ .maxBodySize }}"></textarea>
+{{- if .emojiEnabled }}<div id="emoji-suggestions"></div>{{ end -}}
 </p>
 <p>
 <input type="submit" value="{{ .post.Printer.Sprintf "Reply" }}">
@@ -89,7 +90,7 @@ Reply
 <button autofocus>{{ .post.Printer.Sprintf "Close" }}</button>
 </form>
 </dialog>
-<script async src="/static/qr-code.js" type="module"></script>
 {{- end }}
+<script async src="/static/main.js" type="module"></script>
 </body>
 </html>

@@ -10,7 +10,7 @@ instances and read-only replicas.
 
 # Features
   * Markdown
-  * emoji shortcodes
+  * emoji shortcodes with suggestions
   * optional TLS (using `--tls-cert` and `--tls-key` options)
   * tripcodes in `username#secret` format
   * shareable URL QR codes

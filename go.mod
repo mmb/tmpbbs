@@ -3,6 +3,7 @@ module github.com/mmb/tmpbbs
 go 1.24.1
 
 require (
+	github.com/derekparker/trie v0.0.0-20230829180723-39f4de51ef7d
 	github.com/google/uuid v1.6.0
 	github.com/kyokomi/emoji/v2 v2.2.13
 	github.com/microcosm-cc/bluemonday v1.0.27
