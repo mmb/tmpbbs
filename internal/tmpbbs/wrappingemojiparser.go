@@ -1,7 +1,7 @@
 package tmpbbs
 
 import (
-	"github.com/enescakir/emoji"
+	"github.com/kyokomi/emoji/v2"
 )
 
 type wrappingEmojiParser struct {
@@ -19,8 +19,8 @@ func (wep wrappingEmojiParser) parse(input string) string {
 	// emoji.ParseWithWrapper but text/template complains about a nil pointer
 	// if it's not checked here.
 	if wep.wrapper == nil {
-		return emoji.Parse(input)
+		return emoji.Sprint(input)
 	}
 
-	return emoji.ParseWithWrapper(input, wep.wrapper)
+	return emoji.SprintWithWrapper(wep.wrapper, input)
 }

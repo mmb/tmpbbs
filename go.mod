@@ -1,9 +1,10 @@
 module github.com/mmb/tmpbbs
 
 go 1.24.1
+
 require (
-	github.com/enescakir/emoji v1.0.0
 	github.com/google/uuid v1.6.0
+	github.com/kyokomi/emoji/v2 v2.2.13
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/russross/blackfriday/v2 v2.1.0
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
@@ -33,4 +34,4 @@ require (
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )
 
-replace github.com/enescakir/emoji v1.0.0 => github.com/mmb/emoji v0.0.0-20241117080017-cb05a5915ab5
+replace github.com/kyokomi/emoji/v2 => github.com/mmb/kyokomiemoji/v2 v2.0.0-20250405050457-8f6070a155ee
