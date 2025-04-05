@@ -88,6 +88,10 @@ posts on B can be replied to on A but the replies don't go back to B
 * Full mesh - N instances all pull from each other, each instance has all the
 posts and replies are propagated to all instances
 
+* Local offline cache - local instance A can pull from remote instance B
+and will stay available with intermittent or no connectivity to B, it
+will catch up when connectivity is available
+
 * Read-only mirror / star - instance A started with `--replies=false` pulls
 from instance B, providing a read-only mirror of B, can be used to reduce load
 on instance B or distributed geographically to reduce latency for users
