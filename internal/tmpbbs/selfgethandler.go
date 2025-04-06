@@ -5,15 +5,13 @@ import (
 	"os"
 )
 
-// A SelfGetHandler is an http.Handler that serves the running server binary.
-type SelfGetHandler struct{}
+type selfGetHandler struct{}
 
-// NewSelfGetHandler returns a new SelfGetHandler.
-func NewSelfGetHandler() *SelfGetHandler {
-	return &SelfGetHandler{}
+func newSelfGetHandler() *selfGetHandler {
+	return &selfGetHandler{}
 }
 
-func (sgh SelfGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
+func (sgh selfGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 	binaryPath, err := os.Executable()
 	if err != nil {
 		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)

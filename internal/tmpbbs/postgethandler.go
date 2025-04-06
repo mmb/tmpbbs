@@ -12,8 +12,7 @@ import (
 
 //go:generate gotext update -lang en-US -out catalog.go github.com/mmb/tmpbbs/internal/tmpbbs
 
-// PostGetHandler is an http.Handler that renders a Post as an HTML page.
-type PostGetHandler struct {
+type postGetHandler struct {
 	basicEmojiParser    parser
 	wrappingEmojiParser parser
 	markdownParser      parser
@@ -29,10 +28,9 @@ type PostGetHandler struct {
 //go:embed template
 var templateFS embed.FS
 
-// NewPostGetHandler returns a new PostGetHandler.
-func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool, emojiEnabled bool,
+func newPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool, emojiEnabled bool,
 	qrCodesEnabled bool, postStore *PostStore,
-) *PostGetHandler {
+) *postGetHandler {
 	var (
 		basicEmojiParser    parser
 		wrappingEmojiParser parser
@@ -43,7 +41,7 @@ func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool
 		wrappingEmojiParser = newWrappingEmojiParser(newEmojiSpanWrapper("emoji"))
 	}
 
-	return &PostGetHandler{
+	return &postGetHandler{
 		repliesPerPage:      repliesPerPage,
 		cssURLs:             cssURLs,
 		repliesEnabled:      repliesEnabled,
@@ -57,7 +55,7 @@ func NewPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool
 	}
 }
 
-func (pgh *PostGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
+func (pgh *postGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 	repliesPage, err := strconv.Atoi(request.URL.Query().Get("p"))
 	if err != nil {
 		repliesPage = 1
@@ -81,7 +79,7 @@ func (pgh *PostGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request
 	}
 }
 
-func (pgh *PostGetHandler) renderPost(displayPost *displayPost, repliesPage int, w io.Writer) error {
+func (pgh *postGetHandler) renderPost(displayPost *displayPost, repliesPage int, w io.Writer) error {
 	return pgh.template.ExecuteTemplate(w, "index.gohtml", map[string]interface{}{
 		"cssURLs":        pgh.cssURLs,
 		"emojiEnabled":   pgh.emojiEnabled,

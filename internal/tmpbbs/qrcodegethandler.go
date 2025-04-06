@@ -6,17 +6,15 @@ import (
 	"github.com/skip2/go-qrcode"
 )
 
-// A QRCodeGetHandler is an http.Handler that serves QR code images.
-type QRCodeGetHandler struct{}
+type qrCodeGetHandler struct{}
 
 const qrCodeSize = 256
 
-// NewQRCodeGetHandler returns a new QRCodeGetHandler.
-func NewQRCodeGetHandler() *QRCodeGetHandler {
-	return &QRCodeGetHandler{}
+func newQRCodeGetHandler() *qrCodeGetHandler {
+	return &qrCodeGetHandler{}
 }
 
-func (qcgh QRCodeGetHandler) ServeHTTP(reponseWriter http.ResponseWriter, request *http.Request) {
+func (qcgh qrCodeGetHandler) ServeHTTP(reponseWriter http.ResponseWriter, request *http.Request) {
 	url := request.URL.Query().Get("url")
 
 	png, err := qrcode.Encode(url, qrcode.Medium, qrCodeSize)
