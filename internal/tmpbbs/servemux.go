@@ -34,6 +34,10 @@ func NewServeMux(viper *viper.Viper, staticFS embed.FS, postStore *PostStore,
 		serveMux.Handle("POST /p/{parentUUID}", postPostHandler)
 	}
 
+	if viper.GetBool("emoji") {
+		serveMux.Handle("GET /emoji-suggest", newEmojiSuggestHandler())
+	}
+
 	if viper.GetBool("qr-codes") {
 		serveMux.Handle("GET /qr", newQRCodeGetHandler())
 	}

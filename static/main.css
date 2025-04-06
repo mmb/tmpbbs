@@ -24,6 +24,7 @@ li.odd, li.even {
 
 span.emoji {
   font-size: 200%;
+  vertical-align: middle;
 }
 
 textarea {
@@ -38,4 +39,8 @@ ul.post {
 
 ul.replies {
    padding: 0;
+}
+
+.emoji-suggestion {
+  margin: 0 8px 8px 0;
 }
