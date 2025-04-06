@@ -5,24 +5,21 @@ import (
 	"strings"
 )
 
-// PostPostHandler is an http.Handler that creates a new Post in a PostStore
-// from user input.
-type PostPostHandler struct {
+type postPostHandler struct {
 	postStore      *PostStore
 	tripcoder      *Tripcoder
 	repliesPerPage int
 }
 
-// NewPostPostHandler returns a new PostPostHandler.
-func NewPostPostHandler(repliesPerPage int, postStore *PostStore, tripcoder *Tripcoder) *PostPostHandler {
-	return &PostPostHandler{
+func newPostPostHandler(repliesPerPage int, postStore *PostStore, tripcoder *Tripcoder) *postPostHandler {
+	return &postPostHandler{
 		repliesPerPage: repliesPerPage,
 		postStore:      postStore,
 		tripcoder:      tripcoder,
 	}
 }
 
-func (pph PostPostHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
+func (pph postPostHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 	if !pph.postStore.hasPost(request.PathValue("parentUUID")) {
 		http.NotFound(responseWriter, request)
 
