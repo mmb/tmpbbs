@@ -11,6 +11,16 @@ permissions:
   contents: read
 
 jobs:
+  eslint:
+    name: eslint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: v23.11.0
+      - name: Run ESLint
+        run: npm install eslint && npx eslint
   golangci-lint:
     name: golangci-lint
     runs-on: ubuntu-latest
