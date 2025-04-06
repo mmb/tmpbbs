@@ -19,10 +19,7 @@ const randomSaltLength = 16
 // NewTripcoder returns a new Tripcoder with the passed in salt. If the salt
 // is empty a random 16-byte salt is generated.
 func NewTripcoder(salt string, superuserTripcodes []string, randReader io.Reader) (*Tripcoder, error) {
-	var (
-		saltBytes []byte
-		nothing   struct{}
-	)
+	var saltBytes []byte
 
 	if salt == "" {
 		saltBytes = make([]byte, randomSaltLength)
@@ -39,7 +36,7 @@ func NewTripcoder(salt string, superuserTripcodes []string, randReader io.Reader
 		superuserTripcodes: make(map[string]struct{}),
 	}
 	for _, tripcode := range superuserTripcodes {
-		tripcoder.superuserTripcodes[tripcode] = nothing
+		tripcoder.superuserTripcodes[tripcode] = struct{}{}
 	}
 
 	return tripcoder, nil
