@@ -10,7 +10,7 @@ import (
 func Serve(listenAddress string, tlsCertFile string, tlsKeyFile string, serveMux *http.ServeMux) error {
 	server := &http.Server{
 		Addr:              listenAddress,
-		Handler:           serveMux,
+		Handler:           newLogHandler(serveMux),
 		IdleTimeout:       120 * time.Second, //nolint:mnd // not worth creating a const
 		ReadHeaderTimeout: 2 * time.Second,   //nolint:mnd // not worth creating a const
 		ReadTimeout:       5 * time.Second,   //nolint:mnd // not worth creating a const
