@@ -131,7 +131,7 @@ func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
 }
 
 func (dp displayPost) TimeAgo() string {
-	age := time.Since(dp.time)
+	age := time.Since(dp.time.Round(0))
 	if age < 1*time.Hour {
 		return dp.Printer.Sprintf("%dm ago", int64(math.Round(age.Minutes())))
 	}
