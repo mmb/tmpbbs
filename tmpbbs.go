@@ -47,8 +47,6 @@ import (
 	_ "go.uber.org/automaxprocs"
 )
 
-var version = "unspecified"
-
 //go:embed static
 var staticFS embed.FS
 
@@ -67,7 +65,7 @@ func main() {
 	}
 
 	if viper.GetBool("version") {
-		fmt.Println(version)
+		fmt.Printf("%s-%s\n", tmpbbs.Version, tmpbbs.Commit)
 		os.Exit(0)
 	}
 
