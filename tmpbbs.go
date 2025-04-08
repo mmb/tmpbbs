@@ -44,6 +44,7 @@ import (
 
 	"github.com/mmb/tmpbbs/internal/tmpbbs"
 	"github.com/spf13/pflag"
+	_ "go.uber.org/automaxprocs"
 )
 
 var version = "unspecified"
