@@ -8,7 +8,7 @@ COMMIT=$2
 export RELEASE_DIR=release
 mkdir -p "$RELEASE_DIR"
 
-BUILD_ARGS=(-ldflags "-s -w -X main.version=$VERSION-$COMMIT")
+BUILD_ARGS=(-ldflags "-s -w -X github.com/mmb/tmpbbs/internal/tmpbbs.Version=$VERSION -X github.com/mmb/tmpbbs/internal/tmpbbs.Commit=$COMMIT")
 
 build() {
   export GOOS=$1 GOARCH=$2 CGO_ENABLED=$3

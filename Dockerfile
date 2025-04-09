@@ -12,7 +12,7 @@ COPY . .
 ENV CGO_ENABLED=0
 ENV GOARCH=${TARGETARCH}
 ENV GOOS=${TARGETOS}
-RUN go build -ldflags "-s -w -X main.version=${VERSION:-$(git tag --points-at HEAD)}-${COMMIT:-$(git rev-parse HEAD)}" -v
+RUN go build -ldflags "-s -w -X github.com/mmb/tmpbbs/internal/tmpbbs.Version=${VERSION:-$(git tag --points-at HEAD)} -X github.com/mmb/tmpbbs/internal/tmpbbs.Commit=${COMMIT:-$(git rev-parse HEAD)}" -v
 
 FROM scratch
 ARG UID
