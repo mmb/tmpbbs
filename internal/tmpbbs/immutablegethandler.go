@@ -20,7 +20,7 @@ type immutableGetHandler struct {
 func newImmutableGetHandler(wrappedHandler http.Handler, startTime time.Time) *immutableGetHandler {
 	handler := immutableGetHandler{
 		wrappedHandler: wrappedHandler,
-		startTime:      startTime,
+		startTime:      startTime.Truncate(time.Second).Round(0),
 		lastModified:   startTime.Format(time.RFC1123),
 	}
 	if Commit != "" {
