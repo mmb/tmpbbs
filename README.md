@@ -8,6 +8,8 @@ one or both directions. This enables different topologies such as a
 decentralized mesh where each instance has all the posts, trees, backup
 instances and read-only replicas.
 
+![Screenshot](screenshot.png)
+
 # Features
   * Markdown
   * emoji shortcodes with suggestions
