@@ -40,6 +40,7 @@ import (
 	"embed"
 	"fmt"
 	"log"
+	"log/slog"
 	"os"
 
 	"github.com/mmb/tmpbbs/internal/tmpbbs"
@@ -57,6 +58,13 @@ func main() {
 	}
 
 	tmpbbs.SetupLog(viper.GetBool("json-log"))
+
+	config := viper.AllSettings()
+	delete(config, "help")
+	delete(config, "superuser-tripcodes")
+	delete(config, "tripcode-salt")
+	delete(config, "version")
+	slog.Info("startup", "version", tmpbbs.Version, "commit", tmpbbs.Commit, "config", config)
 
 	if viper.GetBool("help") {
 		pflag.CommandLine.SortFlags = false
