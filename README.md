@@ -8,6 +8,11 @@ one or both directions. This enables different topologies such as a
 decentralized mesh where each instance has all the posts, trees, backup
 instances and read-only replicas.
 
+By default all running instances provide everything you need to create your
+own copy of them. You can get the binary from `/self` (assuming you are using
+the same platform) and the data can be pulled and kept up-to-date using
+`--pull-peers`.
+
 ![Screenshot](screenshot.png)
 
 # Features
