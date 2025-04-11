@@ -101,6 +101,9 @@ on instance B or distributed geographically to reduce latency for users
 * Ring - a closed loop of N instances each pull from one other instance, posts
 propagate in a circle in one direction
 
+* Sneakernet - instances A and B pull from instance C which also pulls from them,
+instance C is on a portable device that periodically moves betwen A and B
+
 * Tree - an instance has N instances pulling from it, each of those has N
 instances pulling from it, etc., posts flow down a hierarchy
 
