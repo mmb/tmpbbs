@@ -32,13 +32,13 @@ go install github.com/mmb/tmpbbs@latest
 # Container Images
 
 ```sh
-docker run --publish 8080:8080 mm62/tmpbbs
+docker run --name tmpbbs --publish 8080:8080 --pull always --rm mm62/tmpbbs:latest
 ```
 
 or
 
 ```sh
-docker run --publish 8080:8080 ghcr.io/mmb/tmpbbs
+docker run --name tmpbbs --publish 8080:8080 --pull always --rm ghcr.io/mmb/tmpbbs:latest
 ```
 
 # Options
