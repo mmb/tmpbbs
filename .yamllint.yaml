@@ -1,0 +1,12 @@
+---
+extends: default
+
+rules:
+  comments:
+    level: error
+  comments-indentation:
+    level: error
+  document-start:
+    level: error
+  truthy:
+    level: error
