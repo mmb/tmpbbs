@@ -6,16 +6,14 @@ import (
 )
 
 type postPostHandler struct {
-	postStore      *PostStore
-	tripcoder      *Tripcoder
-	repliesPerPage int
+	postStore *PostStore
+	tripcoder *Tripcoder
 }
 
-func newPostPostHandler(repliesPerPage int, postStore *PostStore, tripcoder *Tripcoder) *postPostHandler {
+func newPostPostHandler(postStore *PostStore, tripcoder *Tripcoder) *postPostHandler {
 	return &postPostHandler{
-		repliesPerPage: repliesPerPage,
-		postStore:      postStore,
-		tripcoder:      tripcoder,
+		postStore: postStore,
+		tripcoder: tripcoder,
 	}
 }
 
@@ -38,6 +36,5 @@ func (pph postPostHandler) ServeHTTP(responseWriter http.ResponseWriter, request
 
 	pph.postStore.put(post, request.PathValue("parentUUID"))
 
-	repliesLastPage := post.Parent.repliesLastPage(pph.repliesPerPage)
-	http.Redirect(responseWriter, request, post.Parent.repliesPageURL(repliesLastPage, "replies-end"), http.StatusSeeOther)
+	http.Redirect(responseWriter, request, post.Parent.repliesPageURL(1, "replies-start"), http.StatusSeeOther)
 }

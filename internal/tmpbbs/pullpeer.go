@@ -1,6 +1,7 @@
 package tmpbbs
 
 import (
+	"container/list"
 	"context"
 	"crypto/tls"
 	"log/slog"
@@ -93,6 +94,7 @@ func (pp *pullPeer) sync() int {
 			Author:    protoPost.GetAuthor(),
 			Tripcode:  protoPost.GetTripcode(),
 			Body:      protoPost.GetBody(),
+			Replies:   list.New(),
 			uuid:      protoPost.GetUuid(),
 			time:      protoPost.GetTime().AsTime(),
 			superuser: protoPost.GetSuperuser(),

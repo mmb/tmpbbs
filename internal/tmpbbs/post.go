@@ -1,6 +1,7 @@
 package tmpbbs
 
 import (
+	"container/list"
 	"fmt"
 	"math"
 	"time"
@@ -11,12 +12,12 @@ import (
 type post struct {
 	time      time.Time
 	Parent    *post
+	Replies   *list.List
 	Title     string
 	Author    string
 	Tripcode  string
 	Body      string
 	uuid      string
-	Replies   []*post
 	superuser bool
 }
 
@@ -38,11 +39,12 @@ func newPost(title string, author string, body string, tripcoder *Tripcoder) *po
 	}
 
 	return &post{
+		time:      time.Now(),
+		Replies:   list.New(),
 		Title:     title,
 		Author:    author,
 		Tripcode:  tripcode,
 		Body:      body,
-		time:      time.Now(),
 		uuid:      uuid.New().String(),
 		superuser: superuser,
 	}
@@ -64,6 +66,23 @@ func (p *post) URL() string {
 	return "/p/" + p.uuid
 }
 
+// bump moves a post to the top of its parent's replies then bumps each of its
+// ancestors all the way to the root post.
+func (p *post) bump() {
+	if p.Parent == nil {
+		return
+	}
+
+	current := p.Parent.Replies.Front()
+	for ; current.Value.(*post) != p; current = current.Next() { //nolint:errcheck,forcetypeassert,revive // only one type
+	}
+
+	p.Parent.Replies.PushFront(current.Value)
+	p.Parent.Replies.Remove(current)
+
+	p.Parent.bump()
+}
+
 func (p *post) delete() {
 	p.Title = ""
 	p.Author = ""
@@ -83,7 +102,7 @@ func (p *post) hasRepliesPage(page int, perPage int) bool {
 }
 
 func (p *post) repliesLastPage(perPage int) int {
-	return max(1, int(math.Ceil(float64(len(p.Replies))/float64(perPage))))
+	return max(1, int(math.Ceil(float64(p.Replies.Len())/float64(perPage))))
 }
 
 func (p *post) validate() []string {
