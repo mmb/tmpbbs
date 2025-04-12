@@ -30,7 +30,7 @@ func NewServeMux(viper *viper.Viper, staticFS embed.FS, postStore *PostStore,
 	serveMux.Handle("GET /robots.txt", newImmutableGetHandler(http.FileServerFS(staticDir), postStore.posts[0].time))
 
 	if viper.GetBool("replies") {
-		postPostHandler := newPostPostHandler(viper.GetInt("replies-per-page"), postStore, tripcoder)
+		postPostHandler := newPostPostHandler(postStore, tripcoder)
 		serveMux.Handle("POST /{$}", postPostHandler)
 		serveMux.Handle("POST /p/{parentUUID}", postPostHandler)
 	}

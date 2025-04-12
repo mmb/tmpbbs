@@ -63,7 +63,7 @@ func (dp displayPost) DisplayTitle() template.HTML {
 }
 
 func (dp displayPost) NumReplies() string {
-	return dp.Printer.Sprintf("%d replies", len(dp.Replies))
+	return dp.Printer.Sprintf("%d replies", dp.Replies.Len())
 }
 
 func (dp displayPost) PageTitle() string {
@@ -81,7 +81,7 @@ func (dp displayPost) ParentDisplayPost() *displayPost {
 }
 
 func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) template.HTML {
-	if len(dp.Replies) == 0 {
+	if dp.Replies.Len() == 0 {
 		return ""
 	}
 
@@ -119,12 +119,19 @@ func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) t
 }
 
 func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
-	start := min((max(0, page-1))*perPage, len(dp.Replies))
-	end := min(start+perPage, len(dp.Replies))
-
+	start := min((max(0, page-1))*perPage, dp.Replies.Len())
+	end := min(start+perPage, dp.Replies.Len())
 	result := make([]*displayPost, end-start)
-	for i, reply := range dp.Replies[start:end] {
-		result[i] = newDisplayPost(reply, dp.Printer, dp.basicEmojiParser, dp.wrappingEmojiParser, dp.markdownParser)
+
+	current := dp.Replies.Front()
+	for range start {
+		current = current.Next()
+	}
+
+	for i := 0; i < perPage && current != nil; i++ {
+		result[i] = newDisplayPost(current.Value.(*post), //nolint:errcheck,forcetypeassert // only one type
+			dp.Printer, dp.basicEmojiParser, dp.wrappingEmojiParser, dp.markdownParser)
+		current = current.Next()
 	}
 
 	return result

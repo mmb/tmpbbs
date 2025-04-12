@@ -32,7 +32,7 @@ func (ps *PostStore) put(post *post, parentUUID string) {
 
 	post.Parent = ps.getPostByUUID(parentUUID)
 	if post.Parent != nil {
-		post.Parent.Replies = append(post.Parent.Replies, post)
+		post.Parent.Replies.PushFront(post)
 	}
 
 	ps.uuidMap[post.uuid] = len(ps.posts)
@@ -40,6 +40,8 @@ func (ps *PostStore) put(post *post, parentUUID string) {
 
 	if (post.IsOriginalPoster() || post.IsSuperuser()) && strings.HasPrefix(post.Body, "!delete") {
 		post.Parent.delete()
+	} else {
+		post.bump()
 	}
 }
 
