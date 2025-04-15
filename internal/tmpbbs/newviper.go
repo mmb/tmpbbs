@@ -14,16 +14,16 @@ func NewViper() (*viper.Viper, error) {
 	initFlags()
 	pflag.Parse()
 
-	viper := viper.New()
-	viper.AutomaticEnv()
-	viper.SetEnvPrefix("tmpbbs")
-	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
+	vipr := viper.New()
+	vipr.AutomaticEnv()
+	vipr.SetEnvPrefix("tmpbbs")
+	vipr.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
 
-	if err := viper.BindPFlags(pflag.CommandLine); err != nil {
+	if err := vipr.BindPFlags(pflag.CommandLine); err != nil {
 		return nil, err
 	}
 
-	return viper, nil
+	return vipr, nil
 }
 
 func initFlags() {

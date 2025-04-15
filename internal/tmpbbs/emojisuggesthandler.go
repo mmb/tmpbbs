@@ -19,16 +19,16 @@ type suggestion struct {
 }
 
 func newEmojiSuggestHandler() *emojiSuggestHandler {
-	trie := trie.New()
+	tri := trie.New()
 	for shortcode, pictogram := range emoji.CodeMap() {
-		trie.Add(shortcode, suggestion{
+		tri.Add(shortcode, suggestion{
 			Suggestion: emoji.NormalizeShortCode(shortcode),
 			Pictogram:  pictogram,
 		})
 	}
 
 	return &emojiSuggestHandler{
-		trie: trie,
+		trie: tri,
 	}
 }
 
