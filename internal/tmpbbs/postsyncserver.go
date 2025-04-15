@@ -25,15 +25,15 @@ func NewPostSyncServer(postStore *PostStore) *PostSyncServer {
 }
 
 // Get returns Posts in order starting from a UUID in the request.
-func (pss *PostSyncServer) Get(context context.Context, request *proto.PostSyncRequest) (*proto.PostSyncResponse,
+func (pss *PostSyncServer) Get(ctx context.Context, request *proto.PostSyncRequest) (*proto.PostSyncResponse,
 	error,
 ) {
 	var clientAddress string
 
-	peer, exists := peer.FromContext(context)
+	p, exists := peer.FromContext(ctx)
 
 	if exists {
-		clientAddress = peer.Addr.String()
+		clientAddress = p.Addr.String()
 	}
 
 	logger := slog.Default().With("clientAddress", clientAddress)
