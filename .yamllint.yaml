@@ -8,5 +8,9 @@ rules:
     level: error
   document-start:
     level: error
+  quoted-strings:
+    check-keys: true
+    quote-type: single
+    required: only-when-needed
   truthy:
     level: error
