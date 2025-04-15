@@ -5,6 +5,8 @@ name: Check
     branches:
       - main
   pull_request:
+  schedule:
+    - cron: 6 6 * * 6
 
 permissions:
   checks: write
