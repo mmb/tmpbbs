@@ -63,6 +63,10 @@ func (p *post) Time() string {
 }
 
 func (p *post) URL() string {
+	if p.Parent == nil {
+		return "/"
+	}
+
 	return "/p/" + p.uuid
 }
 
