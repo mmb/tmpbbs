@@ -1,6 +1,7 @@
 package tmpbbs
 
 import (
+	"cmp"
 	"net/http"
 	"strings"
 )
@@ -18,7 +19,8 @@ func newPostPostHandler(postStore *PostStore, tripcoder *Tripcoder) *postPostHan
 }
 
 func (pph postPostHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
-	if !pph.postStore.hasPost(request.PathValue("parentUUID")) {
+	parentUUID := cmp.Or(request.PathValue("parentUUID"), pph.postStore.posts[0].uuid)
+	if !pph.postStore.hasPost(parentUUID) {
 		http.NotFound(responseWriter, request)
 
 		return
@@ -34,7 +36,7 @@ func (pph postPostHandler) ServeHTTP(responseWriter http.ResponseWriter, request
 		return
 	}
 
-	pph.postStore.put(post, request.PathValue("parentUUID"))
+	pph.postStore.put(post, parentUUID)
 
 	http.Redirect(responseWriter, request, post.Parent.repliesPageURL(1, "replies-start"), http.StatusSeeOther)
 }
