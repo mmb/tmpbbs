@@ -22,6 +22,7 @@ the same platform) and the data can be pulled and kept up-to-date using
   * tripcodes in `username#secret` format
   * shareable URL QR codes
   * every instance distributes the software by serving its own binary
+  * post IDs in URLs are error resistant and pronounceable Crockford Base 32
 
 # Installation
 

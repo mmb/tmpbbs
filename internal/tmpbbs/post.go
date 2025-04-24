@@ -67,7 +67,7 @@ func (p *post) URL() string {
 		return "/"
 	}
 
-	return "/p/" + p.uuid
+	return "/p/" + p.readableID()
 }
 
 // bump moves a post to the top of its parent's replies then bumps each of its
@@ -91,6 +91,11 @@ func (p *post) delete() {
 	p.Title = ""
 	p.Author = ""
 	p.Body = "deleted"
+}
+
+func (p *post) readableID() string {
+	return fmt.Sprintf("%s-%s-%s-%s-%s-%s-%s", p.uuid[:4], p.uuid[4:8], p.uuid[8:12], p.uuid[12:16], p.uuid[16:20],
+		p.uuid[20:24], p.uuid[24:])
 }
 
 func (p *post) repliesPageURL(page int, anchor string) string {
