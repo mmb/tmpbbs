@@ -6,7 +6,7 @@ import (
 	"math"
 	"time"
 
-	"github.com/google/uuid"
+	"github.com/oklog/ulid/v2"
 )
 
 type post struct {
@@ -45,7 +45,7 @@ func newPost(title string, author string, body string, tripcoder *Tripcoder) *po
 		Author:    author,
 		Tripcode:  tripcode,
 		Body:      body,
-		uuid:      uuid.New().String(),
+		uuid:      ulid.Make().String(),
 		superuser: superuser,
 	}
 }
