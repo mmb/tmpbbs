@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"fmt"
 	"math"
+	"strings"
 	"time"
 
 	"github.com/oklog/ulid/v2"
@@ -94,8 +95,8 @@ func (p *post) delete() {
 }
 
 func (p *post) readableID() string {
-	return fmt.Sprintf("%s-%s-%s-%s-%s-%s-%s", p.uuid[:4], p.uuid[4:8], p.uuid[8:12], p.uuid[12:16], p.uuid[16:20],
-		p.uuid[20:24], p.uuid[24:])
+	return strings.ToLower(fmt.Sprintf("%s-%s-%s-%s-%s-%s-%s", p.uuid[:4], p.uuid[4:8], p.uuid[8:12], p.uuid[12:16],
+		p.uuid[16:20], p.uuid[20:24], p.uuid[24:]))
 }
 
 func (p *post) repliesPageURL(page int, anchor string) string {
