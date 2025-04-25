@@ -49,3 +49,11 @@ ul.replies {
 .emoji-suggestion {
   margin: 0 8px 8px 0;
 }
+
+.time {
+  font-style: italic;
+}
+
+.tripcode {
+  font-family: monospace;
+}
