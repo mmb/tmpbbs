@@ -10,6 +10,7 @@ Posts can be loaded from a YAML file on startup.
 
 Usage of tmpbbs:
 
+	-o, --config-file string            path to config file ($TMPBBS_CONFIG_FILE)
 	-u, --css-urls strings              comma-separated list of CSS URLs ($TMPBBS_CSS_URLS) (default [/static/main.css])
 	-m, --emoji                         enable emoji shortcode expansion ($TMPBBS_EMOJI) (default true)
 	-g, --grpc-listen-address string    <host>:port to listen on for gRPC ($TMPBBS_GRPC_LISTEN_ADDRESS) (default ":8081")

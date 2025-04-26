@@ -23,10 +23,20 @@ func NewViper() (*viper.Viper, error) {
 		return nil, err
 	}
 
+	configFile := vipr.GetString("config-file")
+	if configFile != "" {
+		vipr.SetConfigFile(configFile)
+
+		if err := vipr.ReadInConfig(); err != nil {
+			return nil, err
+		}
+	}
+
 	return vipr, nil
 }
 
 func initFlags() {
+	pflag.StringP("config-file", "o", "", "path to config file ($TMPBBS_CONFIG_FILE)")
 	pflag.StringSliceP("css-urls", "u", []string{"/static/main.css"},
 		"comma-separated list of CSS URLs ($TMPBBS_CSS_URLS)")
 	pflag.BoolP("emoji", "m", true, "enable emoji shortcode expansion ($TMPBBS_EMOJI)")
