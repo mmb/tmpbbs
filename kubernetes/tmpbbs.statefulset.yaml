@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: tmpbbs
+spec:
+  minReadySeconds: 30
+  replicas: 3
+  selector:
+    matchLabels:
+      app: tmpbbs
+  serviceName: tmpbbs-grpc
+  template:
+    metadata:
+      labels:
+        app: tmpbbs
+    spec:
+      containers:
+        - env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: TMPBBS_CONFIG_FILE
+              value: /config/$(POD_NAME).yaml
+            - name: TMPBBS_JSON_LOG
+              value: 'true'
+          image: mm62/tmpbbs:latest
+          name: tmpbbs
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: grpc
+              containerPort: 8081
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      topologySpreadConstraints:
+        - labelSelector:
+            matchLabels:
+              app: tmpbbs
+          maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - name: config
+          configMap:
+            name: config

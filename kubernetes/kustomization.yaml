@@ -1,0 +1,15 @@
+---
+configMapGenerator:
+  - name: config
+    files:
+      - config/tmpbbs-0.yaml
+      - config/tmpbbs-1.yaml
+      - config/tmpbbs-2.yaml
+
+namespace: tmpbbs
+
+resources:
+  - tmpbbs-grpc.service.yaml
+  - tmpbbs-http.service.yaml
+  - tmpbbs.namespace.yaml
+  - tmpbbs.statefulset.yaml
