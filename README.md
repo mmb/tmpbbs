@@ -91,6 +91,9 @@ are used for globally unique post identifiers.
 * Backup - instance A pulls from instance B and vice versa, B is not actively
 used, can be used to overcome the loss of data if instance A restarts
 
+* Chain - a chain of N instances connected by long distance point-to-point
+links each pull from their closest neighbor
+
 * Fork - instance A pulls from instance B, creating a "forked" forum where
 posts on B can be replied to on A but the replies don't go back to B
 
