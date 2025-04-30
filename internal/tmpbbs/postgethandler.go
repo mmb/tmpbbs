@@ -80,7 +80,7 @@ func (pgh *postGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request
 }
 
 func (pgh *postGetHandler) renderPost(displayPost *displayPost, repliesPage int, w io.Writer) error {
-	return pgh.template.ExecuteTemplate(w, "index.gohtml", map[string]interface{}{
+	return pgh.template.ExecuteTemplate(w, "index.gohtml", map[string]any{
 		"cssURLs":        pgh.cssURLs,
 		"emojiEnabled":   pgh.emojiEnabled,
 		"qrCodesEnabled": pgh.qrCodesEnabled,
