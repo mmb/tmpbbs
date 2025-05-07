@@ -6,6 +6,7 @@ class EmojiSuggester {
     this.input = input
     this.displayContainer = displayContainer
     this.minPrefixLength = 3
+    this.whitespaceRegex = /\s/u
   }
 
   update() {
@@ -68,11 +69,11 @@ class EmojiSuggester {
   }
 
   #indexIsWhitespace(index) {
-    return /\s/u.test(this.input.value[index])
+    return this.whitespaceRegex.test(this.input.value[index])
   }
 }
 
-if (emojiSuggestions !== null) {
+if (emojiSuggestions) {
   const bodyTextarea = document.getElementById("body"),
       emojiSuggester = new EmojiSuggester(bodyTextarea, emojiSuggestions)
   bodyTextarea.addEventListener("keyup", () => {
@@ -83,7 +84,7 @@ if (emojiSuggestions !== null) {
   })
 }
 
-if (qrCodeDialog !== null) {
+if (qrCodeDialog) {
   const button = document.getElementById("show-qr"),
            img = document.createElement("img")
   img.src = `/qr?url=${encodeURIComponent(window.location.href)}`
