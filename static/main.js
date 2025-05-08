@@ -75,13 +75,13 @@ class EmojiSuggester {
 
 if (emojiSuggestions) {
   const bodyTextarea = document.getElementById("body"),
-      emojiSuggester = new EmojiSuggester(bodyTextarea, emojiSuggestions)
-  bodyTextarea.addEventListener("keyup", () => {
-    emojiSuggester.update()
-  })
-  bodyTextarea.addEventListener("mouseup", () => {
-    emojiSuggester.update()
-  })
+      emojiSuggester = new EmojiSuggester(bodyTextarea, emojiSuggestions),
+      events = ["input", "mouseup"]
+    events.forEach(event => {
+        bodyTextarea.addEventListener(event, () => {
+            emojiSuggester.update()
+        })
+    })
 }
 
 if (qrCodeDialog) {
