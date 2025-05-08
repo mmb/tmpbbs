@@ -52,10 +52,8 @@ Reply
 <input type="text" id="title" name="title" placeholder="{{ .post.Printer.Sprintf "Title" }}" autocomplete="off" maxlength="{{ .maxTitleSize }}">
 <input type="text" id="author" name="author" placeholder="{{ .post.Printer.Sprintf "Author#tripcode-secret" }}" maxlength="{{ .maxAuthorSize }}">
 </p>
-<p>
 <textarea id="body" name="body" placeholder="{{ .post.Printer.Sprintf "Markdown is supported." }}{{ if .emojiEnabled }} {{ .post.Printer.Sprintf "Insert emoji using shortcode between colons (:mushroom: becomes 🍄)." }}{{ end }}"  autocomplete="off" maxlength="{{ .maxBodySize }}"></textarea>
 {{- if .emojiEnabled }}<div id="emoji-suggestions"></div>{{ end -}}
-</p>
 <p>
 <input type="submit" value="{{ .post.Printer.Sprintf "Reply" }}">
 </p>
@@ -81,7 +79,9 @@ Reply
 {{ .post.RepliesNav .repliesPage .repliesPerPage $class }}
 <li id="replies-end"></li>
 </ul>
+</li>
 </ul>
+</li>
 </ul>
 {{- if .qrCodesEnabled }}
 <button id="show-qr" title="{{ .post.Printer.Sprintf "URL QR Code" }}" style="display: none;">🔳📲</button>
