@@ -39,6 +39,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf
+  htmlhint:
+    name: htmlhint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Run htmlhint
+        run: |
+          npm install --global htmlhint
+          go run tmpbbs.go &
+          sleep 3
+          htmlhint http://localhost:8080/
+          kill $!
   modernize:
     name: modernize
     runs-on: ubuntu-latest

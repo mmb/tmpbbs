@@ -46,6 +46,10 @@ ul.replies {
    padding: 0;
 }
 
+#emoji-suggestions {
+  margin-top: 1em;
+}
+
 .emoji-suggestion {
   margin: 0 8px 8px 0;
 }
