@@ -163,5 +163,5 @@ func (dp displayPost) expandEmoji(input string, parser parser) string {
 }
 
 func (dp displayPost) sanitizeAndExpandEmoji(input string, parser parser) string {
-	return dp.expandEmoji(strings.TrimSpace(string(bluemonday.StrictPolicy().SanitizeBytes([]byte(input)))), parser)
+	return dp.expandEmoji(strings.TrimSpace(bluemonday.StrictPolicy().Sanitize(input)), parser)
 }
