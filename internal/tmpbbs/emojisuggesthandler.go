@@ -72,7 +72,7 @@ func (ah emojiSuggestHandler) ServeHTTP(responseWriter http.ResponseWriter, requ
 	}
 
 	sort.Slice(result, func(i int, j int) bool {
-		return result[i].Suggestion[1:len(result[i].Suggestion)-1] < result[j].Suggestion[1:len(result[j].Suggestion)-1]
+		return result[i].Suggestion < result[j].Suggestion
 	})
 
 	err := json.NewEncoder(responseWriter).Encode(result)
