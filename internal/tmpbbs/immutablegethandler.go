@@ -32,10 +32,10 @@ func newImmutableGetHandler(wrappedHandler http.Handler, startTime time.Time) *i
 
 func (igh *immutableGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 	if igh.eTag != "" {
-		responseWriter.Header().Add("ETag", igh.eTag)
+		responseWriter.Header().Set("ETag", igh.eTag)
 	}
 
-	responseWriter.Header().Add("Last-Modified", igh.lastModified)
+	responseWriter.Header().Set("Last-Modified", igh.lastModified)
 
 	if ifNoneMatch := request.Header.Get("If-None-Match"); igh.eTag != "" && ifNoneMatch == igh.eTag {
 		responseWriter.WriteHeader(http.StatusNotModified)
