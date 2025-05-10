@@ -10,6 +10,6 @@ var crockfordReplacer = strings.NewReplacer( //nolint:gochecknoglobals // consta
 	"U", "",
 )
 
-func crockfordDecode(s string) string {
+func crockfordNormalize(s string) string {
 	return crockfordReplacer.Replace(strings.ToUpper(s))
 }
