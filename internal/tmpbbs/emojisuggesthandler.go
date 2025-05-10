@@ -32,17 +32,17 @@ func newEmojiSuggestHandler() *emojiSuggestHandler {
 	}
 }
 
-func (ah emojiSuggestHandler) ServeHTTP(reponseWriter http.ResponseWriter, request *http.Request) {
+func (ah emojiSuggestHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 	var keys []string
 
-	reponseWriter.Header().Set("Content-Type", "application/json")
+	responseWriter.Header().Set("Content-Type", "application/json")
 
 	query := request.URL.Query().Get("q")
 	if ah.trie.HasKeysWithPrefix(query) {
 		keys = ah.trie.PrefixSearch(query)
 	} else {
-		if _, err := reponseWriter.Write([]byte("[]")); err != nil {
-			http.Error(reponseWriter, err.Error(), http.StatusInternalServerError)
+		if _, err := responseWriter.Write([]byte("[]")); err != nil {
+			http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
 		}
 
 		return
@@ -55,7 +55,7 @@ func (ah emojiSuggestHandler) ServeHTTP(reponseWriter http.ResponseWriter, reque
 
 		metaSuggestion, ok := value.Meta().(suggestion)
 		if !ok {
-			http.Error(reponseWriter, "suggestion type assertion failed", http.StatusInternalServerError)
+			http.Error(responseWriter, "suggestion type assertion failed", http.StatusInternalServerError)
 
 			return
 		}
@@ -75,9 +75,9 @@ func (ah emojiSuggestHandler) ServeHTTP(reponseWriter http.ResponseWriter, reque
 		return result[i].Suggestion[1:len(result[i].Suggestion)-1] < result[j].Suggestion[1:len(result[j].Suggestion)-1]
 	})
 
-	err := json.NewEncoder(reponseWriter).Encode(result)
+	err := json.NewEncoder(responseWriter).Encode(result)
 	if err != nil {
-		http.Error(reponseWriter, err.Error(), http.StatusInternalServerError)
+		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
 
 		return
 	}
