@@ -14,19 +14,19 @@ func newQRCodeGetHandler() *qrCodeGetHandler {
 	return &qrCodeGetHandler{}
 }
 
-func (qcgh qrCodeGetHandler) ServeHTTP(reponseWriter http.ResponseWriter, request *http.Request) {
+func (qcgh qrCodeGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 	url := request.URL.Query().Get("url")
 
 	png, err := qrcode.Encode(url, qrcode.Medium, qrCodeSize)
 	if err != nil {
-		http.Error(reponseWriter, err.Error(), http.StatusInternalServerError)
+		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
 
 		return
 	}
 
-	reponseWriter.Header().Set("Content-Type", "image/png")
+	responseWriter.Header().Set("Content-Type", "image/png")
 
-	if _, err = reponseWriter.Write(png); err != nil {
-		http.Error(reponseWriter, err.Error(), http.StatusInternalServerError)
+	if _, err = responseWriter.Write(png); err != nil {
+		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
 	}
 }
