@@ -32,7 +32,7 @@ func ServeGRPC(listenAddress string, tlsCertFile string, tlsKeyFile string, post
 		config := &tls.Config{
 			Certificates: []tls.Certificate{certificate},
 			ClientAuth:   tls.NoClientCert,
-			MinVersion:   tls.VersionTLS12,
+			MinVersion:   tls.VersionTLS13,
 		}
 		grpcServer = grpc.NewServer(grpc.Creds(credentials.NewTLS(config)))
 		tlsEnabled = true
@@ -42,7 +42,8 @@ func ServeGRPC(listenAddress string, tlsCertFile string, tlsKeyFile string, post
 
 	proto.RegisterPostSyncServer(grpcServer, postSyncServer)
 
-	slog.Info("listening for gRPC", "address", listenAddress, "tlsEnabled", tlsEnabled)
+	slog.Info("listening for gRPC", "address", listenAddress, "tlsEnabled", tlsEnabled, "tlsCertFile", tlsCertFile,
+		"tlsKeyFile", tlsKeyFile)
 
 	return grpcServer.Serve(listener)
 }
