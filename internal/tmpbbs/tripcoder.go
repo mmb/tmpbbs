@@ -49,7 +49,7 @@ func (tc Tripcoder) code(input string) (string, string) {
 	}
 
 	if parts[1] == "" {
-		return input[:len(input)-1], ""
+		return parts[0], ""
 	}
 
 	hash := sha256.New()
