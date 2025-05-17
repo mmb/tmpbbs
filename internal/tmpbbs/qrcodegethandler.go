@@ -14,7 +14,7 @@ func newQRCodeGetHandler() *qrCodeGetHandler {
 	return &qrCodeGetHandler{}
 }
 
-func (qcgh qrCodeGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
+func (qcgh *qrCodeGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 	url := request.URL.Query().Get("url")
 
 	png, err := qrcode.Encode(url, qrcode.Medium, qrCodeSize)
