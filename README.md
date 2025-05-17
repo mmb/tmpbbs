@@ -51,7 +51,6 @@ Usage of tmpbbs:
   -u, --css-urls strings              comma-separated list of CSS URLs ($TMPBBS_CSS_URLS) (default [/static/main.css])
   -m, --emoji                         enable emoji shortcode expansion ($TMPBBS_EMOJI) (default true)
   -g, --grpc-listen-address string    <host>:port to listen on for gRPC ($TMPBBS_GRPC_LISTEN_ADDRESS) (default ":8081")
-  -h, --help                          usage help
   -j, --json-log                      set log output format to JSON ($TMPBBS_JSON_LOG)
   -l, --listen-address string         <host>:port to listen on for HTTP ($TMPBBS_LISTEN_ADDRESS) (default ":8080")
   -p, --load-posts strings            comma-separated paths of YAML or JSON files of posts to load, format [{"title":"","author":"","body":""}]
