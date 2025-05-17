@@ -14,6 +14,7 @@ type logHandler struct {
 type loggingResponseWriter struct {
 	wrappedResponseWriter http.ResponseWriter
 	statusCode            int
+	responseSize          int
 }
 
 func newLogHandler(wrappedHandler http.Handler) *logHandler {
@@ -28,15 +29,20 @@ func (lh *logHandler) ServeHTTP(responseWriter http.ResponseWriter, request *htt
 
 	lh.wrappedHandler.ServeHTTP(lrw, request)
 	slog.Info("HTTP request",
-		"remoteAddr", request.RemoteAddr,
-		"method", request.Method,
-		"path", request.URL.Path,
-		"query", request.URL.Query(),
-		"proto", request.Proto,
-		"referer", request.Referer(),
-		"userAgent", request.UserAgent(),
-		"statusCode", cmp.Or(lrw.statusCode, http.StatusOK),
-		"elapsed", time.Since(start),
+		slog.Group("request",
+			"remoteAddr", request.RemoteAddr,
+			"method", request.Method,
+			"path", request.URL.Path,
+			"query", request.URL.Query(),
+			"proto", request.Proto,
+			"referer", request.Referer(),
+			"userAgent", request.UserAgent(),
+		),
+		slog.Group("response",
+			"statusCode", cmp.Or(lrw.statusCode, http.StatusOK),
+			"size", lrw.responseSize,
+			"elapsed", time.Since(start),
+		),
 	)
 }
 
@@ -51,7 +57,10 @@ func (lrw *loggingResponseWriter) Header() http.Header {
 }
 
 func (lrw *loggingResponseWriter) Write(bytes []byte) (int, error) {
-	return lrw.wrappedResponseWriter.Write(bytes)
+	bytesWritten, err := lrw.wrappedResponseWriter.Write(bytes)
+	lrw.responseSize += bytesWritten
+
+	return bytesWritten, err
 }
 
 func (lrw *loggingResponseWriter) WriteHeader(statusCode int) {
