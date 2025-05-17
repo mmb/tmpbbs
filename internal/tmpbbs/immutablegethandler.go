@@ -45,13 +45,7 @@ func (igh *immutableGetHandler) ServeHTTP(responseWriter http.ResponseWriter, re
 
 	if ifModifiedSinceHeader := request.Header.Get("If-Modified-Since"); ifModifiedSinceHeader != "" {
 		ifModifiedSince, err := time.Parse(time.RFC1123, ifModifiedSinceHeader)
-		if err != nil {
-			http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
-
-			return
-		}
-
-		if !igh.startTime.After(ifModifiedSince) {
+		if err == nil && !igh.startTime.After(ifModifiedSince) {
 			responseWriter.WriteHeader(http.StatusNotModified)
 
 			return
