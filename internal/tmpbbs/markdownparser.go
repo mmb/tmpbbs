@@ -40,7 +40,7 @@ func newMarkdownParser() *markdownParser {
 	}
 }
 
-func (mp markdownParser) parse(input string) string {
+func (mp *markdownParser) parse(input string) string {
 	unsafe := blackfriday.Run([]byte(input), *mp.blackfridayExtensions, *mp.blackfridayRenderer)
 
 	return string(mp.bluemondayPolicy.SanitizeBytes(unsafe))
