@@ -35,7 +35,7 @@ func newEmojiSuggestHandler() *emojiSuggestHandler {
 	}
 }
 
-func (ah emojiSuggestHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
+func (ah *emojiSuggestHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 	var keys []string
 
 	responseWriter.Header().Set("Content-Type", "application/json")
