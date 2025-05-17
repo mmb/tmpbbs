@@ -15,9 +15,9 @@ func NewViper() (*viper.Viper, error) {
 	pflag.Parse()
 
 	vipr := viper.New()
-	vipr.AutomaticEnv()
 	vipr.SetEnvPrefix("tmpbbs")
 	vipr.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
+	vipr.AutomaticEnv()
 
 	if err := vipr.BindPFlags(pflag.CommandLine); err != nil {
 		return nil, err
