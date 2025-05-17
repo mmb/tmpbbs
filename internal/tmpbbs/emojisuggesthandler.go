@@ -2,6 +2,7 @@ package tmpbbs
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"sort"
 
@@ -17,6 +18,8 @@ type suggestion struct {
 	Suggestion string `json:"suggestion"`
 	Pictogram  string `json:"pictogram"`
 }
+
+const minQueryLength = 2
 
 func newEmojiSuggestHandler() *emojiSuggestHandler {
 	tri := trie.New()
@@ -38,6 +41,13 @@ func (ah emojiSuggestHandler) ServeHTTP(responseWriter http.ResponseWriter, requ
 	responseWriter.Header().Set("Content-Type", "application/json")
 
 	query := request.URL.Query().Get("q")
+	if len(query) < minQueryLength {
+		http.Error(responseWriter, fmt.Sprintf("query must be a minimum of %d characters", minQueryLength),
+			http.StatusBadRequest)
+
+		return
+	}
+
 	if ah.trie.HasKeysWithPrefix(query) {
 		keys = ah.trie.PrefixSearch(query)
 	} else {
