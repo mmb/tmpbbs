@@ -14,7 +14,6 @@ Usage of tmpbbs:
 	-u, --css-urls strings              comma-separated list of CSS URLs ($TMPBBS_CSS_URLS) (default [/static/main.css])
 	-m, --emoji                         enable emoji shortcode expansion ($TMPBBS_EMOJI) (default true)
 	-g, --grpc-listen-address string    <host>:port to listen on for gRPC ($TMPBBS_GRPC_LISTEN_ADDRESS) (default ":8081")
-	-h, --help                          usage help
 	-j, --json-log                      set log output format to JSON ($TMPBBS_JSON_LOG)
 	-l, --listen-address string         <host>:port to listen on for HTTP ($TMPBBS_LISTEN_ADDRESS) (default ":8080")
 	-p, --load-posts strings            comma-separated paths of YAML or JSON files of posts to load,
@@ -45,7 +44,6 @@ import (
 	"os"
 
 	"github.com/mmb/tmpbbs/internal/tmpbbs"
-	"github.com/spf13/pflag"
 	_ "go.uber.org/automaxprocs"
 )
 
@@ -61,17 +59,10 @@ func main() {
 	tmpbbs.SetupLog(viper.GetBool("json-log"))
 
 	config := viper.AllSettings()
-	delete(config, "help")
 	delete(config, "superuser-tripcodes")
 	delete(config, "tripcode-salt")
 	delete(config, "version")
 	slog.Info("startup", "version", tmpbbs.Version, "commit", tmpbbs.Commit, "config", config)
-
-	if viper.GetBool("help") {
-		pflag.CommandLine.SortFlags = false
-		pflag.Usage()
-		os.Exit(0)
-	}
 
 	if viper.GetBool("version") {
 		fmt.Printf("%s-%s\n", tmpbbs.Version, tmpbbs.Commit)
