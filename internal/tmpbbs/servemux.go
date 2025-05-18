@@ -25,9 +25,8 @@ func NewServeMux(vipr *viper.Viper, staticFS embed.FS, postStore *PostStore,
 		return nil, err
 	}
 
-	serveMux.Handle("GET /static/", newImmutableGetHandler(http.StripPrefix("/static", http.FileServerFS(staticDir)),
-		postStore.posts[0].time))
-	serveMux.Handle("GET /robots.txt", newImmutableGetHandler(http.FileServerFS(staticDir), postStore.posts[0].time))
+	serveMux.Handle("GET /static/", newImmutableGetHandler(http.StripPrefix("/static", http.FileServerFS(staticDir))))
+	serveMux.Handle("GET /robots.txt", newImmutableGetHandler(http.FileServerFS(staticDir)))
 
 	if vipr.GetBool("replies") {
 		postPostHandler := newPostPostHandler(postStore, tripcoder)
@@ -36,15 +35,15 @@ func NewServeMux(vipr *viper.Viper, staticFS embed.FS, postStore *PostStore,
 	}
 
 	if vipr.GetBool("emoji") {
-		serveMux.Handle("GET /emoji-suggest", newImmutableGetHandler(newEmojiSuggestHandler(), postStore.posts[0].time))
+		serveMux.Handle("GET /emoji-suggest", newImmutableGetHandler(newEmojiSuggestHandler()))
 	}
 
 	if vipr.GetBool("qr-codes") {
-		serveMux.Handle("GET /qr", newImmutableGetHandler(newQRCodeGetHandler(), postStore.posts[0].time))
+		serveMux.Handle("GET /qr", newImmutableGetHandler(newQRCodeGetHandler()))
 	}
 
 	if vipr.GetBool("serve-binary") {
-		serveMux.Handle("GET /self", newImmutableGetHandler(newSelfGetHandler(), postStore.posts[0].time))
+		serveMux.Handle("GET /self", newImmutableGetHandler(newSelfGetHandler()))
 	}
 
 	if pathsErr := ServeFSPaths(vipr.GetStringSlice("serve-fs-paths"), serveMux); pathsErr != nil {
