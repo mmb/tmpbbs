@@ -17,7 +17,9 @@ type immutableGetHandler struct {
 	lastModified   string
 }
 
-func newImmutableGetHandler(wrappedHandler http.Handler, startTime time.Time) *immutableGetHandler {
+func newImmutableGetHandler(wrappedHandler http.Handler) *immutableGetHandler {
+	startTime := time.Now()
+
 	handler := immutableGetHandler{
 		wrappedHandler: wrappedHandler,
 		startTime:      startTime.Truncate(time.Second).Round(0),
