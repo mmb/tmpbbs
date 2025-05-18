@@ -26,23 +26,24 @@ func NewPostStore(title string) *PostStore {
 	return postStore
 }
 
-func (ps *PostStore) put(post *post, parentUUID string) {
-	ps.mutex.Lock()
-	defer ps.mutex.Unlock()
-
-	post.Parent = ps.getPostByUUID(parentUUID)
-	if post.Parent != nil {
-		post.Parent.Replies.PushFront(post)
+// LoadYAML loads Posts from a YAML file on the filesystem into the PostStore.
+func (ps *PostStore) LoadYAML(path string, tripcoder *Tripcoder) error {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return err
 	}
 
-	ps.uuidMap[post.uuid] = len(ps.posts)
-	ps.posts = append(ps.posts, post)
+	var posts []post
 
-	if (post.IsOriginalPoster() || post.IsSuperuser()) && strings.HasPrefix(post.Body, "!delete") {
-		post.Parent.delete()
-	} else {
-		post.bump()
+	if yamlErr := yaml.Unmarshal(data, &posts); yamlErr != nil {
+		return yamlErr
 	}
+
+	for i := range posts {
+		ps.put(newPost(posts[i].Title, posts[i].Author, posts[i].Body, tripcoder), ps.posts[0].uuid)
+	}
+
+	return nil
 }
 
 func (ps *PostStore) get(uuid string, callback func(*post)) bool {
@@ -86,24 +87,30 @@ func (ps *PostStore) hasPost(uuid string) bool {
 	return found
 }
 
-// LoadYAML loads Posts from a YAML file on the filesystem into the PostStore.
-func (ps *PostStore) LoadYAML(path string, tripcoder *Tripcoder) error {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return err
+func (ps *PostStore) put(post *post, parentUUID string) {
+	ps.mutex.Lock()
+	defer ps.mutex.Unlock()
+
+	post.Parent = ps.getPostByUUID(parentUUID)
+	if post.Parent != nil {
+		post.Parent.Replies.PushFront(post)
 	}
 
-	var posts []post
+	ps.uuidMap[post.uuid] = len(ps.posts)
+	ps.posts = append(ps.posts, post)
 
-	if yamlErr := yaml.Unmarshal(data, &posts); yamlErr != nil {
-		return yamlErr
+	if (post.IsOriginalPoster() || post.IsSuperuser()) && strings.HasPrefix(post.Body, "!delete") {
+		post.Parent.delete()
+	} else {
+		post.bump()
 	}
+}
 
-	for i := range posts {
-		ps.put(newPost(posts[i].Title, posts[i].Author, posts[i].Body, tripcoder), ps.posts[0].uuid)
-	}
+func (ps *PostStore) rootPost() *post {
+	ps.mutex.RLock()
+	defer ps.mutex.RUnlock()
 
-	return nil
+	return ps.posts[0]
 }
 
 func (ps *PostStore) getPostByUUID(uuid string) *post {
