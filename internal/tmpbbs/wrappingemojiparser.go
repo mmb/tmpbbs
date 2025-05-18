@@ -14,13 +14,6 @@ func newWrappingEmojiParser(wrapper *emojiSpanWrapper) *wrappingEmojiParser {
 	}
 }
 
-func (wep wrappingEmojiParser) parse(input string) string {
-	// This check shouldn't be necessary because it's checked for nil inside
-	// emoji.ParseWithWrapper but text/template complains about a nil pointer
-	// if it's not checked here.
-	if wep.wrapper == nil {
-		return emoji.Sprint(input)
-	}
-
+func (wep *wrappingEmojiParser) parse(input string) string {
 	return emoji.SprintWithWrapper(wep.wrapper, input)
 }
