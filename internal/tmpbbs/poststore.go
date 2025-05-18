@@ -11,17 +11,20 @@ import (
 // A PostStore stores Posts in memory and provides safety for concurrent
 // access.
 type PostStore struct {
-	uuidMap map[string]int
-	posts   []*post
-	mutex   sync.RWMutex
+	uuidMap  map[string]int
+	rootUUID string
+	posts    []*post
+	mutex    sync.RWMutex
 }
 
 // NewPostStore returns a new PostStore. It also creates the root Post.
 func NewPostStore(title string) *PostStore {
+	rootPost := newPost(title, "", "", nil)
 	postStore := &PostStore{
-		uuidMap: make(map[string]int),
+		uuidMap:  make(map[string]int),
+		rootUUID: rootPost.uuid,
 	}
-	postStore.put(newPost(title, "", "", nil), "")
+	postStore.put(rootPost, "")
 
 	return postStore
 }
