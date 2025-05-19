@@ -58,11 +58,8 @@ func main() {
 
 	tmpbbs.SetupLog(viper.GetBool("json-log"))
 
-	config := viper.AllSettings()
-	delete(config, "superuser-tripcodes")
-	delete(config, "tripcode-salt")
-	delete(config, "version")
-	slog.Info("startup", "version", tmpbbs.Version, "commit", tmpbbs.Commit, "config", config)
+	slog.Info("startup", "version", tmpbbs.Version, "commit", tmpbbs.Commit, "config",
+		tmpbbs.LoggedViperSettings(viper.AllSettings()))
 
 	if viper.GetBool("version") {
 		fmt.Printf("%s-%s\n", tmpbbs.Version, tmpbbs.Commit)

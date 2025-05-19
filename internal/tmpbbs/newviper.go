@@ -1,12 +1,17 @@
 package tmpbbs
 
 import (
+	"log/slog"
 	"strings"
 	"time"
 
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
+
+// LoggedViperSettings makes a map[string]any satisfy the slog LogValuer
+// interface.
+type LoggedViperSettings map[string]any
 
 // NewViper returns a new viper.Viper with flags configured and the command
 // line parsed.
@@ -33,6 +38,36 @@ func NewViper() (*viper.Viper, error) {
 	}
 
 	return vipr, nil
+}
+
+// LogValue returns an slog.GroupValue with the subset of viper settings.
+func (lvs LoggedViperSettings) LogValue() slog.Value {
+	logConfigKeys := []string{
+		"config-file",
+		"css-urls",
+		"emoji",
+		"grpc-listen-address",
+		"json-log",
+		"listen-address",
+		"load-posts",
+		"pull-interval",
+		"pull-peers",
+		"qr-codes",
+		"replies-per-page",
+		"replies",
+		"serve-binary",
+		"serve-fs-paths",
+		"title",
+		"tls-cert",
+		"tls-key",
+	}
+
+	attrs := make([]slog.Attr, len(logConfigKeys))
+	for i, key := range logConfigKeys {
+		attrs[i] = slog.Any(key, lvs[key])
+	}
+
+	return slog.GroupValue(attrs...)
 }
 
 func initFlags() {
