@@ -11,6 +11,11 @@ type postPostHandler struct {
 	tripcoder *Tripcoder
 }
 
+// The body is application/x-www-form-urlencoded so the max size is 3 times
+// the field limits (if every character were encoded) plus 2 bytes for the &
+// separators.
+const maxRequestBodyBytes = (maxTitleSize+maxAuthorSize+maxBodySize)*3 + 2
+
 func newPostPostHandler(postStore *PostStore, tripcoder *Tripcoder) *postPostHandler {
 	return &postPostHandler{
 		postStore: postStore,
@@ -22,6 +27,15 @@ func (pph *postPostHandler) ServeHTTP(responseWriter http.ResponseWriter, reques
 	parentUUID := cmp.Or(crockfordNormalize(request.PathValue("parentUUID")), pph.postStore.rootUUID)
 	if !pph.postStore.hasPost(parentUUID) {
 		http.NotFound(responseWriter, request)
+
+		return
+	}
+
+	request.Body = http.MaxBytesReader(responseWriter, request.Body, maxRequestBodyBytes)
+	defer request.Body.Close()
+
+	if err := request.ParseForm(); err != nil {
+		http.Error(responseWriter, err.Error(), http.StatusBadRequest)
 
 		return
 	}
