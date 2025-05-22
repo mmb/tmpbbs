@@ -6,7 +6,7 @@ require (
 	github.com/derekparker/trie v0.0.0-20230829180723-39f4de51ef7d
 	github.com/kyokomi/emoji/v2 v2.2.13
 	github.com/microcosm-cc/bluemonday v1.0.27
-	github.com/oklog/ulid/v2 v2.1.0
+	github.com/oklog/ulid/v2 v2.1.1
 	github.com/russross/blackfriday/v2 v2.1.0
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/spf13/pflag v1.0.6
