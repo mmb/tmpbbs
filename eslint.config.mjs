@@ -14,6 +14,7 @@ export default defineConfig([
     plugins: { js },
     rules: {
       "comma-dangle":  ["error", "never"],
+      "init-declarations": "off",
       "no-magic-numbers": [ "error", { "ignore" : [0, 1] }],
       "semi":  ["error", "never"]
     }

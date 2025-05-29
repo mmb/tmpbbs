@@ -1,4 +1,5 @@
-const emojiSuggestions = document.getElementById("emoji-suggestions"),
+const debounceInterval = 150,
+      emojiSuggestions = document.getElementById("emoji-suggestions"),
           qrCodeDialog = document.getElementById("qr")
 
 class EmojiSuggester {
@@ -77,10 +78,12 @@ if (emojiSuggestions) {
   const bodyTextarea = document.getElementById("body"),
       emojiSuggester = new EmojiSuggester(bodyTextarea, emojiSuggestions),
       events = ["input", "mouseup"]
+    let timeout
     events.forEach(event => {
-        bodyTextarea.addEventListener(event, () => {
-            emojiSuggester.update()
-        })
+      bodyTextarea.addEventListener(event, () => {
+        clearTimeout(timeout)
+        timeout = setTimeout(() => emojiSuggester.update(), debounceInterval)
+      })
     })
 }
 
