@@ -8,6 +8,8 @@ ARG COMMIT
 ARG UID
 RUN useradd --uid ${UID} tmpbbs
 WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
 COPY . .
 ENV CGO_ENABLED=0
 ENV GOARCH=${TARGETARCH}
