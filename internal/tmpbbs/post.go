@@ -18,7 +18,7 @@ type post struct {
 	Author    string
 	Tripcode  string
 	Body      string
-	uuid      string
+	id        string
 	superuser bool
 }
 
@@ -46,7 +46,7 @@ func newPost(title string, author string, body string, tripcoder *Tripcoder) *po
 		Author:    author,
 		Tripcode:  tripcode,
 		Body:      body,
-		uuid:      ulid.Make().String(),
+		id:        ulid.Make().String(),
 		superuser: superuser,
 	}
 }
@@ -95,8 +95,8 @@ func (p *post) delete() {
 }
 
 func (p *post) readableID() string {
-	return strings.ToLower(fmt.Sprintf("%s-%s-%s-%s-%s-%s-%s", p.uuid[:4], p.uuid[4:8], p.uuid[8:12], p.uuid[12:16],
-		p.uuid[16:20], p.uuid[20:24], p.uuid[24:]))
+	return strings.ToLower(fmt.Sprintf("%s-%s-%s-%s-%s-%s-%s", p.id[:4], p.id[4:8], p.id[8:12], p.id[12:16],
+		p.id[16:20], p.id[20:24], p.id[24:]))
 }
 
 func (p *post) repliesPageURL(page int, anchor string) string {

@@ -9,7 +9,7 @@ service PostSync {
 }
 
 message PostSyncRequest {
-  string uuid = 1;
+  string id = 1;
   int32 max_results = 2;
 }
 
@@ -23,7 +23,7 @@ message Post {
   string author = 3;
   string tripcode = 4;
   string body = 5;
-  string uuid = 6;
-  string parent_uuid = 7;
+  string id = 6;
+  string parent_id = 7;
   bool superuser = 8;
 }

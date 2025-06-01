@@ -24,8 +24,8 @@ func newPostPostHandler(postStore *PostStore, tripcoder *Tripcoder) *postPostHan
 }
 
 func (pph *postPostHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
-	parentUUID := cmp.Or(crockfordNormalize(request.PathValue("parentUUID")), pph.postStore.rootID)
-	if !pph.postStore.hasPost(parentUUID) {
+	parentID := cmp.Or(crockfordNormalize(request.PathValue("parentID")), pph.postStore.rootID)
+	if !pph.postStore.hasPost(parentID) {
 		http.NotFound(responseWriter, request)
 
 		return
@@ -50,7 +50,7 @@ func (pph *postPostHandler) ServeHTTP(responseWriter http.ResponseWriter, reques
 		return
 	}
 
-	pph.postStore.put(post, parentUUID)
+	pph.postStore.put(post, parentID)
 
 	http.Redirect(responseWriter, request, post.Parent.repliesPageURL(1, "replies-start"), http.StatusSeeOther)
 }
