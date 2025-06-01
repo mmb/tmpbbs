@@ -22,7 +22,7 @@ func NewPostStore(title string) *PostStore {
 	rootPost := newPost(title, "", "", nil)
 	postStore := &PostStore{
 		idMap:  make(map[string]int),
-		rootID: rootPost.uuid,
+		rootID: rootPost.id,
 	}
 	postStore.put(rootPost, "")
 
@@ -38,7 +38,7 @@ func (ps *PostStore) put(post *post, parentID string) {
 		post.Parent.Replies.PushFront(post)
 	}
 
-	ps.idMap[post.uuid] = len(ps.posts)
+	ps.idMap[post.id] = len(ps.posts)
 	ps.posts = append(ps.posts, post)
 
 	if (post.IsOriginalPoster() || post.IsSuperuser()) && strings.HasPrefix(post.Body, "!delete") {
@@ -103,7 +103,7 @@ func (ps *PostStore) LoadYAML(path string, tripcoder *Tripcoder) error {
 	}
 
 	for i := range posts {
-		ps.put(newPost(posts[i].Title, posts[i].Author, posts[i].Body, tripcoder), ps.posts[0].uuid)
+		ps.put(newPost(posts[i].Title, posts[i].Author, posts[i].Body, tripcoder), ps.posts[0].id)
 	}
 
 	return nil

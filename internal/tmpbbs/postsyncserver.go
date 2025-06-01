@@ -24,7 +24,7 @@ func NewPostSyncServer(postStore *PostStore) *PostSyncServer {
 	}
 }
 
-// Get returns Posts in order starting from a UUID in the request.
+// Get returns Posts in order starting from an ID in the request.
 func (pss *PostSyncServer) Get(ctx context.Context, request *proto.PostSyncRequest) (*proto.PostSyncResponse,
 	error,
 ) {
@@ -43,28 +43,28 @@ func (pss *PostSyncServer) Get(ctx context.Context, request *proto.PostSyncReque
 		maxResults = maxMaxResults
 	}
 
-	posts := pss.postStore.getSince(request.GetUuid(), maxResults)
+	posts := pss.postStore.getSince(request.GetId(), maxResults)
 	protoPosts := make([]*proto.Post, len(posts))
 
 	for index, post := range posts {
-		var parentUUID string
+		var parentID string
 		if post.Parent != nil {
-			parentUUID = post.Parent.uuid
+			parentID = post.Parent.id
 		}
 
 		protoPosts[index] = &proto.Post{
-			Time:       timestamppb.New(post.time),
-			Title:      post.Title,
-			Author:     post.Author,
-			Tripcode:   post.Tripcode,
-			Body:       post.Body,
-			Uuid:       post.uuid,
-			ParentUuid: parentUUID,
-			Superuser:  post.IsSuperuser(),
+			Time:      timestamppb.New(post.time),
+			Title:     post.Title,
+			Author:    post.Author,
+			Tripcode:  post.Tripcode,
+			Body:      post.Body,
+			Id:        post.id,
+			ParentId:  parentID,
+			Superuser: post.IsSuperuser(),
 		}
 	}
 
-	logger.Info("responded to peer sync request", "sinceUUID", request.GetUuid(),
+	logger.Info("responded to peer sync request", "sinceID", request.GetId(),
 		"maxResults", maxResults, "numResults", len(protoPosts))
 
 	return &proto.PostSyncResponse{

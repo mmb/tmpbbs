@@ -18,7 +18,7 @@ func NewServeMux(vipr *viper.Viper, staticFS embed.FS, postStore *PostStore,
 	postGetHandler := newPostGetHandler(vipr.GetInt("replies-per-page"), vipr.GetStringSlice("css-urls"),
 		vipr.GetBool("replies"), vipr.GetBool("emoji"), vipr.GetBool("qr-codes"), postStore)
 	serveMux.Handle("GET /{$}", postGetHandler)
-	serveMux.Handle("GET /p/{uuid}", postGetHandler)
+	serveMux.Handle("GET /p/{id}", postGetHandler)
 
 	staticDir, err := fs.Sub(staticFS, "static")
 	if err != nil {
@@ -31,7 +31,7 @@ func NewServeMux(vipr *viper.Viper, staticFS embed.FS, postStore *PostStore,
 	if vipr.GetBool("replies") {
 		postPostHandler := newPostPostHandler(postStore, tripcoder)
 		serveMux.Handle("POST /{$}", postPostHandler)
-		serveMux.Handle("POST /p/{parentUUID}", postPostHandler)
+		serveMux.Handle("POST /p/{parentID}", postPostHandler)
 	}
 
 	if vipr.GetBool("emoji") {

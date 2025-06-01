@@ -82,7 +82,7 @@ prefixing the address with `tls://` in `--pull-peers`. If the peer instances
 are not using TLS `--pull-peers` should just have their `host:grpcport` but
 in this case the gRPC traffic will not be encrypted.
 
-Two instances can pull from each other and posts will not be duplicated. UUIDs
+Two instances can pull from each other and posts will not be duplicated. ULIDs
 are used for globally unique post identifiers.
 
 ## Topologies

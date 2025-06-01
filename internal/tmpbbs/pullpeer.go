@@ -16,14 +16,14 @@ import (
 )
 
 type pullPeer struct {
-	client         proto.PostSyncClient
-	postStore      *PostStore
-	logger         *slog.Logger
-	address        string
-	rootUUID       string
-	lastUUIDSynced string
-	interval       time.Duration
-	maxResults     int32
+	client       proto.PostSyncClient
+	postStore    *PostStore
+	logger       *slog.Logger
+	address      string
+	rootID       string
+	lastIDSynced string
+	interval     time.Duration
+	maxResults   int32
 }
 
 func newPullPeer(address string, interval time.Duration, postStore *PostStore) (*pullPeer, error) {
@@ -63,7 +63,7 @@ func (pp *pullPeer) run(initialWait time.Duration) {
 
 func (pp *pullPeer) sync() int {
 	response, err := pp.client.Get(context.Background(),
-		&proto.PostSyncRequest{Uuid: pp.lastUUIDSynced, MaxResults: pp.maxResults}, grpc.UseCompressor(gzip.Name))
+		&proto.PostSyncRequest{Id: pp.lastIDSynced, MaxResults: pp.maxResults}, grpc.UseCompressor(gzip.Name))
 	if err != nil {
 		pp.logger.Error(err.Error())
 
@@ -71,20 +71,20 @@ func (pp *pullPeer) sync() int {
 	}
 
 	protoPosts := response.GetPosts()
-	pp.logger.Info("received response to peer sync request", "lastUUIDSynced", pp.lastUUIDSynced,
+	pp.logger.Info("received response to peer sync request", "lastIDSynced", pp.lastIDSynced,
 		"numPosts", len(protoPosts))
 
 	for _, protoPost := range protoPosts {
 		// Root post of peer
-		if protoPost.GetParentUuid() == "" {
-			pp.rootUUID = protoPost.GetUuid()
-			pp.lastUUIDSynced = protoPost.GetUuid()
+		if protoPost.GetParentId() == "" {
+			pp.rootID = protoPost.GetId()
+			pp.lastIDSynced = protoPost.GetId()
 
 			continue
 		}
 		// We already have this post, do not add
-		if pp.postStore.hasPost(protoPost.GetUuid()) {
-			pp.lastUUIDSynced = protoPost.GetUuid()
+		if pp.postStore.hasPost(protoPost.GetId()) {
+			pp.lastIDSynced = protoPost.GetId()
 
 			continue
 		}
@@ -95,30 +95,30 @@ func (pp *pullPeer) sync() int {
 			Tripcode:  protoPost.GetTripcode(),
 			Body:      protoPost.GetBody(),
 			Replies:   list.New(),
-			uuid:      protoPost.GetUuid(),
+			id:        protoPost.GetId(),
 			time:      protoPost.GetTime().AsTime(),
 			superuser: protoPost.GetSuperuser(),
 		}
 
 		// If the parent is the peer's root, add it to our root
-		if protoPost.GetParentUuid() == pp.rootUUID {
+		if protoPost.GetParentId() == pp.rootID {
 			pp.postStore.put(post, pp.postStore.rootID)
-			pp.lastUUIDSynced = protoPost.GetUuid()
+			pp.lastIDSynced = protoPost.GetId()
 
 			continue
 		}
 
 		// If we have the parent, add it to the parent
-		if pp.postStore.hasPost(protoPost.GetParentUuid()) {
-			pp.postStore.put(post, protoPost.GetParentUuid())
-			pp.lastUUIDSynced = protoPost.GetUuid()
+		if pp.postStore.hasPost(protoPost.GetParentId()) {
+			pp.postStore.put(post, protoPost.GetParentId())
+			pp.lastIDSynced = protoPost.GetId()
 
 			continue
 		}
 
 		// We don't have the parent, start a resync from the peer root.
-		pp.lastUUIDSynced = ""
-		pp.logger.Warn("resync from root", "missingParentUUID", protoPost.GetParentUuid())
+		pp.lastIDSynced = ""
+		pp.logger.Warn("resync from root", "missingParentID", protoPost.GetParentId())
 
 		return 0
 	}

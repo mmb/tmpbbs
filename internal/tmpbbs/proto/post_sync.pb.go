@@ -24,7 +24,7 @@ const (
 
 type PostSyncRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	MaxResults    int32                  `protobuf:"varint,2,opt,name=max_results,json=maxResults,proto3" json:"max_results,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -60,9 +60,9 @@ func (*PostSyncRequest) Descriptor() ([]byte, []int) {
 	return file_post_sync_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *PostSyncRequest) GetUuid() string {
+func (x *PostSyncRequest) GetId() string {
 	if x != nil {
-		return x.Uuid
+		return x.Id
 	}
 	return ""
 }
@@ -125,8 +125,8 @@ type Post struct {
 	Author        string                 `protobuf:"bytes,3,opt,name=author,proto3" json:"author,omitempty"`
 	Tripcode      string                 `protobuf:"bytes,4,opt,name=tripcode,proto3" json:"tripcode,omitempty"`
 	Body          string                 `protobuf:"bytes,5,opt,name=body,proto3" json:"body,omitempty"`
-	Uuid          string                 `protobuf:"bytes,6,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	ParentUuid    string                 `protobuf:"bytes,7,opt,name=parent_uuid,json=parentUuid,proto3" json:"parent_uuid,omitempty"`
+	Id            string                 `protobuf:"bytes,6,opt,name=id,proto3" json:"id,omitempty"`
+	ParentId      string                 `protobuf:"bytes,7,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
 	Superuser     bool                   `protobuf:"varint,8,opt,name=superuser,proto3" json:"superuser,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -197,16 +197,16 @@ func (x *Post) GetBody() string {
 	return ""
 }
 
-func (x *Post) GetUuid() string {
+func (x *Post) GetId() string {
 	if x != nil {
-		return x.Uuid
+		return x.Id
 	}
 	return ""
 }
 
-func (x *Post) GetParentUuid() string {
+func (x *Post) GetParentId() string {
 	if x != nil {
-		return x.ParentUuid
+		return x.ParentId
 	}
 	return ""
 }
@@ -222,22 +222,21 @@ var File_post_sync_proto protoreflect.FileDescriptor
 
 const file_post_sync_proto_rawDesc = "" +
 	"\n" +
-	"\x0fpost_sync.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"F\n" +
-	"\x0fPostSyncRequest\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x1f\n" +
+	"\x0fpost_sync.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"B\n" +
+	"\x0fPostSyncRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1f\n" +
 	"\vmax_results\x18\x02 \x01(\x05R\n" +
 	"maxResults\"/\n" +
 	"\x10PostSyncResponse\x12\x1b\n" +
-	"\x05posts\x18\x01 \x03(\v2\x05.PostR\x05posts\"\xe7\x01\n" +
+	"\x05posts\x18\x01 \x03(\v2\x05.PostR\x05posts\"\xdf\x01\n" +
 	"\x04Post\x12.\n" +
 	"\x04time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04time\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12\x16\n" +
 	"\x06author\x18\x03 \x01(\tR\x06author\x12\x1a\n" +
 	"\btripcode\x18\x04 \x01(\tR\btripcode\x12\x12\n" +
-	"\x04body\x18\x05 \x01(\tR\x04body\x12\x12\n" +
-	"\x04uuid\x18\x06 \x01(\tR\x04uuid\x12\x1f\n" +
-	"\vparent_uuid\x18\a \x01(\tR\n" +
-	"parentUuid\x12\x1c\n" +
+	"\x04body\x18\x05 \x01(\tR\x04body\x12\x0e\n" +
+	"\x02id\x18\x06 \x01(\tR\x02id\x12\x1b\n" +
+	"\tparent_id\x18\a \x01(\tR\bparentId\x12\x1c\n" +
 	"\tsuperuser\x18\b \x01(\bR\tsuperuser28\n" +
 	"\bPostSync\x12,\n" +
 	"\x03Get\x12\x10.PostSyncRequest\x1a\x11.PostSyncResponse\"\x00B-Z+github.com/mmb/tmpbbs/internal/tmpbbs/protob\x06proto3"
