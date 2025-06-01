@@ -24,7 +24,7 @@ func newPostPostHandler(postStore *PostStore, tripcoder *Tripcoder) *postPostHan
 }
 
 func (pph *postPostHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
-	parentUUID := cmp.Or(crockfordNormalize(request.PathValue("parentUUID")), pph.postStore.rootUUID)
+	parentUUID := cmp.Or(crockfordNormalize(request.PathValue("parentUUID")), pph.postStore.rootID)
 	if !pph.postStore.hasPost(parentUUID) {
 		http.NotFound(responseWriter, request)
 

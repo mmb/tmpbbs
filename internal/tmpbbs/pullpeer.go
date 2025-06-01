@@ -102,7 +102,7 @@ func (pp *pullPeer) sync() int {
 
 		// If the parent is the peer's root, add it to our root
 		if protoPost.GetParentUuid() == pp.rootUUID {
-			pp.postStore.put(post, pp.postStore.rootUUID)
+			pp.postStore.put(post, pp.postStore.rootID)
 			pp.lastUUIDSynced = protoPost.GetUuid()
 
 			continue
