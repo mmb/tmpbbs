@@ -11,34 +11,34 @@ import (
 // A PostStore stores Posts in memory and provides safety for concurrent
 // access.
 type PostStore struct {
-	uuidMap  map[string]int
-	rootUUID string
-	posts    []*post
-	mutex    sync.RWMutex
+	idMap  map[string]int
+	rootID string
+	posts  []*post
+	mutex  sync.RWMutex
 }
 
 // NewPostStore returns a new PostStore. It also creates the root Post.
 func NewPostStore(title string) *PostStore {
 	rootPost := newPost(title, "", "", nil)
 	postStore := &PostStore{
-		uuidMap:  make(map[string]int),
-		rootUUID: rootPost.uuid,
+		idMap:  make(map[string]int),
+		rootID: rootPost.uuid,
 	}
 	postStore.put(rootPost, "")
 
 	return postStore
 }
 
-func (ps *PostStore) put(post *post, parentUUID string) {
+func (ps *PostStore) put(post *post, parentID string) {
 	ps.mutex.Lock()
 	defer ps.mutex.Unlock()
 
-	post.Parent = ps.getPostByUUID(parentUUID)
+	post.Parent = ps.getPostByID(parentID)
 	if post.Parent != nil {
 		post.Parent.Replies.PushFront(post)
 	}
 
-	ps.uuidMap[post.uuid] = len(ps.posts)
+	ps.idMap[post.uuid] = len(ps.posts)
 	ps.posts = append(ps.posts, post)
 
 	if (post.IsOriginalPoster() || post.IsSuperuser()) && strings.HasPrefix(post.Body, "!delete") {
@@ -48,15 +48,15 @@ func (ps *PostStore) put(post *post, parentUUID string) {
 	}
 }
 
-func (ps *PostStore) get(uuid string, callback func(*post)) bool {
+func (ps *PostStore) get(postID string, callback func(*post)) bool {
 	var post *post
 
 	ps.mutex.RLock()
 	defer ps.mutex.RUnlock()
 
-	if uuid == "" {
+	if postID == "" {
 		post = ps.posts[0]
-	} else if post = ps.getPostByUUID(uuid); post == nil {
+	} else if post = ps.getPostByID(postID); post == nil {
 		return false
 	}
 
@@ -65,11 +65,11 @@ func (ps *PostStore) get(uuid string, callback func(*post)) bool {
 	return true
 }
 
-func (ps *PostStore) getSince(uuid string, maxPosts int) []*post {
+func (ps *PostStore) getSince(postID string, maxPosts int) []*post {
 	ps.mutex.RLock()
 	defer ps.mutex.RUnlock()
 
-	sinceIndex, found := ps.uuidMap[uuid]
+	sinceIndex, found := ps.idMap[postID]
 	if !found {
 		sinceIndex = -1
 	}
@@ -80,11 +80,11 @@ func (ps *PostStore) getSince(uuid string, maxPosts int) []*post {
 	return ps.posts[start:end]
 }
 
-func (ps *PostStore) hasPost(uuid string) bool {
+func (ps *PostStore) hasPost(postID string) bool {
 	ps.mutex.RLock()
 	defer ps.mutex.RUnlock()
 
-	_, found := ps.uuidMap[uuid]
+	_, found := ps.idMap[postID]
 
 	return found
 }
@@ -109,8 +109,8 @@ func (ps *PostStore) LoadYAML(path string, tripcoder *Tripcoder) error {
 	return nil
 }
 
-func (ps *PostStore) getPostByUUID(uuid string) *post {
-	postIndex, found := ps.uuidMap[uuid]
+func (ps *PostStore) getPostByID(postID string) *post {
+	postIndex, found := ps.idMap[postID]
 	if !found {
 		return nil
 	}
