@@ -1,6 +1,7 @@
 package tmpbbs
 
 import (
+	"container/list"
 	"os"
 	"strings"
 	"sync"
@@ -11,18 +12,21 @@ import (
 // A PostStore stores Posts in memory and provides safety for concurrent
 // access.
 type PostStore struct {
-	idMap  map[string]int
-	rootID string
-	posts  []*post
-	mutex  sync.RWMutex
+	idMap    map[string]*list.Element
+	posts    *list.List
+	rootPost *post
+	rootID   string
+	mutex    sync.RWMutex
 }
 
 // NewPostStore returns a new PostStore. It also creates the root Post.
 func NewPostStore(title string) *PostStore {
 	rootPost := newPost(title, "", "", nil)
 	postStore := &PostStore{
-		idMap:  make(map[string]int),
-		rootID: rootPost.id,
+		idMap:    make(map[string]*list.Element),
+		posts:    list.New(),
+		rootPost: rootPost,
+		rootID:   rootPost.id,
 	}
 	postStore.put(rootPost, "")
 
@@ -33,15 +37,13 @@ func (ps *PostStore) put(post *post, parentID string) {
 	ps.mutex.Lock()
 	defer ps.mutex.Unlock()
 
-	post.Parent = ps.getPostByID(parentID)
-	if post.Parent != nil {
+	if post.Parent = ps.getPostByID(parentID); post.Parent != nil {
 		post.Parent.Replies.PushFront(post)
 	}
 
-	ps.idMap[post.id] = len(ps.posts)
-	ps.posts = append(ps.posts, post)
+	ps.idMap[post.id] = ps.posts.PushBack(post)
 
-	if (post.IsOriginalPoster() || post.IsSuperuser()) && strings.HasPrefix(post.Body, "!delete") {
+	if (post.IsOriginalPoster() || post.IsSuperuser()) && strings.HasPrefix(post.Body, "!delete") && post.Parent != nil {
 		post.Parent.delete()
 	} else {
 		post.bump()
@@ -49,35 +51,40 @@ func (ps *PostStore) put(post *post, parentID string) {
 }
 
 func (ps *PostStore) get(postID string, callback func(*post)) bool {
-	var post *post
+	var callbackPost *post
 
 	ps.mutex.RLock()
 	defer ps.mutex.RUnlock()
 
 	if postID == "" {
-		post = ps.posts[0]
-	} else if post = ps.getPostByID(postID); post == nil {
+		callbackPost = ps.rootPost
+	} else if callbackPost = ps.getPostByID(postID); callbackPost == nil {
 		return false
 	}
 
-	callback(post)
+	callback(callbackPost)
 
 	return true
 }
 
 func (ps *PostStore) getSince(postID string, maxPosts int) []*post {
+	var start *list.Element
+
 	ps.mutex.RLock()
 	defer ps.mutex.RUnlock()
 
-	sinceIndex, found := ps.idMap[postID]
-	if !found {
-		sinceIndex = -1
+	if sinceElement, found := ps.idMap[postID]; found {
+		start = sinceElement.Next()
+	} else {
+		start = ps.posts.Front()
 	}
 
-	start := sinceIndex + 1
-	end := min(len(ps.posts), start+maxPosts)
+	result := make([]*post, 0, maxPosts)
+	for count, element := 0, start; count < maxPosts && element != nil; count, element = count+1, element.Next() {
+		result = append(result, element.Value.(*post)) //nolint:errcheck,forcetypeassert // can't error
+	}
 
-	return ps.posts[start:end]
+	return result
 }
 
 func (ps *PostStore) hasPost(postID string) bool {
@@ -103,17 +110,19 @@ func (ps *PostStore) LoadYAML(path string, tripcoder *Tripcoder) error {
 	}
 
 	for i := range posts {
-		ps.put(newPost(posts[i].Title, posts[i].Author, posts[i].Body, tripcoder), ps.posts[0].id)
+		ps.put(newPost(posts[i].Title, posts[i].Author, posts[i].Body, tripcoder), ps.rootID)
 	}
 
 	return nil
 }
 
+// getPostByID returns the post with ID postID or nil if not found.
+// The caller must handle locking.
 func (ps *PostStore) getPostByID(postID string) *post {
-	postIndex, found := ps.idMap[postID]
+	element, found := ps.idMap[postID]
 	if !found {
 		return nil
 	}
 
-	return ps.posts[postIndex]
+	return element.Value.(*post) //nolint:errcheck,forcetypeassert // can't error
 }
