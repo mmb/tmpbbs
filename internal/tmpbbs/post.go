@@ -14,6 +14,7 @@ type post struct {
 	time                 time.Time
 	Parent               *post
 	Replies              *list.List
+	postsElement         *list.Element
 	parentRepliesElement *list.Element
 	Title                string
 	Author               string
@@ -108,6 +109,16 @@ func (p *post) hasRepliesPage(page int, perPage int) bool {
 
 func (p *post) repliesLastPage(perPage int) int {
 	return max(1, int(math.Ceil(float64(p.Replies.Len())/float64(perPage))))
+}
+
+// lastUpdate returns the last update time of the most recent reply or the
+// time of the post if there are no replies.
+func (p *post) lastUpdate() time.Time {
+	if lastReply := p.Replies.Front(); lastReply != nil {
+		return lastReply.Value.(*post).lastUpdate() //nolint:errcheck,forcetypeassert // only one type
+	}
+
+	return p.time.Round(0)
 }
 
 func (p *post) validate() []string {

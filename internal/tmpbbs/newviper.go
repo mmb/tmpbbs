@@ -50,6 +50,8 @@ func (lvs LoggedViperSettings) LogValue() slog.Value {
 		"json-log",
 		"listen-address",
 		"load-posts",
+		"prune-interval",
+		"prune-max-age",
 		"pull-interval",
 		"pull-peers",
 		"qr-codes",
@@ -81,6 +83,10 @@ func initFlags() {
 	pflag.StringSliceP("load-posts", "p", []string{},
 		`comma-separated paths of YAML or JSON files of posts to load, format [{"title":"","author":"","body":""}]
 ($TMPBBS_LOAD_POSTS)`)
+	pflag.DurationP("prune-interval", "s", time.Hour,
+		"how often to check for stale posts to prune ($TMPBBS_PRUNE_INTERVAL)")
+	pflag.DurationP("prune-max-age", "w", 30*24*time.Hour,
+		"delete posts that haven't been updated in this long ($TMPBBS_PRUNE_MAX_AGE)")
 	pflag.DurationP("pull-interval", "i", 30*time.Second, //nolint:mnd // default
 		"peer pull interval ($TMPBBS_PULL_INTERVAL)")
 	pflag.StringSliceP("pull-peers", "d", []string{},

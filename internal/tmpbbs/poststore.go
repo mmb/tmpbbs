@@ -2,9 +2,11 @@ package tmpbbs
 
 import (
 	"container/list"
+	"log/slog"
 	"os"
 	"strings"
 	"sync"
+	"time"
 
 	"gopkg.in/yaml.v3"
 )
@@ -12,23 +14,31 @@ import (
 // A PostStore stores Posts in memory and provides safety for concurrent
 // access.
 type PostStore struct {
-	idMap    map[string]*list.Element
-	posts    *list.List
-	rootPost *post
-	rootID   string
-	mutex    sync.RWMutex
+	idMap         map[string]*list.Element
+	posts         *list.List
+	rootPost      *post
+	rootID        string
+	pruneInterval time.Duration
+	pruneMaxAge   time.Duration
+	mutex         sync.RWMutex
 }
 
 // NewPostStore returns a new PostStore. It also creates the root Post.
-func NewPostStore(title string) *PostStore {
+func NewPostStore(title string, pruneInterval time.Duration, pruneMaxAge time.Duration) *PostStore {
 	rootPost := newPost(title, "", "", nil)
 	postStore := &PostStore{
-		idMap:    make(map[string]*list.Element),
-		posts:    list.New(),
-		rootPost: rootPost,
-		rootID:   rootPost.id,
+		idMap:         make(map[string]*list.Element),
+		posts:         list.New(),
+		rootPost:      rootPost,
+		rootID:        rootPost.id,
+		pruneInterval: pruneInterval,
+		pruneMaxAge:   pruneMaxAge,
 	}
 	postStore.put(rootPost, "")
+
+	if pruneInterval > 0 {
+		go postStore.startPruner()
+	}
 
 	return postStore
 }
@@ -41,7 +51,8 @@ func (ps *PostStore) put(post *post, parentID string) {
 		post.parentRepliesElement = post.Parent.Replies.PushFront(post)
 	}
 
-	ps.idMap[post.id] = ps.posts.PushBack(post)
+	post.postsElement = ps.posts.PushBack(post)
+	ps.idMap[post.id] = post.postsElement
 
 	if (post.IsOriginalPoster() || post.IsSuperuser()) && strings.HasPrefix(post.Body, "!delete") && post.Parent != nil {
 		post.Parent.delete()
@@ -65,6 +76,21 @@ func (ps *PostStore) get(postID string, callback func(*post)) bool {
 	callback(callbackPost)
 
 	return true
+}
+
+// delete removes all references to a post from the PostStore.
+// Write lock must be obtained before calling.
+func (ps *PostStore) delete(postToDelete *post) {
+	slog.Info("delete post", "id", postToDelete.id)
+
+	for reply := postToDelete.Replies.Front(); reply != nil; reply = reply.Next() {
+		ps.delete(reply.Value.(*post)) //nolint:errcheck,forcetypeassert // only one type
+	}
+
+	postToDelete.Parent.Replies.Remove(postToDelete.parentRepliesElement)
+
+	delete(ps.idMap, postToDelete.id)
+	ps.posts.Remove(postToDelete.postsElement)
 }
 
 func (ps *PostStore) getSince(postID string, maxPosts int) []*post {
@@ -125,4 +151,38 @@ func (ps *PostStore) getPostByID(postID string) *post {
 	}
 
 	return element.Value.(*post) //nolint:errcheck,forcetypeassert // can't error
+}
+
+func (ps *PostStore) startPruner() {
+	ticker := time.NewTicker(ps.pruneInterval)
+	defer ticker.Stop()
+
+	for {
+		<-ticker.C
+		ps.prune()
+	}
+}
+
+func (ps *PostStore) prune() {
+	slog.Info("prune start")
+
+	var deletePosts []*post
+
+	ps.mutex.Lock()
+	defer ps.mutex.Unlock()
+	beforeCount := ps.posts.Len()
+
+	for element := ps.posts.Front().Next(); element != nil; element = element.Next() {
+		checkPost := element.Value.(*post) //nolint:errcheck,forcetypeassert // only one type
+		if time.Since(checkPost.lastUpdate()) > ps.pruneMaxAge {
+			deletePosts = append(deletePosts, checkPost)
+		}
+	}
+
+	for _, p := range deletePosts {
+		ps.delete(p)
+	}
+
+	afterCount := ps.posts.Len()
+	slog.Info("prune end", "prunedCount", beforeCount-afterCount)
 }
