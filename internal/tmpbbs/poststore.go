@@ -38,7 +38,7 @@ func (ps *PostStore) put(post *post, parentID string) {
 	defer ps.mutex.Unlock()
 
 	if post.Parent = ps.getPostByID(parentID); post.Parent != nil {
-		post.Parent.Replies.PushFront(post)
+		post.parentRepliesElement = post.Parent.Replies.PushFront(post)
 	}
 
 	ps.idMap[post.id] = ps.posts.PushBack(post)
