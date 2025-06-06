@@ -11,15 +11,16 @@ import (
 )
 
 type post struct {
-	time      time.Time
-	Parent    *post
-	Replies   *list.List
-	Title     string
-	Author    string
-	Tripcode  string
-	Body      string
-	id        string
-	superuser bool
+	time                 time.Time
+	Parent               *post
+	Replies              *list.List
+	parentRepliesElement *list.Element
+	Title                string
+	Author               string
+	Tripcode             string
+	Body                 string
+	id                   string
+	superuser            bool
 }
 
 const (
@@ -78,13 +79,7 @@ func (p *post) bump() {
 		return
 	}
 
-	current := p.Parent.Replies.Front()
-	for ; current.Value.(*post) != p; current = current.Next() { //nolint:errcheck,forcetypeassert,revive // only one type
-	}
-
-	p.Parent.Replies.PushFront(current.Value)
-	p.Parent.Replies.Remove(current)
-
+	p.Parent.Replies.MoveToFront(p.parentRepliesElement)
 	p.Parent.bump()
 }
 
