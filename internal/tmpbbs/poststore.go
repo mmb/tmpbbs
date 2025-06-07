@@ -107,7 +107,7 @@ func (ps *PostStore) getSince(postID string, maxPosts int) []*post {
 
 	result := make([]*post, 0, maxPosts)
 	for count, element := 0, start; count < maxPosts && element != nil; count, element = count+1, element.Next() {
-		result = append(result, element.Value.(*post)) //nolint:errcheck,forcetypeassert // can't error
+		result = append(result, element.Value.(*post)) //nolint:errcheck,forcetypeassert // only one type
 	}
 
 	return result
@@ -150,7 +150,7 @@ func (ps *PostStore) getPostByID(postID string) *post {
 		return nil
 	}
 
-	return element.Value.(*post) //nolint:errcheck,forcetypeassert // can't error
+	return element.Value.(*post) //nolint:errcheck,forcetypeassert // only one type
 }
 
 func (ps *PostStore) startPruner() {
