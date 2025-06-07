@@ -14,6 +14,10 @@ func newWrappingEmojiParser(wrapper *emojiSpanWrapper) *wrappingEmojiParser {
 	}
 }
 
-func (wep *wrappingEmojiParser) parse(input string) string {
-	return emoji.SprintWithWrapper(wep.wrapper, input)
+func (wep wrappingEmojiParser) parse(input string) string {
+	if wep.wrapper != nil {
+		return emoji.SprintWithWrapper(wep.wrapper, input)
+	}
+
+	return emoji.Sprint(input)
 }
