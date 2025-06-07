@@ -18,6 +18,10 @@ Usage of tmpbbs:
 	-l, --listen-address string         <host>:port to listen on for HTTP ($TMPBBS_LISTEN_ADDRESS) (default ":8080")
 	-p, --load-posts strings            comma-separated paths of YAML or JSON files of posts to load,
 	                                    format [{"title":"","author":"","body":""}] ($TMPBBS_LOAD_POSTS)
+	-s, --prune-interval duration       how often to check for stale posts to prune ($TMPBBS_PRUNE_INTERVAL)
+	                                    (default 1h0m0s)
+	-w, --prune-max-age duration        delete posts that haven't been updated in this long ($TMPBBS_PRUNE_MAX_AGE)
+	                                    (default 720h0m0s)
 	-i, --pull-interval duration        peer pull interval ($TMPBBS_PULL_INTERVAL) (default 30s)
 	-d, --pull-peers strings            comma-separated list of tmpbbs gRPC <tls://>host:gRPCport to pull posts from
 	                                    ($TMPBBS_PULL_PEERS)
@@ -66,7 +70,8 @@ func main() {
 		os.Exit(0)
 	}
 
-	postStore := tmpbbs.NewPostStore(viper.GetString("title"))
+	postStore := tmpbbs.NewPostStore(viper.GetString("title"), viper.GetDuration("prune-interval"),
+		viper.GetDuration("prune-max-age"))
 
 	tripcoder, err := tmpbbs.NewTripcoder(viper.GetString("tripcode-salt"), viper.GetStringSlice("superuser-tripcodes"),
 		rand.Reader)
