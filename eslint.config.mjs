@@ -15,9 +15,10 @@ export default defineConfig([
     rules: {
       'comma-dangle':  ['error', 'never'],
       'init-declarations': 'off',
-      'no-magic-numbers': [ 'error', { 'ignore' : [0, 1] }],
-      'quotes': ['error', 'single', { 'avoidEscape': true }],
-      'semi': ['error', 'never']
+      'no-magic-numbers': [ 'error', { ignore : [0, 1] }],
+      'quote-props': ['error', 'as-needed'],
+      quotes: ['error', 'single', { avoidEscape: true }],
+      semi: ['error', 'never']
     }
   }
 ])
