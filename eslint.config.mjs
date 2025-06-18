@@ -13,9 +13,10 @@ export default defineConfig([
     },
     plugins: { js },
     rules: {
-      'comma-dangle':  ['error', 'never'],
+      'comma-dangle': ['error', 'never'],
       'init-declarations': 'off',
-      'no-magic-numbers': [ 'error', { ignore : [0, 1] }],
+      'key-spacing': ['error', { mode: 'strict' }],
+      'no-magic-numbers': [ 'error', { ignore: [0, 1] }],
       'quote-props': ['error', 'as-needed'],
       quotes: ['error', 'single', { avoidEscape: true }],
       semi: ['error', 'never']
