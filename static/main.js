@@ -43,7 +43,7 @@ class EmojiSuggester {
     }
 
     const params = new URLSearchParams([["q", this.currentWord]]),
-     suggestions = await (await fetch(`/emoji-suggest?${params}`)).json()
+     suggestions = await (await fetch(`/emoji-suggest?${params}`, { cache: 'default' })).json()
 
     this.displayContainer.innerHTML = ""
     suggestions.forEach(suggestion => {
