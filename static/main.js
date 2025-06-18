@@ -1,6 +1,6 @@
 const debounceInterval = 150,
-      emojiSuggestions = document.getElementById("emoji-suggestions"),
-          qrCodeDialog = document.getElementById("qr")
+      emojiSuggestions = document.getElementById('emoji-suggestions'),
+          qrCodeDialog = document.getElementById('qr')
 
 class EmojiSuggester {
   constructor(input, displayContainer) {
@@ -36,26 +36,26 @@ class EmojiSuggester {
   }
 
   async #getSuggestions() {
-    if (!this.currentWord.startsWith(":") || this.currentWord.length < this.minPrefixLength) {
-      this.displayContainer.innerHTML = ""
+    if (!this.currentWord.startsWith(':') || this.currentWord.length < this.minPrefixLength) {
+      this.displayContainer.innerHTML = ''
 
       return
     }
 
-    const params = new URLSearchParams([["q", this.currentWord]]),
+    const params = new URLSearchParams([['q', this.currentWord]]),
      suggestions = await (await fetch(`/emoji-suggest?${params}`, { cache: 'default' })).json()
 
-    this.displayContainer.innerHTML = ""
+    this.displayContainer.innerHTML = ''
     suggestions.forEach(suggestion => {
-      const button = document.createElement("button"),
-         emojiSpan = document.createElement("span")
-      button.type = "button"
-      button.className = "emoji-suggestion"
+      const button = document.createElement('button'),
+         emojiSpan = document.createElement('span')
+      button.type = 'button'
+      button.className = 'emoji-suggestion'
       button.addEventListener('mouseup', () => {
         this.#replaceCurrentWord(suggestion.suggestion)
         this.input.focus()
       })
-      emojiSpan.className = "emoji"
+      emojiSpan.className = 'emoji'
       emojiSpan.innerHTML = suggestion.pictogram
       button.append(emojiSpan, document.createTextNode(` ${suggestion.suggestion}`))
       this.displayContainer.append(button)
@@ -75,9 +75,9 @@ class EmojiSuggester {
 }
 
 if (emojiSuggestions) {
-  const bodyTextarea = document.getElementById("body"),
+  const bodyTextarea = document.getElementById('body'),
       emojiSuggester = new EmojiSuggester(bodyTextarea, emojiSuggestions),
-      events = ["input", "mouseup"]
+      events = ['input', 'mouseup']
     let timeout
     events.forEach(event => {
       bodyTextarea.addEventListener(event, () => {
@@ -88,12 +88,12 @@ if (emojiSuggestions) {
 }
 
 if (qrCodeDialog) {
-  const button = document.getElementById("show-qr"),
-           img = document.createElement("img")
+  const button = document.getElementById('show-qr'),
+           img = document.createElement('img')
   img.src = `/qr?url=${encodeURIComponent(window.location.href)}`
-  img.loading = "lazy"
+  img.loading = 'lazy'
   qrCodeDialog.prepend(img)
 
-  button.addEventListener("click", () => { qrCodeDialog.showModal() })
-  button.style.display = ""
+  button.addEventListener('click', () => { qrCodeDialog.showModal() })
+  button.style.display = ''
 }
