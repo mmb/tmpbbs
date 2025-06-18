@@ -1,22 +1,23 @@
-import { defineConfig } from "eslint/config"
-import globals from "globals"
-import js from "@eslint/js"
+import { defineConfig } from 'eslint/config'
+import globals from 'globals'
+import js from '@eslint/js'
 
 export default defineConfig([
   {
-    extends: ["js/all"],
-    files: ["**/*.{js,mjs,cjs}"],
+    extends: ['js/all'],
+    files: ['**/*.{js,mjs,cjs}'],
     languageOptions: { globals: globals.browser },
     linterOptions: {
-      reportUnusedDisableDirectives: "error",
-      reportUnusedInlineConfigs: "error"
+      reportUnusedDisableDirectives: 'error',
+      reportUnusedInlineConfigs: 'error'
     },
     plugins: { js },
     rules: {
-      "comma-dangle":  ["error", "never"],
-      "init-declarations": "off",
-      "no-magic-numbers": [ "error", { "ignore" : [0, 1] }],
-      "semi":  ["error", "never"]
+      'comma-dangle':  ['error', 'never'],
+      'init-declarations': 'off',
+      'no-magic-numbers': [ 'error', { 'ignore' : [0, 1] }],
+      'quotes': ['error', 'single', { 'avoidEscape': true }],
+      'semi': ['error', 'never']
     }
   }
 ])
