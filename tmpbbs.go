@@ -60,15 +60,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	tmpbbs.SetupLog(viper.GetBool("json-log"))
-
-	slog.Info("startup", "version", tmpbbs.Version, "commit", tmpbbs.Commit, "config",
-		tmpbbs.LoggedViperSettings(viper.AllSettings()))
-
 	if viper.GetBool("version") {
 		fmt.Printf("%s-%s\n", tmpbbs.Version, tmpbbs.Commit)
 		os.Exit(0)
 	}
+
+	tmpbbs.SetupLog(viper.GetBool("json-log"))
+
+	slog.Info("startup", "version", tmpbbs.Version, "commit", tmpbbs.Commit, "config",
+		tmpbbs.LoggedViperSettings(viper.AllSettings()))
 
 	postStore := tmpbbs.NewPostStore(viper.GetString("title"), viper.GetDuration("prune-interval"),
 		viper.GetDuration("prune-max-age"))
