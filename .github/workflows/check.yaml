@@ -11,6 +11,7 @@ name: Check
 permissions:
   checks: write
   contents: read
+  security-events: write
 
 jobs:
   eslint:
