@@ -62,17 +62,19 @@ func (pp *pullPeer) run(initialWait time.Duration) {
 }
 
 func (pp *pullPeer) sync() int {
-	response, err := pp.client.Get(context.Background(),
-		&proto.PostSyncRequest{Id: pp.lastIDSynced, MaxResults: pp.maxResults}, grpc.UseCompressor(gzip.Name))
+	ctx := context.Background()
+
+	response, err := pp.client.Get(ctx, &proto.PostSyncRequest{Id: pp.lastIDSynced, MaxResults: pp.maxResults},
+		grpc.UseCompressor(gzip.Name))
 	if err != nil {
-		pp.logger.Error(err.Error())
+		pp.logger.ErrorContext(ctx, err.Error())
 
 		return 0
 	}
 
 	protoPosts := response.GetPosts()
-	pp.logger.Info("received response to peer sync request", "lastIDSynced", pp.lastIDSynced,
-		"numPosts", len(protoPosts))
+	pp.logger.InfoContext(ctx, "received response to peer sync request", "lastIDSynced", pp.lastIDSynced, "numPosts",
+		len(protoPosts))
 
 	for _, protoPost := range protoPosts {
 		// Root post of peer
@@ -118,7 +120,7 @@ func (pp *pullPeer) sync() int {
 
 		// We don't have the parent, start a resync from the peer root.
 		pp.lastIDSynced = ""
-		pp.logger.Warn("resync from root", "missingParentID", protoPost.GetParentId())
+		pp.logger.WarnContext(ctx, "resync from root", "missingParentID", protoPost.GetParentId())
 
 		return 0
 	}

@@ -1,6 +1,7 @@
 package tmpbbs
 
 import (
+	"context"
 	"crypto/tls"
 	"log/slog"
 	"net"
@@ -12,7 +13,10 @@ import (
 
 // ServeGRPC creates and configures a grpc.Server then starts listening.
 func ServeGRPC(listenAddress string, tlsCertFile string, tlsKeyFile string, postSyncServer *PostSyncServer) error {
-	listener, err := net.Listen("tcp", listenAddress)
+	ctx := context.Background()
+	listenConfig := net.ListenConfig{}
+
+	listener, err := listenConfig.Listen(ctx, "tcp", listenAddress)
 	if err != nil {
 		return err
 	}
@@ -40,7 +44,8 @@ func ServeGRPC(listenAddress string, tlsCertFile string, tlsKeyFile string, post
 
 	proto.RegisterPostSyncServer(grpcServer, postSyncServer)
 
-	slog.Info("listening for gRPC", "address", listenAddress, "tlsCertFile", tlsCertFile, "tlsKeyFile", tlsKeyFile)
+	slog.InfoContext(ctx, "listening for gRPC", "address", listenAddress, "tlsCertFile", tlsCertFile, "tlsKeyFile",
+		tlsKeyFile)
 
 	return grpcServer.Serve(listener)
 }

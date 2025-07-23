@@ -2,6 +2,7 @@ package tmpbbs
 
 import (
 	"container/list"
+	"context"
 	"log/slog"
 	"os"
 	"strings"
@@ -81,7 +82,8 @@ func (ps *PostStore) get(postID string, callback func(*post)) bool {
 // delete removes all references to a post from the PostStore.
 // Write lock must be obtained before calling.
 func (ps *PostStore) delete(postToDelete *post) {
-	slog.Info("delete post", "id", postToDelete.id)
+	ctx := context.Background()
+	slog.InfoContext(ctx, "delete post", "id", postToDelete.id)
 
 	for reply := postToDelete.Replies.Front(); reply != nil; reply = reply.Next() {
 		ps.delete(reply.Value.(*post)) //nolint:errcheck,forcetypeassert // only one type
@@ -164,12 +166,14 @@ func (ps *PostStore) startPruner() {
 }
 
 func (ps *PostStore) prune() {
-	slog.Info("prune start")
+	ctx := context.Background()
+	slog.InfoContext(ctx, "prune start")
 
 	var deletePosts []*post
 
 	ps.mutex.Lock()
 	defer ps.mutex.Unlock()
+
 	beforeCount := ps.posts.Len()
 
 	for element := ps.posts.Front().Next(); element != nil; element = element.Next() {
@@ -184,5 +188,5 @@ func (ps *PostStore) prune() {
 	}
 
 	afterCount := ps.posts.Len()
-	slog.Info("prune end", "prunedCount", beforeCount-afterCount)
+	slog.InfoContext(ctx, "prune end", "prunedCount", beforeCount-afterCount)
 }

@@ -1,6 +1,7 @@
 package tmpbbs
 
 import (
+	"context"
 	"log/slog"
 	"net/http"
 	"time"
@@ -8,6 +9,7 @@ import (
 
 // Serve creates and configures an http.Server then starts listening.
 func Serve(listenAddress string, tlsCertFile string, tlsKeyFile string, serveMux *http.ServeMux) error {
+	ctx := context.Background()
 	server := &http.Server{
 		Addr:              listenAddress,
 		Handler:           newLogHandler(serveMux),
@@ -18,12 +20,12 @@ func Serve(listenAddress string, tlsCertFile string, tlsKeyFile string, serveMux
 	}
 
 	if tlsCertFile != "" && tlsKeyFile != "" {
-		slog.Info("listening for HTTP", "address", listenAddress, "tlsEnabled", true)
+		slog.InfoContext(ctx, "listening for HTTP", "address", listenAddress, "tlsEnabled", true)
 
 		return server.ListenAndServeTLS(tlsCertFile, tlsKeyFile)
 	}
 
-	slog.Info("listening for HTTP", "address", listenAddress, "tlsEnabled", false)
+	slog.InfoContext(ctx, "listening for HTTP", "address", listenAddress, "tlsEnabled", false)
 
 	return server.ListenAndServe()
 }
