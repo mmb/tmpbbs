@@ -28,7 +28,7 @@ func (lh *logHandler) ServeHTTP(responseWriter http.ResponseWriter, request *htt
 	start := time.Now()
 
 	lh.wrappedHandler.ServeHTTP(lrw, request)
-	slog.Info("HTTP request",
+	slog.InfoContext(request.Context(), "HTTP request",
 		slog.Group("request",
 			"remoteAddr", request.RemoteAddr,
 			"method", request.Method,

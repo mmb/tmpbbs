@@ -64,7 +64,7 @@ func (pss *PostSyncServer) Get(ctx context.Context, request *proto.PostSyncReque
 		}
 	}
 
-	logger.Info("responded to peer sync request", "sinceID", request.GetId(),
+	logger.InfoContext(ctx, "responded to peer sync request", "sinceID", request.GetId(),
 		"maxResults", maxResults, "numResults", len(protoPosts))
 
 	return &proto.PostSyncResponse{

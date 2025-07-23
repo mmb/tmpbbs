@@ -40,6 +40,7 @@ Usage of tmpbbs:
 package main
 
 import (
+	"context"
 	"crypto/rand"
 	"embed"
 	"fmt"
@@ -55,6 +56,8 @@ import (
 var staticFS embed.FS
 
 func main() {
+	ctx := context.Background()
+
 	viper, err := tmpbbs.NewViper()
 	if err != nil {
 		log.Fatal(err)
@@ -67,7 +70,7 @@ func main() {
 
 	tmpbbs.SetupLog(viper.GetBool("json-log"))
 
-	slog.Info("startup", "version", tmpbbs.Version, "commit", tmpbbs.Commit, "config",
+	slog.InfoContext(ctx, "startup", "version", tmpbbs.Version, "commit", tmpbbs.Commit, "config",
 		tmpbbs.LoggedViperSettings(viper.AllSettings()))
 
 	postStore := tmpbbs.NewPostStore(viper.GetString("title"), viper.GetDuration("prune-interval"),
