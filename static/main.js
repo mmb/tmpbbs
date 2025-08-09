@@ -51,7 +51,7 @@ class EmojiSuggester {
          emojiSpan = document.createElement('span')
       button.type = 'button'
       button.className = 'emoji-suggestion'
-      button.addEventListener('mouseup', () => {
+      button.addEventListener('click', () => {
         this.#replaceCurrentWord(suggestion.suggestion)
         this.input.focus()
       })
