@@ -49,7 +49,6 @@ import (
 	"os"
 
 	"github.com/mmb/tmpbbs/internal/tmpbbs"
-	_ "go.uber.org/automaxprocs"
 )
 
 //go:embed static
