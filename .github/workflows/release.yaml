@@ -61,14 +61,14 @@ jobs:
           sbom: true
           push: true
       - name: Generate signed build provenance attestation for Docker Hub
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v3
         with:
           subject-name: index.docker.io/${{ env.DOCKER_HUB_IMAGE }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
       - name: >-
           Generate signed build provenance attestation for GitHub Container Registry
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v3
         with:
           subject-name: ghcr.io/${{ github.repository }}
           subject-digest: ${{ steps.push.outputs.digest }}
@@ -80,7 +80,7 @@ jobs:
           ./build-release-binaries.sh "${{ steps.metadata.outputs.version }}"
           "${{ github.sha }}"
       - name: Generate signed build provenance attestation for binaries
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v3
         with:
           subject-path: release/*
       - name: Create release
