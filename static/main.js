@@ -77,7 +77,8 @@ class EmojiSuggester {
 if (emojiSuggestions) {
   const bodyTextarea = document.getElementById('body'),
       emojiSuggester = new EmojiSuggester(bodyTextarea, emojiSuggestions),
-      events = ['input', 'mouseup']
+      events = ['keyup', 'mouseup']
+
     let timeout
     events.forEach(event => {
       bodyTextarea.addEventListener(event, () => {
