@@ -75,6 +75,8 @@ jobs:
           push-to-registry: true
       - name: Install golang
         uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
       - name: Build binaries
         run: >-
           ./build-release-binaries.sh "${{ steps.metadata.outputs.version }}"
