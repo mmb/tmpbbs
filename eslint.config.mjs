@@ -14,6 +14,8 @@ export default defineConfig([
     plugins: { js },
     rules: {
       'comma-dangle': ['error', 'never'],
+      // eslint-disable-next-line no-magic-numbers
+      indent: ['error', 2],
       'init-declarations': 'off',
       'key-spacing': ['error', { mode: 'strict' }],
       'no-magic-numbers': [ 'error', { ignore: [0, 1] }],

@@ -1,6 +1,6 @@
 const debounceInterval = 150,
-      emojiSuggestions = document.getElementById('emoji-suggestions'),
-          qrCodeDialog = document.getElementById('qr')
+  emojiSuggestions = document.getElementById('emoji-suggestions'),
+  qrCodeDialog = document.getElementById('qr')
 
 class EmojiSuggester {
   constructor(input, displayContainer) {
@@ -43,12 +43,12 @@ class EmojiSuggester {
     }
 
     const params = new URLSearchParams([['q', this.currentWord]]),
-     suggestions = await (await fetch(`/emoji-suggest?${params}`, { cache: 'default' })).json()
+      suggestions = await (await fetch(`/emoji-suggest?${params}`, { cache: 'default' })).json()
 
     this.displayContainer.innerHTML = ''
     suggestions.forEach(suggestion => {
       const button = document.createElement('button'),
-         emojiSpan = document.createElement('span')
+        emojiSpan = document.createElement('span')
       button.type = 'button'
       button.className = 'emoji-suggestion'
       button.addEventListener('click', () => {
@@ -76,21 +76,21 @@ class EmojiSuggester {
 
 if (emojiSuggestions) {
   const bodyTextarea = document.getElementById('body'),
-      emojiSuggester = new EmojiSuggester(bodyTextarea, emojiSuggestions),
-      events = ['keyup', 'mouseup']
+    emojiSuggester = new EmojiSuggester(bodyTextarea, emojiSuggestions),
+    events = ['keyup', 'mouseup']
 
-    let timeout
-    events.forEach(event => {
-      bodyTextarea.addEventListener(event, () => {
-        clearTimeout(timeout)
-        timeout = setTimeout(() => emojiSuggester.update(), debounceInterval)
-      })
+  let timeout
+  events.forEach(event => {
+    bodyTextarea.addEventListener(event, () => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => emojiSuggester.update(), debounceInterval)
     })
+  })
 }
 
 if (qrCodeDialog) {
   const button = document.getElementById('show-qr'),
-           img = document.createElement('img')
+    img = document.createElement('img')
   img.src = `/qr?url=${encodeURIComponent(window.location.href)}`
   img.loading = 'lazy'
   qrCodeDialog.prepend(img)
