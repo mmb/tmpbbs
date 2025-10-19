@@ -10,7 +10,19 @@ class EmojiSuggester {
     this.whitespaceRegex = /\s/u
   }
 
-  update() {
+  listen() {
+    const events = ['keyup', 'mouseup']
+
+    let timeout
+    events.forEach(event => {
+      this.input.addEventListener(event, () => {
+        clearTimeout(timeout)
+        timeout = setTimeout(() => this.#update(), debounceInterval)
+      })
+    })
+  }
+
+  #update() {
     this.#updateCurrentWord()
     this.#getSuggestions()
   }
@@ -35,9 +47,13 @@ class EmojiSuggester {
     this.currentWordEndIndex = endIndex
   }
 
+  #indexIsWhitespace(index) {
+    return this.whitespaceRegex.test(this.input.value[index])
+  }
+
   async #getSuggestions() {
     if (!this.currentWord.startsWith(':') || this.currentWord.length < this.minPrefixLength) {
-      this.displayContainer.innerHTML = ''
+      this.#clearSuggestions()
 
       return
     }
@@ -45,7 +61,7 @@ class EmojiSuggester {
     const params = new URLSearchParams([['q', this.currentWord]]),
       suggestions = await (await fetch(`/emoji-suggest?${params}`, { cache: 'default' })).json()
 
-    this.displayContainer.innerHTML = ''
+    this.#clearSuggestions()
     suggestions.forEach(suggestion => {
       const button = document.createElement('button'),
         emojiSpan = document.createElement('span')
@@ -62,30 +78,21 @@ class EmojiSuggester {
     })
   }
 
+  #clearSuggestions() {
+    this.displayContainer.innerHTML = ''
+  }
+
   #replaceCurrentWord(replacement) {
     this.input.value = this.input.value.substring(0, this.currentWordStartIndex) + replacement + this.input.value.substring(this.currentWordEndIndex + 1)
     this.input.selectionStart = this.currentWordStartIndex + replacement.length
     this.input.selectionEnd =  this.input.selectionStart
-    this.update()
-  }
-
-  #indexIsWhitespace(index) {
-    return this.whitespaceRegex.test(this.input.value[index])
+    this.#update()
   }
 }
 
 if (emojiSuggestions) {
-  const bodyTextarea = document.getElementById('body'),
-    emojiSuggester = new EmojiSuggester(bodyTextarea, emojiSuggestions),
-    events = ['keyup', 'mouseup']
-
-  let timeout
-  events.forEach(event => {
-    bodyTextarea.addEventListener(event, () => {
-      clearTimeout(timeout)
-      timeout = setTimeout(() => emojiSuggester.update(), debounceInterval)
-    })
-  })
+  const emojiSuggester = new EmojiSuggester(document.getElementById('body'), emojiSuggestions)
+  emojiSuggester.listen()
 }
 
 if (qrCodeDialog) {
