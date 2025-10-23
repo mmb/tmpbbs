@@ -23,6 +23,8 @@ func newLogHandler(wrappedHandler http.Handler) *logHandler {
 	}
 }
 
+// ServeHTTP calls the wrapped handler then logs information about the request
+// and response.
 func (lh *logHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 	lrw := newLoggingResponseWriter(responseWriter)
 	start := time.Now()
@@ -52,10 +54,13 @@ func newLoggingResponseWriter(wrappedResponseWriter http.ResponseWriter) *loggin
 	}
 }
 
+// Header returns what the wrapped ResponseWriter's Header method returns.
 func (lrw *loggingResponseWriter) Header() http.Header {
 	return lrw.wrappedResponseWriter.Header()
 }
 
+// Write writes bytes to the wrapped ResponseWriter and increments the total
+// bytes written.
 func (lrw *loggingResponseWriter) Write(bytes []byte) (int, error) {
 	bytesWritten, err := lrw.wrappedResponseWriter.Write(bytes)
 	lrw.responseSize += bytesWritten
@@ -63,6 +68,8 @@ func (lrw *loggingResponseWriter) Write(bytes []byte) (int, error) {
 	return bytesWritten, err
 }
 
+// WriteHeader sets the status code on the wrapped ResponseWriter and calls its
+// WriteHeader method.
 func (lrw *loggingResponseWriter) WriteHeader(statusCode int) {
 	lrw.statusCode = statusCode
 	lrw.wrappedResponseWriter.WriteHeader(statusCode)

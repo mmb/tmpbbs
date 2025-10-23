@@ -38,6 +38,7 @@ linters:
     - goconst
     - gocritic
     - gocyclo
+    - godoclint
     - godot
     - godox
     - goheader
@@ -121,6 +122,8 @@ linters:
       disabled-checks:
         - paramTypeCombine
         - unnamedResult
+    godoclint:
+      default: all
     godot:
       capital: true
     gomoddirectives:
