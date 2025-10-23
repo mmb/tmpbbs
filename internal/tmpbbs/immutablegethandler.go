@@ -32,6 +32,8 @@ func newImmutableGetHandler(wrappedHandler http.Handler) *immutableGetHandler {
 	return &handler
 }
 
+// ServeHTTP sets ETag and Last-Modified headers and either returns HTTP 304 if
+// the content has not been modified or calls the wrapped handler.
 func (igh *immutableGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 	if igh.eTag != "" {
 		responseWriter.Header().Set("ETag", igh.eTag)

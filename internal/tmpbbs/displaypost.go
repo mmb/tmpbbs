@@ -1,8 +1,8 @@
 /*
 Package tmpbbs provides all functionality for the tmpbbs binary.
 
-It includes http and gRPC servers and handlers, HTML templating, localization,
-and data store.
+It includes http and gRPC servers and handlers, HTML templating,
+localization, and data store.
 */
 package tmpbbs
 
@@ -43,15 +43,21 @@ func newDisplayPost(post *post, printer *message.Printer, basicEmojiParser parse
 	}
 }
 
+// BodyHTML returns a template.HTML of the post's body with Markdown and emoji
+// expanded.
 func (dp displayPost) BodyHTML() template.HTML {
 	return template.HTML(
 		dp.expandEmoji(dp.markdownParser.parse(dp.Body), dp.wrappingEmojiParser)) // #nosec G203 -- sanitized
 }
 
+// DisplayAuthor returns a template.HTML of the posts's author with emoji
+// expanded.
 func (dp displayPost) DisplayAuthor() template.HTML {
 	return template.HTML(dp.sanitizeAndExpandEmoji(dp.Author, dp.wrappingEmojiParser)) // #nosec G203 -- sanitized
 }
 
+// DisplayTitle returns a template.HTML of the posts's title with emoji
+// expanded.
 func (dp displayPost) DisplayTitle() template.HTML {
 	title := dp.sanitizeAndExpandEmoji(dp.Title, dp.wrappingEmojiParser)
 
@@ -62,10 +68,12 @@ func (dp displayPost) DisplayTitle() template.HTML {
 	return template.HTML(title) // #nosec G203 -- either sanitized above or no user input if empty
 }
 
+// NumReplies returns how many replies the post has in human lanuage.
 func (dp displayPost) NumReplies() string {
 	return dp.Printer.Sprintf("%d replies", dp.Replies.Len())
 }
 
+// PageTitle returns the HTML title for the post's page.
 func (dp displayPost) PageTitle() string {
 	title := dp.sanitizeAndExpandEmoji(dp.Title, dp.basicEmojiParser)
 
@@ -76,10 +84,13 @@ func (dp displayPost) PageTitle() string {
 	return title
 }
 
+// ParentDisplayPost returns the displayPost of the post's parent.
 func (dp displayPost) ParentDisplayPost() *displayPost {
 	return newDisplayPost(dp.Parent, dp.Printer, dp.basicEmojiParser, dp.wrappingEmojiParser, dp.markdownParser)
 }
 
+// RepliesNav returns a template.HTML with navigation links based on the current
+// page.
 func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) template.HTML {
 	if dp.Replies.Len() == 0 {
 		return ""
@@ -118,6 +129,7 @@ func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) t
 		fmt.Sprintf("<li class=%q>%s</li>", liClass, strings.Join(links, " / "))) // #nosec G203 -- no user input
 }
 
+// RepliesPage returns a page of the posts's replies.
 func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
 	start := min((max(0, page-1))*perPage, dp.Replies.Len())
 	end := min(start+perPage, dp.Replies.Len())
@@ -137,6 +149,7 @@ func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
 	return result
 }
 
+// TimeAgo returns roughly how long ago the post was made in human language.
 func (dp displayPost) TimeAgo() string {
 	age := time.Since(dp.time.Round(0))
 	if age < 1*time.Hour {

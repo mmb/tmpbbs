@@ -15,6 +15,7 @@ func newEmojiSpanWrapper(class string) *emojiSpanWrapper {
 	}
 }
 
+// Wrap wraps emoji in HTML spans with a class for styling.
 func (esw emojiSpanWrapper) Wrap(alias string, code string) string {
 	description := strings.ReplaceAll(alias[1:len(alias)-1], "_", " ")
 

@@ -1,3 +1,4 @@
+//nolint:godoclint // usage preformatted
 /*
 Tmpbbs serves a forum web site.
 

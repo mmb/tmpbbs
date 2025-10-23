@@ -35,6 +35,7 @@ func newEmojiSuggestHandler() *emojiSuggestHandler {
 	}
 }
 
+// ServeHTTP serves JSON emoji suggestions for autocomplete.
 func (ah *emojiSuggestHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 	var keys []string
 

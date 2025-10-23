@@ -11,6 +11,7 @@ func newSelfGetHandler() *selfGetHandler {
 	return &selfGetHandler{}
 }
 
+// ServeHTTP serves the running binary.
 func (sgh *selfGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 	binaryPath, err := os.Executable()
 	if err != nil {

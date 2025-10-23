@@ -55,6 +55,7 @@ func newPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool
 	}
 }
 
+// ServeHTTP serves rendered post pages.
 func (pgh *postGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 	repliesPage, err := strconv.Atoi(request.URL.Query().Get("p"))
 	if err != nil {

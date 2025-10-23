@@ -53,18 +53,23 @@ func newPost(title string, author string, body string, tripcoder *Tripcoder) *po
 	}
 }
 
+// IsOriginalPoster returns true if the post's parent was written by the same
+// user.
 func (p *post) IsOriginalPoster() bool {
 	return p.Parent != nil && p.Parent.Tripcode != "" && p.Tripcode == p.Parent.Tripcode
 }
 
+// IsSuperuser returns true if the post was made by a superuser.
 func (p *post) IsSuperuser() bool {
 	return p.superuser
 }
 
+// Time returns the post's time formatted as RFC3339.
 func (p *post) Time() string {
 	return p.time.UTC().Format(time.RFC3339)
 }
 
+// URL returns the path part of the post's URL.
 func (p *post) URL() string {
 	if p.Parent == nil {
 		return "/"

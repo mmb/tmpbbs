@@ -23,6 +23,7 @@ func newPostPostHandler(postStore *PostStore, tripcoder *Tripcoder) *postPostHan
 	}
 }
 
+// ServeHTTP creates new posts and redirects to the top of the parent's replies.
 func (pph *postPostHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 	parentID := cmp.Or(crockfordNormalize(request.PathValue("parentID")), pph.postStore.rootID)
 	if !pph.postStore.hasPost(parentID) {
