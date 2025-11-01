@@ -2,6 +2,10 @@ body {
   font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
 
+button#show-qr {
+  display: none;
+}
+
 img {
   max-width: 100%;
 }
