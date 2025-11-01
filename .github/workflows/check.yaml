@@ -55,6 +55,19 @@ jobs:
           sleep 3
           htmlhint http://localhost:8080/
           kill $!
+  kubeconform:
+    name: kubeconform
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+      - name: Run kubeconform
+        run: |
+          go install github.com/yannh/kubeconform/cmd/kubeconform@v0.7.0
+          curl --location --remote-name "https://dl.k8s.io/release/$(curl --location --silent https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          kubectl kustomize kubernetes | kubeconform -strict -summary
   modernize:
     name: modernize
     runs-on: ubuntu-latest
