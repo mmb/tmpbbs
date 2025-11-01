@@ -12,7 +12,7 @@ func Serve(listenAddress string, tlsCertFile string, tlsKeyFile string, serveMux
 	ctx := context.Background()
 	server := &http.Server{
 		Addr:              listenAddress,
-		Handler:           newLogHandler(serveMux),
+		Handler:           newLogHandler(newCommonHeadersHandler(serveMux)),
 		IdleTimeout:       120 * time.Second, //nolint:mnd // not worth creating a const
 		ReadHeaderTimeout: 2 * time.Second,   //nolint:mnd // not worth creating a const
 		ReadTimeout:       5 * time.Second,   //nolint:mnd // not worth creating a const
