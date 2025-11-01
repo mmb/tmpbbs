@@ -103,5 +103,4 @@ if (qrCodeDialog) {
   qrCodeDialog.prepend(img)
 
   button.addEventListener('click', () => { qrCodeDialog.showModal() })
-  button.style.display = ''
 }
