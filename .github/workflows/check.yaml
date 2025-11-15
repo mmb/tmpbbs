@@ -14,6 +14,16 @@ permissions:
   security-events: write
 
 jobs:
+  binaries:
+    name: binaries
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+      - name: Build binaries
+        run: ./build-release-binaries.sh 0.0.0 "${{ github.sha }}"
   eslint:
     name: eslint
     runs-on: ubuntu-latest
