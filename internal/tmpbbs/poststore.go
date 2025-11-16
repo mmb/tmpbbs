@@ -57,9 +57,9 @@ func (ps *PostStore) put(post *post, parentID string) {
 
 	if (post.IsOriginalPoster() || post.IsSuperuser()) && strings.HasPrefix(post.Body, "!delete") && post.Parent != nil {
 		post.Parent.delete()
-	} else {
-		post.bump()
 	}
+
+	post.bump()
 }
 
 func (ps *PostStore) get(postID string, callback func(*post)) bool {
