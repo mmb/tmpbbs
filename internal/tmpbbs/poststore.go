@@ -55,7 +55,8 @@ func (ps *PostStore) put(post *post, parentID string) {
 	post.postsElement = ps.posts.PushBack(post)
 	ps.idMap[post.id] = post.postsElement
 
-	if (post.IsOriginalPoster() || post.IsSuperuser()) && strings.HasPrefix(post.Body, "!delete") && post.Parent != nil {
+	if (post.IsOriginalPoster() || post.IsSuperuser()) && strings.HasPrefix(post.Body, "!delete") && post.Parent != nil &&
+		post.Parent != ps.rootPost {
 		post.Parent.delete()
 	}
 
