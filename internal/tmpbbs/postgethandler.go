@@ -2,10 +2,12 @@ package tmpbbs
 
 import (
 	"embed"
+	"fmt"
 	"html/template"
 	"io"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"golang.org/x/text/message"
 )
@@ -62,7 +64,9 @@ func (pgh *postGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request
 		repliesPage = 1
 	}
 
-	printer := message.NewPrinter(message.MatchLanguage(request.Header.Get("Accept-Language"), "en-US"))
+	language := message.MatchLanguage(request.Header.Get("Accept-Language"), "en-US")
+	printer := message.NewPrinter(language)
+
 	responseWriter.Header().Set("Vary", "Accept-Language")
 
 	if !pgh.postStore.get(crockfordNormalize(request.PathValue("id")), func(post *post) {
@@ -71,6 +75,21 @@ func (pgh *postGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request
 			http.NotFound(responseWriter, request)
 
 			return
+		}
+
+		if Commit != "" {
+			eTag := fmt.Sprintf(`"%s-%d-%d-%s"`, Commit, post.lastUpdate().UnixNano(), repliesPage, language)
+			responseWriter.Header().Set("ETag", eTag)
+
+			if ifNoneMatch := request.Header.Get("If-None-Match"); ifNoneMatch != "" {
+				for checkETag := range strings.SplitSeq(ifNoneMatch, ",") {
+					if strings.TrimSpace(checkETag) == eTag {
+						responseWriter.WriteHeader(http.StatusNotModified)
+
+						return
+					}
+				}
+			}
 		}
 
 		if err = pgh.renderPost(displayPost, repliesPage, responseWriter); err != nil {
