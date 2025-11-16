@@ -3,6 +3,7 @@ package tmpbbs
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -35,16 +36,20 @@ func newImmutableGetHandler(wrappedHandler http.Handler) *immutableGetHandler {
 // ServeHTTP sets ETag and Last-Modified headers and either returns HTTP 304 if
 // the content has not been modified or calls the wrapped handler.
 func (igh *immutableGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
-	if igh.eTag != "" {
-		responseWriter.Header().Set("ETag", igh.eTag)
-	}
-
 	responseWriter.Header().Set("Last-Modified", igh.lastModified)
 
-	if ifNoneMatch := request.Header.Get("If-None-Match"); igh.eTag != "" && ifNoneMatch == igh.eTag {
-		responseWriter.WriteHeader(http.StatusNotModified)
+	if igh.eTag != "" {
+		responseWriter.Header().Set("ETag", igh.eTag)
 
-		return
+		if ifNoneMatch := request.Header.Get("If-None-Match"); ifNoneMatch != "" {
+			for checkETag := range strings.SplitSeq(ifNoneMatch, ",") {
+				if strings.TrimSpace(checkETag) == igh.eTag {
+					responseWriter.WriteHeader(http.StatusNotModified)
+
+					return
+				}
+			}
+		}
 	}
 
 	if ifModifiedSinceHeader := request.Header.Get("If-Modified-Since"); ifModifiedSinceHeader != "" {
