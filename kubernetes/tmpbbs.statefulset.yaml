@@ -30,6 +30,10 @@ spec:
             - name: TMPBBS_JSON_LOG
               value: 'true'
           image: mm62/tmpbbs:latest
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
           name: tmpbbs
           ports:
             - name: http

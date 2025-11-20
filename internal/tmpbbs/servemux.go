@@ -2,6 +2,7 @@ package tmpbbs
 
 import (
 	"embed"
+	"fmt"
 	"io/fs"
 	"net/http"
 
@@ -14,6 +15,10 @@ func NewServeMux(vipr *viper.Viper, staticFS embed.FS, postStore *PostStore,
 	tripcoder *Tripcoder,
 ) (*http.ServeMux, error) {
 	serveMux := http.NewServeMux()
+
+	serveMux.HandleFunc("/healthz", func(responseWriter http.ResponseWriter, _ *http.Request) {
+		fmt.Fprint(responseWriter, "ok")
+	})
 
 	postGetHandler := newPostGetHandler(vipr.GetInt("replies-per-page"), vipr.GetStringSlice("css-urls"),
 		vipr.GetBool("replies"), vipr.GetBool("emoji"), vipr.GetBool("qr-codes"), postStore)
