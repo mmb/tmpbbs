@@ -49,7 +49,7 @@ docker run --name tmpbbs --publish 8080:8080 --pull always --rm ghcr.io/mmb/tmpb
 % tmpbbs --help
 Usage of tmpbbs:
   -o, --config-file string            path to config file ($TMPBBS_CONFIG_FILE)
-  -u, --css-urls strings              comma-separated list of CSS URLs ($TMPBBS_CSS_URLS) (default [/static/main.css])
+  -u, --css-urls strings              comma-separated list of additional CSS URLs ($TMPBBS_CSS_URLS)
   -m, --emoji                         enable emoji shortcode expansion ($TMPBBS_EMOJI) (default true)
   -g, --grpc-listen-address string    <host>:port to listen on for gRPC ($TMPBBS_GRPC_LISTEN_ADDRESS) (default ":8081")
   -j, --json-log                      set log output format to JSON ($TMPBBS_JSON_LOG)

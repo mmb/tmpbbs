@@ -1,4 +1,5 @@
-const debounceInterval = 150,
+const commit = document.querySelector('meta[name="commit"]').content,
+  debounceInterval = 150,
   emojiSuggestions = document.getElementById('emoji-suggestions'),
   qrCodeDialog = document.getElementById('qr')
 
@@ -59,7 +60,7 @@ class EmojiSuggester {
     }
 
     const params = new URLSearchParams([['q', this.currentWord]]),
-      suggestions = await (await fetch(`/emoji-suggest?${params}`, { cache: 'default' })).json()
+      suggestions = await (await fetch(`/emoji-suggest/${commit}?${params}`, { cache: 'default' })).json()
 
     this.#clearSuggestions()
     suggestions.forEach(suggestion => {
@@ -98,7 +99,7 @@ if (emojiSuggestions) {
 if (qrCodeDialog) {
   const button = document.getElementById('show-qr'),
     img = document.createElement('img')
-  img.src = `/qr?url=${encodeURIComponent(window.location.href)}`
+  img.src = `/qr/${commit}?url=${encodeURIComponent(window.location.href)}`
   img.loading = 'lazy'
   qrCodeDialog.prepend(img)
 

@@ -74,8 +74,7 @@ func (lvs LoggedViperSettings) LogValue() slog.Value {
 
 func initFlags() {
 	pflag.StringP("config-file", "o", "", "path to config file ($TMPBBS_CONFIG_FILE)")
-	pflag.StringSliceP("css-urls", "u", []string{"/static/main.css"},
-		"comma-separated list of CSS URLs ($TMPBBS_CSS_URLS)")
+	pflag.StringSliceP("css-urls", "u", []string{}, "comma-separated list of additional CSS URLs ($TMPBBS_CSS_URLS)")
 	pflag.BoolP("emoji", "m", true, "enable emoji shortcode expansion ($TMPBBS_EMOJI)")
 	pflag.StringP("grpc-listen-address", "g", ":8081", "<host>:port to listen on for gRPC ($TMPBBS_GRPC_LISTEN_ADDRESS)")
 	pflag.BoolP("json-log", "j", false, "set log output format to JSON ($TMPBBS_JSON_LOG)")

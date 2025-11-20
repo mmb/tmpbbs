@@ -12,7 +12,7 @@ Posts can be loaded from a YAML file on startup.
 Usage of tmpbbs:
 
 	-o, --config-file string            path to config file ($TMPBBS_CONFIG_FILE)
-	-u, --css-urls strings              comma-separated list of CSS URLs ($TMPBBS_CSS_URLS) (default [/static/main.css])
+	-u, --css-urls strings              comma-separated list of additional CSS URLs ($TMPBBS_CSS_URLS)
 	-m, --emoji                         enable emoji shortcode expansion ($TMPBBS_EMOJI) (default true)
 	-g, --grpc-listen-address string    <host>:port to listen on for gRPC ($TMPBBS_GRPC_LISTEN_ADDRESS) (default ":8081")
 	-j, --json-log                      set log output format to JSON ($TMPBBS_JSON_LOG)
@@ -48,6 +48,8 @@ import (
 	"log"
 	"log/slog"
 	"os"
+	"strconv"
+	"time"
 
 	"github.com/mmb/tmpbbs/internal/tmpbbs"
 )
@@ -56,6 +58,12 @@ import (
 var staticFS embed.FS
 
 func main() {
+	// If commit is not set by go build (during development, for example) set it to the current time because it's used for
+	// caching.
+	if tmpbbs.Commit == "" {
+		tmpbbs.Commit = strconv.FormatInt(time.Now().UnixNano(), 10)
+	}
+
 	ctx := context.Background()
 
 	viper, err := tmpbbs.NewViper()
