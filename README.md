@@ -1,12 +1,15 @@
 A single instance of tmpbbs is an ephemeral, anonymous forum site. All posts
 are stored in memory and lost when the process stops. It's a single static
-binary and does not require the internet or any disk. It runs on a wide
-variety of low-powered hardware including older wireless routers.
+binary and does not require the internet or any disk. It can run on low-powered
+hardware like older wireless routers.
 
 Multiple instances of tmpbbs can be linked so that posts are replicated in
 one or both directions. This enables different topologies such as a
 decentralized mesh where each instance has all the posts, trees, backup
-instances and read-only replicas.
+instances and read-only replicas. This is how posts are made durable.
+
+It works well with [tailscale](https://tailscale.com/) and similar software to
+create private forums.
 
 By default all running instances provide everything you need to create your
 own copy of them. You can get the binary from `/self` (assuming you are using
@@ -113,8 +116,8 @@ on instance B or distributed geographically to reduce latency for users
 * Ring - a closed loop of N instances each pull from one other instance, posts
 propagate in a circle in one direction
 
-* Sneakernet - instances A and B pull from instance C which also pulls from them,
-instance C is on a portable device that periodically moves betwen A and B
+* Sneakernet - instances A and B pull from instance C which also pulls from
+them, instance C is on a portable device that periodically moves betwen A and B
 
 * Tree - an instance has N instances pulling from it, each of those has N
 instances pulling from it, etc., posts flow down a hierarchy
@@ -127,3 +130,9 @@ Users can delete their own posts by replying with a post that starts with
 A list of superuser tripcodes can be passed in with `--superuser-tripcodes`.
 Users with those tripcodes can delete any post. Tripcodes are dependent on the
 tripcode salt so this option should be used together with  `--tripcode-salt`.
+
+# Pruning
+
+By default posts older than 30 days are pruned every hour. This can be
+controlled (or disabled) with the `--prune-interval` and `--prune-max-age`
+options.
