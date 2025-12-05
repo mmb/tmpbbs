@@ -8,11 +8,11 @@ import (
 )
 
 // Serve creates and configures an http.Server then starts listening.
-func Serve(listenAddress string, tlsCertFile string, tlsKeyFile string, serveMux *http.ServeMux) error {
+func Serve(listenAddress string, tlsCertFile string, tlsKeyFile string, serveMux http.Handler) error {
 	ctx := context.Background()
 	server := &http.Server{
 		Addr:              listenAddress,
-		Handler:           newLogHandler(newCommonHeadersHandler(serveMux)),
+		Handler:           newLogHandler(serveMux),
 		IdleTimeout:       120 * time.Second, //nolint:mnd // not worth creating a const
 		ReadHeaderTimeout: 2 * time.Second,   //nolint:mnd // not worth creating a const
 		ReadTimeout:       5 * time.Second,   //nolint:mnd // not worth creating a const

@@ -13,7 +13,7 @@ import (
 // based on user configuration.
 func NewServeMux(vipr *viper.Viper, staticFS embed.FS, postStore *PostStore,
 	tripcoder *Tripcoder,
-) (*http.ServeMux, error) {
+) (http.Handler, error) {
 	serveMux := http.NewServeMux()
 
 	serveMux.HandleFunc("/healthz", func(responseWriter http.ResponseWriter, _ *http.Request) {
@@ -56,5 +56,7 @@ func NewServeMux(vipr *viper.Viper, staticFS embed.FS, postStore *PostStore,
 		return nil, pathsErr
 	}
 
-	return serveMux, nil
+	externalCSS := len(vipr.GetStringSlice("css-urls")) > 0
+
+	return newCommonHeadersHandler(serveMux, externalCSS), nil
 }
