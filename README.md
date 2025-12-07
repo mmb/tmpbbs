@@ -136,3 +136,27 @@ tripcode salt so this option should be used together with  `--tripcode-salt`.
 By default posts older than 30 days are pruned every hour. This can be
 controlled (or disabled) with the `--prune-interval` and `--prune-max-age`
 options.
+
+# Adding a New Language
+
+Add the new language-region tag to the `lang` argument (comma-separated) in
+the `go:generate` line in `internal/tmpbbs/postgethandler.go`. Example adding
+`es-ES`:
+
+```go
+//go:generate gotext -srclang=en-US update -lang=es-ES -out=catalog.go github.com/mmb/tmpbbs/internal/tmpbbs
+```
+
+Install gotext and run go generate:
+
+```sh
+go install golang.org/x/text/cmd/gotext@latest
+go generate ./...
+```
+
+Edit `internal/tmpbbs/locales/es-ES/out.gotext.json` and fill in the
+`translation` fields. Copy that file to `messages.gotext.json` in the same
+directory.
+
+Run `go generate ./...` again. Open a pull request with the
+new `messages.gotext.json` file and the changed files.
