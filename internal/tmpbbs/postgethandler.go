@@ -18,6 +18,7 @@ type postGetHandler struct {
 	wrappingEmojiParser parser
 	postStore           *PostStore
 	template            *template.Template
+	commit              string
 	cssURLs             []string
 	repliesPerPage      int
 	emojiEnabled        bool
@@ -28,7 +29,7 @@ type postGetHandler struct {
 //go:embed template
 var templateFS embed.FS
 
-func newPostGetHandler(cssURLs []string, emojiEnabled bool, postStore *PostStore, qrCodesEnabled bool,
+func newPostGetHandler(commit string, cssURLs []string, emojiEnabled bool, postStore *PostStore, qrCodesEnabled bool,
 	repliesEnabled bool, repliesPerPage int,
 ) *postGetHandler {
 	var (
@@ -43,6 +44,7 @@ func newPostGetHandler(cssURLs []string, emojiEnabled bool, postStore *PostStore
 
 	return &postGetHandler{
 		basicEmojiParser:    basicEmojiParser,
+		commit:              commit,
 		cssURLs:             cssURLs,
 		emojiEnabled:        emojiEnabled,
 		markdownParser:      newMarkdownParser(),
@@ -71,7 +73,7 @@ func (pgh *postGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request
 			return
 		}
 		responseWriter.Header().Set("Vary", "Accept-Language")
-		eTag := fmt.Sprintf(`"%s-%d-%d-%s"`, Commit, post.lastUpdate().UnixNano(), repliesPage, language)
+		eTag := fmt.Sprintf(`"%s-%d-%d-%s"`, pgh.commit, post.lastUpdate().UnixNano(), repliesPage, language)
 		responseWriter.Header().Set("ETag", eTag)
 		if ifNoneMatch := request.Header.Get("If-None-Match"); ifNoneMatch != "" {
 			for checkETag := range strings.SplitSeq(ifNoneMatch, ",") {
@@ -92,7 +94,7 @@ func (pgh *postGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request
 
 func (pgh *postGetHandler) renderPost(displayPost *displayPost, repliesPage int, w io.Writer) error {
 	return pgh.template.ExecuteTemplate(w, "index.gohtml", map[string]any{
-		"commit":         Commit,
+		"commit":         pgh.commit,
 		"cssURLs":        pgh.cssURLs,
 		"emojiEnabled":   pgh.emojiEnabled,
 		"maxAuthorSize":  maxAuthorSize,

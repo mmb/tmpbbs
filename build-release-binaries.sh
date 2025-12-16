@@ -10,7 +10,7 @@ mkdir -p "$RELEASE_DIR"
 
 export CGO_ENABLED=0
 
-BUILD_ARGS=(-ldflags "-s -w -X github.com/mmb/tmpbbs/internal/tmpbbs.Version=$VERSION -X github.com/mmb/tmpbbs/internal/tmpbbs.Commit=$COMMIT")
+BUILD_ARGS=(-ldflags "-s -w -X main.version=$VERSION -X main.commit=$COMMIT")
 
 build() {
   export GOOS=$1 GOARCH=$2

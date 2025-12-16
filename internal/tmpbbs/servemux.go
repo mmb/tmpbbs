@@ -11,7 +11,7 @@ import (
 
 // NewServeMux returns a new http.ServeMux configured with routes and handlers
 // based on user configuration.
-func NewServeMux(postStore *PostStore, staticFS embed.FS, tripcoder *Tripcoder, vipr *viper.Viper,
+func NewServeMux(commit string, postStore *PostStore, staticFS embed.FS, tripcoder *Tripcoder, vipr *viper.Viper,
 ) (http.Handler, error) {
 	serveMux := http.NewServeMux()
 
@@ -19,7 +19,7 @@ func NewServeMux(postStore *PostStore, staticFS embed.FS, tripcoder *Tripcoder, 
 		fmt.Fprint(responseWriter, "ok")
 	})
 
-	postGetHandler := newPostGetHandler(vipr.GetStringSlice("css-urls"), vipr.GetBool("emoji"), postStore,
+	postGetHandler := newPostGetHandler(commit, vipr.GetStringSlice("css-urls"), vipr.GetBool("emoji"), postStore,
 		vipr.GetBool("qr-codes"), vipr.GetBool("replies"), vipr.GetInt("replies-per-page"))
 
 	serveMux.Handle("GET /{$}", postGetHandler)
@@ -30,7 +30,7 @@ func NewServeMux(postStore *PostStore, staticFS embed.FS, tripcoder *Tripcoder, 
 		return nil, err
 	}
 
-	serveMux.Handle("GET /static/", newImmutableGetHandler(http.StripPrefix("/static/"+Commit,
+	serveMux.Handle("GET /static/", newImmutableGetHandler(http.StripPrefix("/static/"+commit,
 		http.FileServerFS(staticDir))))
 	serveMux.Handle("GET /robots.txt", http.FileServerFS(staticDir))
 
