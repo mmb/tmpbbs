@@ -13,8 +13,8 @@ type logHandler struct {
 
 type loggingResponseWriter struct {
 	wrappedResponseWriter http.ResponseWriter
-	statusCode            int
 	responseSize          int
+	statusCode            int
 }
 
 func newLogHandler(wrappedHandler http.Handler) *logHandler {

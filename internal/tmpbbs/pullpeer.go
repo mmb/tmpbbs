@@ -17,11 +17,11 @@ import (
 
 type pullPeer struct {
 	client       proto.PostSyncClient
-	postStore    *PostStore
 	logger       *slog.Logger
+	postStore    *PostStore
 	address      string
-	rootID       string
 	lastIDSynced string
+	rootID       string
 	interval     time.Duration
 	maxResults   int32
 }
