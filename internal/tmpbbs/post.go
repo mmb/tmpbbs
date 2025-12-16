@@ -42,14 +42,14 @@ func newPost(title string, author string, body string, tripcoder *Tripcoder) *po
 	}
 
 	return &post{
-		time:      time.Now(),
-		Replies:   list.New(),
-		Title:     title,
 		Author:    author,
-		Tripcode:  tripcode,
 		Body:      body,
 		id:        ulid.Make().String(),
+		Replies:   list.New(),
 		superuser: superuser,
+		time:      time.Now(),
+		Title:     title,
+		Tripcode:  tripcode,
 	}
 }
 

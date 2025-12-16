@@ -35,11 +35,11 @@ func newDisplayPost(post *post, printer *message.Printer, basicEmojiParser parse
 	markdownParser parser,
 ) *displayPost {
 	return &displayPost{
+		basicEmojiParser:    basicEmojiParser,
+		markdownParser:      markdownParser,
 		post:                post,
 		Printer:             printer,
-		basicEmojiParser:    basicEmojiParser,
 		wrappingEmojiParser: wrappingEmojiParser,
-		markdownParser:      markdownParser,
 	}
 }
 

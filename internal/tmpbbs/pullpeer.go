@@ -42,12 +42,12 @@ func newPullPeer(address string, interval time.Duration, postStore *PostStore) (
 	}
 
 	return &pullPeer{
-		interval:   interval,
-		client:     proto.NewPostSyncClient(clientConn),
-		postStore:  postStore,
-		logger:     slog.Default().With("serverAddress", address),
 		address:    address,
+		client:     proto.NewPostSyncClient(clientConn),
+		interval:   interval,
+		logger:     slog.Default().With("serverAddress", address),
 		maxResults: maxMaxResults,
+		postStore:  postStore,
 	}, nil
 }
 

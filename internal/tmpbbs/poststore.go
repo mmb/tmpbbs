@@ -30,10 +30,10 @@ func NewPostStore(title string, pruneInterval time.Duration, pruneMaxAge time.Du
 	postStore := &PostStore{
 		idMap:         make(map[string]*list.Element),
 		posts:         list.New(),
-		rootPost:      rootPost,
-		rootID:        rootPost.id,
 		pruneInterval: pruneInterval,
 		pruneMaxAge:   pruneMaxAge,
+		rootID:        rootPost.id,
+		rootPost:      rootPost,
 	}
 	postStore.put(rootPost, "")
 
