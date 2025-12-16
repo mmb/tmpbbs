@@ -71,16 +71,14 @@ func (pgh *postGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request
 			return
 		}
 		responseWriter.Header().Set("Vary", "Accept-Language")
-		if Commit != "" {
-			eTag := fmt.Sprintf(`"%s-%d-%d-%s"`, Commit, post.lastUpdate().UnixNano(), repliesPage, language)
-			responseWriter.Header().Set("ETag", eTag)
-			if ifNoneMatch := request.Header.Get("If-None-Match"); ifNoneMatch != "" {
-				for checkETag := range strings.SplitSeq(ifNoneMatch, ",") {
-					if strings.TrimSpace(checkETag) == eTag {
-						responseWriter.WriteHeader(http.StatusNotModified)
+		eTag := fmt.Sprintf(`"%s-%d-%d-%s"`, Commit, post.lastUpdate().UnixNano(), repliesPage, language)
+		responseWriter.Header().Set("ETag", eTag)
+		if ifNoneMatch := request.Header.Get("If-None-Match"); ifNoneMatch != "" {
+			for checkETag := range strings.SplitSeq(ifNoneMatch, ",") {
+				if strings.TrimSpace(checkETag) == eTag {
+					responseWriter.WriteHeader(http.StatusNotModified)
 
-						return
-					}
+					return
 				}
 			}
 		}
