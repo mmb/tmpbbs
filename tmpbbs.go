@@ -54,16 +54,17 @@ import (
 	"github.com/mmb/tmpbbs/internal/tmpbbs"
 )
 
+// If commit is not set by go build (during development, for example) set it to the current time because it's used for
+// caching.
+var (
+	commit  = strconv.FormatInt(time.Now().UnixNano(), 10) //nolint:gochecknoglobals // used with go build -X
+	version = ""
+)
+
 //go:embed static
 var staticFS embed.FS
 
 func main() {
-	// If commit is not set by go build (during development, for example) set it to the current time because it's used for
-	// caching.
-	if tmpbbs.Commit == "" {
-		tmpbbs.Commit = strconv.FormatInt(time.Now().UnixNano(), 10)
-	}
-
 	ctx := context.Background()
 
 	viper, err := tmpbbs.NewViper()
@@ -72,13 +73,13 @@ func main() {
 	}
 
 	if viper.GetBool("version") {
-		fmt.Printf("%s-%s\n", tmpbbs.Version, tmpbbs.Commit)
+		fmt.Printf("%s-%s\n", version, commit)
 		os.Exit(0)
 	}
 
 	tmpbbs.SetupLog(viper.GetBool("json-log"))
 
-	slog.InfoContext(ctx, "startup", "version", tmpbbs.Version, "commit", tmpbbs.Commit, "config",
+	slog.InfoContext(ctx, "startup", "version", version, "commit", commit, "config",
 		tmpbbs.LoggedViperSettings(viper.AllSettings()))
 
 	postStore := tmpbbs.NewPostStore(viper.GetString("title"), viper.GetDuration("prune-interval"),
@@ -108,7 +109,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	serveMux, err := tmpbbs.NewServeMux(postStore, staticFS, tripcoder, viper)
+	serveMux, err := tmpbbs.NewServeMux(commit, postStore, staticFS, tripcoder, viper)
 	if err != nil {
 		log.Fatal(err)
 	}
