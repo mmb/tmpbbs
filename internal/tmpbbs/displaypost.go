@@ -25,10 +25,10 @@ type parser interface {
 
 type displayPost struct {
 	*post
-	Printer             *message.Printer
 	basicEmojiParser    parser
-	wrappingEmojiParser parser
 	markdownParser      parser
+	Printer             *message.Printer
+	wrappingEmojiParser parser
 }
 
 func newDisplayPost(post *post, printer *message.Printer, basicEmojiParser parser, wrappingEmojiParser parser,

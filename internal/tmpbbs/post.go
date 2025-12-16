@@ -13,14 +13,14 @@ import (
 type post struct {
 	time                 time.Time
 	Parent               *post
-	Replies              *list.List
-	postsElement         *list.Element
 	parentRepliesElement *list.Element
-	Title                string
+	postsElement         *list.Element
+	Replies              *list.List
 	Author               string
-	Tripcode             string
 	Body                 string
 	id                   string
+	Title                string
+	Tripcode             string
 	superuser            bool
 }
 

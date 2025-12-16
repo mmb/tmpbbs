@@ -15,8 +15,8 @@ type emojiSuggestHandler struct {
 }
 
 type suggestion struct {
-	Suggestion string `json:"suggestion"`
 	Pictogram  string `json:"pictogram"`
+	Suggestion string `json:"suggestion"`
 }
 
 const minQueryLength = 2
