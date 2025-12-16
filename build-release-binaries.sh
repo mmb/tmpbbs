@@ -4,13 +4,14 @@ set -eu
 
 VERSION=$1
 COMMIT=$2
+DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
 export RELEASE_DIR=release
 mkdir -p "$RELEASE_DIR"
 
 export CGO_ENABLED=0
 
-BUILD_ARGS=(-ldflags "-s -w -X main.version=$VERSION -X main.commit=$COMMIT")
+BUILD_ARGS=(-ldflags "-s -w -X main.version=$VERSION -X main.commit=$COMMIT -X main.date=$DATE")
 
 build() {
   export GOOS=$1 GOARCH=$2

@@ -59,6 +59,7 @@ import (
 var (
 	commit  = strconv.FormatInt(time.Now().UnixNano(), 10) //nolint:gochecknoglobals // used with go build -X
 	version = ""
+	date    = "" //nolint:gochecknoglobals // used with go build -X
 )
 
 //go:embed static
@@ -73,13 +74,13 @@ func main() {
 	}
 
 	if viper.GetBool("version") {
-		fmt.Printf("%s-%s\n", version, commit)
+		fmt.Printf("%s-%s-%s\n", version, commit, date)
 		os.Exit(0)
 	}
 
 	tmpbbs.SetupLog(viper.GetBool("json-log"))
 
-	slog.InfoContext(ctx, "startup", "version", version, "commit", commit, "config",
+	slog.InfoContext(ctx, "startup", "version", version, "commit", commit, "date", date, "config",
 		tmpbbs.LoggedViperSettings(viper.AllSettings()))
 
 	postStore := tmpbbs.NewPostStore(viper.GetString("title"), viper.GetDuration("prune-interval"),
