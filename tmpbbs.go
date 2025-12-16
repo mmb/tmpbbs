@@ -110,7 +110,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	serveMux, err := tmpbbs.NewServeMux(commit, postStore, staticFS, tripcoder, viper)
+	serveMux, err := tmpbbs.NewServeMux(viper, commit, staticFS, postStore, tripcoder)
 	if err != nil {
 		log.Fatal(err)
 	}

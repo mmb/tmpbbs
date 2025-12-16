@@ -29,8 +29,8 @@ type postGetHandler struct {
 //go:embed template
 var templateFS embed.FS
 
-func newPostGetHandler(commit string, cssURLs []string, emojiEnabled bool, postStore *PostStore, qrCodesEnabled bool,
-	repliesEnabled bool, repliesPerPage int,
+func newPostGetHandler(postStore *PostStore, commit string, cssURLs []string, emojiEnabled bool, repliesEnabled bool,
+	repliesPerPage int, qrCodesEnabled bool,
 ) *postGetHandler {
 	var (
 		basicEmojiParser    parser
