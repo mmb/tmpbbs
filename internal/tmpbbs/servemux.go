@@ -11,8 +11,7 @@ import (
 
 // NewServeMux returns a new http.ServeMux configured with routes and handlers
 // based on user configuration.
-func NewServeMux(vipr *viper.Viper, staticFS embed.FS, postStore *PostStore,
-	tripcoder *Tripcoder,
+func NewServeMux(postStore *PostStore, staticFS embed.FS, tripcoder *Tripcoder, vipr *viper.Viper,
 ) (http.Handler, error) {
 	serveMux := http.NewServeMux()
 
@@ -20,8 +19,9 @@ func NewServeMux(vipr *viper.Viper, staticFS embed.FS, postStore *PostStore,
 		fmt.Fprint(responseWriter, "ok")
 	})
 
-	postGetHandler := newPostGetHandler(vipr.GetInt("replies-per-page"), vipr.GetStringSlice("css-urls"),
-		vipr.GetBool("replies"), vipr.GetBool("emoji"), vipr.GetBool("qr-codes"), postStore)
+	postGetHandler := newPostGetHandler(vipr.GetStringSlice("css-urls"), vipr.GetBool("emoji"), postStore,
+		vipr.GetBool("qr-codes"), vipr.GetBool("replies"), vipr.GetInt("replies-per-page"))
+
 	serveMux.Handle("GET /{$}", postGetHandler)
 	serveMux.Handle("GET /p/{id}", postGetHandler)
 

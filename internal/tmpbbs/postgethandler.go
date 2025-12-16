@@ -14,22 +14,22 @@ import (
 
 type postGetHandler struct {
 	basicEmojiParser    parser
-	wrappingEmojiParser parser
 	markdownParser      parser
+	wrappingEmojiParser parser
 	postStore           *PostStore
 	template            *template.Template
 	cssURLs             []string
 	repliesPerPage      int
-	repliesEnabled      bool
 	emojiEnabled        bool
 	qrCodesEnabled      bool
+	repliesEnabled      bool
 }
 
 //go:embed template
 var templateFS embed.FS
 
-func newPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool, emojiEnabled bool,
-	qrCodesEnabled bool, postStore *PostStore,
+func newPostGetHandler(cssURLs []string, emojiEnabled bool, postStore *PostStore, qrCodesEnabled bool,
+	repliesEnabled bool, repliesPerPage int,
 ) *postGetHandler {
 	var (
 		basicEmojiParser    parser
@@ -42,16 +42,16 @@ func newPostGetHandler(repliesPerPage int, cssURLs []string, repliesEnabled bool
 	}
 
 	return &postGetHandler{
-		repliesPerPage:      repliesPerPage,
-		cssURLs:             cssURLs,
-		repliesEnabled:      repliesEnabled,
-		emojiEnabled:        emojiEnabled,
-		qrCodesEnabled:      qrCodesEnabled,
 		basicEmojiParser:    basicEmojiParser,
-		wrappingEmojiParser: wrappingEmojiParser,
+		cssURLs:             cssURLs,
+		emojiEnabled:        emojiEnabled,
 		markdownParser:      newMarkdownParser(),
 		postStore:           postStore,
+		qrCodesEnabled:      qrCodesEnabled,
+		repliesEnabled:      repliesEnabled,
+		repliesPerPage:      repliesPerPage,
 		template:            template.Must(template.New("template").ParseFS(templateFS, "template/*.gohtml")),
+		wrappingEmojiParser: wrappingEmojiParser,
 	}
 }
 
@@ -97,13 +97,13 @@ func (pgh *postGetHandler) renderPost(displayPost *displayPost, repliesPage int,
 		"commit":         Commit,
 		"cssURLs":        pgh.cssURLs,
 		"emojiEnabled":   pgh.emojiEnabled,
-		"qrCodesEnabled": pgh.qrCodesEnabled,
-		"repliesEnabled": pgh.repliesEnabled,
-		"repliesPerPage": pgh.repliesPerPage,
-		"post":           displayPost,
-		"repliesPage":    repliesPage,
-		"maxTitleSize":   maxTitleSize,
 		"maxAuthorSize":  maxAuthorSize,
 		"maxBodySize":    maxBodySize,
+		"maxTitleSize":   maxTitleSize,
+		"post":           displayPost,
+		"qrCodesEnabled": pgh.qrCodesEnabled,
+		"repliesEnabled": pgh.repliesEnabled,
+		"repliesPage":    repliesPage,
+		"repliesPerPage": pgh.repliesPerPage,
 	})
 }
