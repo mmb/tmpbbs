@@ -2,6 +2,7 @@
 version: '2'
 linters:
   enable:
+    - arangolint
     - asasalint
     - asciicheck
     - bidichk
@@ -17,6 +18,7 @@ linters:
     - dupl
     - dupword
     - durationcheck
+    - embeddedstructfieldcheck
     - err113
     - errcheck
     - errchkjson
@@ -28,6 +30,7 @@ linters:
     - fatcontext
     # - forbidigo
     - forcetypeassert
+    - funcorder
     - funlen
     - ginkgolinter
     - gocheckcompilerdirectives
@@ -55,6 +58,7 @@ linters:
     - ineffassign
     - interfacebloat
     - intrange
+    - iotamixing
     - ireturn
     - lll
     - loggercheck
@@ -72,6 +76,7 @@ linters:
     - nilnil
     - nlreturn
     - noctx
+    # - noinlineerr
     - nolintlint
     - nonamedreturns
     - nosprintfhostport
@@ -98,6 +103,7 @@ linters:
     - tparallel
     - unconvert
     - unparam
+    - unqueryvet
     - unused
     - usestdlibvars
     - usetesting

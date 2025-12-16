@@ -44,6 +44,26 @@ func NewPostStore(title string, pruneInterval time.Duration, pruneMaxAge time.Du
 	return postStore
 }
 
+// LoadYAML loads Posts from a YAML file on the filesystem into the PostStore.
+func (ps *PostStore) LoadYAML(path string, tripcoder *Tripcoder) error {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return err
+	}
+
+	var posts []post
+
+	if yamlErr := yaml.Unmarshal(data, &posts); yamlErr != nil {
+		return yamlErr
+	}
+
+	for i := range posts {
+		ps.put(newPost(posts[i].Title, posts[i].Author, posts[i].Body, tripcoder), ps.rootID)
+	}
+
+	return nil
+}
+
 func (ps *PostStore) put(post *post, parentID string) {
 	ps.mutex.Lock()
 	defer ps.mutex.Unlock()
@@ -123,26 +143,6 @@ func (ps *PostStore) hasPost(postID string) bool {
 	_, found := ps.idMap[postID]
 
 	return found
-}
-
-// LoadYAML loads Posts from a YAML file on the filesystem into the PostStore.
-func (ps *PostStore) LoadYAML(path string, tripcoder *Tripcoder) error {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return err
-	}
-
-	var posts []post
-
-	if yamlErr := yaml.Unmarshal(data, &posts); yamlErr != nil {
-		return yamlErr
-	}
-
-	for i := range posts {
-		ps.put(newPost(posts[i].Title, posts[i].Author, posts[i].Body, tripcoder), ps.rootID)
-	}
-
-	return nil
 }
 
 // getPostByID returns the post with ID postID or nil if not found.

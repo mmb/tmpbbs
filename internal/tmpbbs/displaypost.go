@@ -25,6 +25,7 @@ type parser interface {
 
 type displayPost struct {
 	*post
+
 	basicEmojiParser    parser
 	markdownParser      parser
 	Printer             *message.Printer

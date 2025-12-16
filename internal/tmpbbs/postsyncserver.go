@@ -12,6 +12,7 @@ import (
 // A PostSyncServer is a gRPC server that returns Posts.
 type PostSyncServer struct {
 	proto.UnimplementedPostSyncServer
+
 	postStore *PostStore
 }
 
