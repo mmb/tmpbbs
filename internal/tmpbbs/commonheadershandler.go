@@ -21,8 +21,8 @@ func newCommonHeadersHandler(wrappedHandler http.Handler, externalCSS bool) *com
 	}
 
 	return &commonHeadersHandler{
-		wrappedHandler: wrappedHandler,
 		cspHeader:      cspHeader,
+		wrappedHandler: wrappedHandler,
 	}
 }
 
