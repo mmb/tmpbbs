@@ -5,6 +5,7 @@ ARG TARGETARCH
 ARG TARGETOS
 ARG VERSION
 ARG COMMIT
+ARG DATE
 ARG UID
 RUN useradd --uid ${UID} tmpbbs
 WORKDIR /app
@@ -14,7 +15,7 @@ COPY . .
 ENV CGO_ENABLED=0
 ENV GOARCH=${TARGETARCH}
 ENV GOOS=${TARGETOS}
-RUN go build -ldflags "-s -w -X main.version=${VERSION:-$(git tag --points-at HEAD)} -X main.commit=${COMMIT:-$(git rev-parse HEAD)}" -v
+RUN go build -ldflags "-s -w -X main.version=${VERSION:-$(git tag --points-at HEAD)} -X main.commit=${COMMIT:-$(git rev-parse HEAD)} -X main.date=${DATE:-$(date -u +%Y-%m-%dT%H:%M:%SZ)}" -v
 
 FROM scratch
 ARG UID
