@@ -1,6 +1,7 @@
 package tmpbbs
 
 import (
+	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
@@ -52,8 +53,7 @@ func (tc Tripcoder) code(input string) (string, string) {
 		return parts[0], ""
 	}
 
-	hash := sha256.New()
-	hash.Write(tc.salt)       //nolint:errcheck // can't error
+	hash := hmac.New(sha256.New, tc.salt)
 	hash.Write([]byte(input)) //nolint:errcheck // can't error
 
 	return parts[0], fmt.Sprintf("%.10s", hex.EncodeToString(hash.Sum(nil)))
