@@ -4,8 +4,8 @@ import (
 	"net/http"
 )
 
-// immutableGetHandler is an http.Handler that sets the Cache-Control header to
-// private, 1 year max age and immutable.
+// immutableGetHandler is an [http.Handler] that sets the Cache-Control header
+// to private, 1 year max age and immutable.
 type immutableGetHandler struct {
 	wrappedHandler http.Handler
 }

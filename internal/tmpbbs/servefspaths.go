@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// ServeFSPaths adds an http.Handler to the passed in http.ServeMux that
+// ServeFSPaths adds an [http.Handler] to the passed in [http.ServeMux] that
 // serves directories from the filesystem.
 func ServeFSPaths(paths []string, serveMux *http.ServeMux) error {
 	for _, dirMapping := range paths {

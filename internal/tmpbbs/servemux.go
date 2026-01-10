@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// NewServeMux returns a new http.ServeMux configured with routes and handlers
+// NewServeMux returns a new [http.ServeMux] configured with routes and handlers
 // based on user configuration.
 func NewServeMux(vipr *viper.Viper, commit string, staticFS embed.FS, postStore *PostStore,
 	tripcoder *Tripcoder,
