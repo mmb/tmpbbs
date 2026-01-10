@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// Serve creates and configures an http.Server then starts listening.
+// Serve creates and configures an [http.Server] then starts listening.
 func Serve(listenAddress string, tlsCertFile string, tlsKeyFile string, serveMux http.Handler) error {
 	ctx := context.Background()
 	server := &http.Server{

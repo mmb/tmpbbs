@@ -40,7 +40,7 @@ func NewViper() (*viper.Viper, error) {
 	return vipr, nil
 }
 
-// LogValue returns an slog.GroupValue with the subset of viper settings.
+// LogValue returns an [slog.GroupValue] with the subset of viper settings.
 func (lvs LoggedViperSettings) LogValue() slog.Value {
 	logConfigKeys := []string{
 		"config-file",

@@ -44,20 +44,20 @@ func newDisplayPost(post *post, printer *message.Printer, basicEmojiParser parse
 	}
 }
 
-// BodyHTML returns a template.HTML of the post's body with Markdown and emoji
+// BodyHTML returns a [template.HTML] of the post's body with Markdown and emoji
 // expanded.
 func (dp displayPost) BodyHTML() template.HTML {
 	return template.HTML(
 		dp.expandEmoji(dp.markdownParser.parse(dp.Body), dp.wrappingEmojiParser)) // #nosec G203 -- sanitized
 }
 
-// DisplayAuthor returns a template.HTML of the posts's author with emoji
+// DisplayAuthor returns a [template.HTML] of the posts's author with emoji
 // expanded.
 func (dp displayPost) DisplayAuthor() template.HTML {
 	return template.HTML(dp.sanitizeAndExpandEmoji(dp.Author, dp.wrappingEmojiParser)) // #nosec G203 -- sanitized
 }
 
-// DisplayTitle returns a template.HTML of the posts's title with emoji
+// DisplayTitle returns a [template.HTML] of the posts's title with emoji
 // expanded.
 func (dp displayPost) DisplayTitle() template.HTML {
 	title := dp.sanitizeAndExpandEmoji(dp.Title, dp.wrappingEmojiParser)
@@ -90,8 +90,8 @@ func (dp displayPost) ParentDisplayPost() *displayPost {
 	return newDisplayPost(dp.Parent, dp.Printer, dp.basicEmojiParser, dp.wrappingEmojiParser, dp.markdownParser)
 }
 
-// RepliesNav returns a template.HTML with navigation links based on the current
-// page.
+// RepliesNav returns a [template.HTML] with navigation links based on the
+// current page.
 func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) template.HTML {
 	if dp.Replies.Len() == 0 {
 		return ""
