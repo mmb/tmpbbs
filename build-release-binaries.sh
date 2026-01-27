@@ -11,7 +11,7 @@ mkdir -p "$RELEASE_DIR"
 
 export CGO_ENABLED=0
 
-BUILD_ARGS=(-ldflags "-s -w -X main.version=$VERSION -X main.commit=$COMMIT -X main.date=$DATE")
+BUILD_ARGS=(-ldflags "-s -w -X main.version=$VERSION -X main.commit=$COMMIT -X main.date=$DATE" -trimpath)
 
 build() {
   export GOOS=$1 GOARCH=$2
