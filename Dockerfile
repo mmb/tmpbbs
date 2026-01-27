@@ -6,8 +6,6 @@ ARG TARGETOS
 ARG VERSION
 ARG COMMIT
 ARG DATE
-ARG UID
-RUN useradd --uid ${UID} tmpbbs
 WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
