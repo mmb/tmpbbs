@@ -16,7 +16,7 @@ own copy of them. You can get the binary from `/self` (assuming you are using
 the same platform) and the data can be pulled and kept up-to-date using
 `--pull-peers`.
 
-![screenshot](https://github.com/user-attachments/assets/78018fa0-9ad9-44a6-bd9e-95ea263f793c)
+![screenshot](https://github.com/user-attachments/assets/43013009-27ac-49fb-bc8f-1fe9e217d3a3)
 
 # Features
   * Markdown
