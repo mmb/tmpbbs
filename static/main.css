@@ -1,5 +1,5 @@
 body {
-  font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  font-family: system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
   padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -20,7 +20,19 @@ body {
   padding: 1em;
 }
 
-input[type="text"] {
+summary {
+  list-style: none;
+}
+
+summary::after {
+  content: '▼';
+}
+
+details[open] > summary::after {
+  content: '▲';
+}
+
+input[type='text'] {
   width: 11em;
 }
 
