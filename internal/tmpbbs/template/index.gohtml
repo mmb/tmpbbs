@@ -68,14 +68,16 @@ Reply
 {{- $class := "even" -}}
 {{ range .post.RepliesPage .repliesPage .repliesPerPage }}
 <li class="{{ $class }}">
+{{- if .Body }}
 <details open>
 <summary>
 {{ template "post_title" . }}
 </summary>
-{{- if .Body }}
 {{ .BodyHTML }}
-{{- end }}
 </details>
+{{- else }}
+{{ template "post_title" . }}
+{{- end }}
 </li>
 {{- if eq $class "even" }}{{ $class = "odd" }}{{ else }}{{ $class = "even" }}{{ end -}}
 {{ end }}
