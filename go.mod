@@ -1,8 +1,8 @@
 module github.com/mmb/tmpbbs
 
-go 1.25
+go 1.26
 
-toolchain go1.25.5
+toolchain go1.26.0
 
 require (
 	github.com/derekparker/trie v0.0.0-20230829180723-39f4de51ef7d
