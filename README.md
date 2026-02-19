@@ -137,7 +137,7 @@ By default posts older than 30 days are pruned every hour. This can be
 controlled (or disabled) with the `--prune-interval` and `--prune-max-age`
 options.
 
-# Adding a New Language
+# Adding a New Translation
 
 Add the new language-region tag to the `lang` argument (comma-separated) in
 the `go:generate` line in `internal/tmpbbs/postgethandler.go`. Example adding
