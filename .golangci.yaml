@@ -28,7 +28,7 @@ linters:
     # - exhaustruct
     - exptostd
     - fatcontext
-    # - forbidigo
+    - forbidigo
     - forcetypeassert
     - funcorder
     - funlen
