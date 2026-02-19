@@ -27,7 +27,7 @@ func (qcgh *qrCodeGetHandler) ServeHTTP(responseWriter http.ResponseWriter, requ
 
 	responseWriter.Header().Set("Content-Type", "image/png")
 
-	if _, err = responseWriter.Write(png); err != nil {
+	if _, err = responseWriter.Write(png); err != nil { // #nosec G705 -- image output
 		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
 	}
 }
