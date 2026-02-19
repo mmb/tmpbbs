@@ -76,7 +76,7 @@ linters:
     - nilnil
     - nlreturn
     - noctx
-    # - noinlineerr
+    - noinlineerr
     - nolintlint
     - nonamedreturns
     - nosprintfhostport

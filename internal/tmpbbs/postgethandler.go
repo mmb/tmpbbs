@@ -90,8 +90,11 @@ func (pgh *postGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request
 			}
 		}
 
-		if err = pgh.renderPost(displayPost, repliesPage, responseWriter); err != nil {
+		err = pgh.renderPost(displayPost, repliesPage, responseWriter)
+		if err != nil {
 			http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
+
+			return
 		}
 	}) {
 		http.NotFound(responseWriter, request)

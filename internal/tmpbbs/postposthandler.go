@@ -35,7 +35,8 @@ func (pph *postPostHandler) ServeHTTP(responseWriter http.ResponseWriter, reques
 	request.Body = http.MaxBytesReader(responseWriter, request.Body, maxRequestBodyBytes)
 	defer request.Body.Close()
 
-	if err := request.ParseForm(); err != nil {
+	err := request.ParseForm()
+	if err != nil {
 		http.Error(responseWriter, err.Error(), http.StatusBadRequest)
 
 		return

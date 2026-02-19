@@ -14,7 +14,8 @@ func ServeFSPaths(paths []string, serveMux *http.ServeMux) error {
 		parts := strings.SplitN(dirMapping, "=", 2) //nolint:mnd // mapping has two parts, can't change
 		urlPrefix, dir := parts[0], parts[1]
 
-		if _, err := os.Stat(dir); os.IsNotExist(err) {
+		_, err := os.Stat(dir)
+		if os.IsNotExist(err) {
 			return err
 		}
 

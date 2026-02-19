@@ -53,8 +53,9 @@ func NewServeMux(vipr *viper.Viper, commit string, staticFS embed.FS, postStore 
 		serveMux.Handle("GET /self", newSelfGetHandler())
 	}
 
-	if pathsErr := ServeFSPaths(vipr.GetStringSlice("serve-fs-paths"), serveMux); pathsErr != nil {
-		return nil, pathsErr
+	err = ServeFSPaths(vipr.GetStringSlice("serve-fs-paths"), serveMux)
+	if err != nil {
+		return nil, err
 	}
 
 	externalCSS := len(vipr.GetStringSlice("css-urls")) > 0

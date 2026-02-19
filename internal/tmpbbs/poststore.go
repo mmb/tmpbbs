@@ -53,7 +53,8 @@ func (ps *PostStore) LoadYAML(path string, tripcoder *Tripcoder) error {
 
 	var posts []post
 
-	if yamlErr := yaml.Unmarshal(data, &posts); yamlErr != nil {
+	yamlErr := yaml.Unmarshal(data, &posts)
+	if yamlErr != nil {
 		return yamlErr
 	}
 
