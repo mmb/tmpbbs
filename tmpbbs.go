@@ -93,7 +93,8 @@ func main() {
 	}
 
 	for _, loadPath := range viper.GetStringSlice("load-posts") {
-		if err = postStore.LoadYAML(loadPath, tripcoder); err != nil {
+		err = postStore.LoadYAML(loadPath, tripcoder)
+		if err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -105,8 +106,8 @@ func main() {
 		}()
 	}
 
-	if err = tmpbbs.RunPullPeers(viper.GetStringSlice("pull-peers"), viper.GetDuration("pull-interval"),
-		postStore); err != nil {
+	err = tmpbbs.RunPullPeers(viper.GetStringSlice("pull-peers"), viper.GetDuration("pull-interval"), postStore)
+	if err != nil {
 		log.Fatal(err)
 	}
 

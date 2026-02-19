@@ -24,7 +24,8 @@ func NewViper() (*viper.Viper, error) {
 	vipr.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
 	vipr.AutomaticEnv()
 
-	if err := vipr.BindPFlags(pflag.CommandLine); err != nil {
+	err := vipr.BindPFlags(pflag.CommandLine)
+	if err != nil {
 		return nil, err
 	}
 
@@ -32,7 +33,8 @@ func NewViper() (*viper.Viper, error) {
 	if configFile != "" {
 		vipr.SetConfigFile(configFile)
 
-		if err := vipr.ReadInConfig(); err != nil {
+		err = vipr.ReadInConfig()
+		if err != nil {
 			return nil, err
 		}
 	}

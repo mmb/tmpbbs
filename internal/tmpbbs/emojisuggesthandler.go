@@ -52,8 +52,11 @@ func (ah *emojiSuggestHandler) ServeHTTP(responseWriter http.ResponseWriter, req
 	if ah.trie.HasKeysWithPrefix(query) {
 		keys = ah.trie.PrefixSearch(query)
 	} else {
-		if _, err := responseWriter.Write([]byte("[]")); err != nil {
+		_, err := responseWriter.Write([]byte("[]"))
+		if err != nil {
 			http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
+
+			return
 		}
 
 		return

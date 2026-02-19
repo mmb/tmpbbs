@@ -25,7 +25,8 @@ func NewTripcoder(salt string, superuserTripcodes []string, randReader io.Reader
 	if salt == "" {
 		saltBytes = make([]byte, randomSaltLength)
 
-		if _, err := randReader.Read(saltBytes); err != nil {
+		_, err := randReader.Read(saltBytes)
+		if err != nil {
 			return nil, err
 		}
 	} else {
