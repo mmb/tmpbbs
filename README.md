@@ -1,3 +1,5 @@
+# tmpbbs
+
 A single instance of tmpbbs is an ephemeral, anonymous forum site. All posts
 are stored in memory and lost when the process stops. It's a single static
 binary and does not require the internet or any disk. It can run on low-powered
@@ -18,23 +20,24 @@ the same platform) and the data can be pulled and kept up-to-date using
 
 ![screenshot](https://github.com/user-attachments/assets/43013009-27ac-49fb-bc8f-1fe9e217d3a3)
 
-# Features
-  * Markdown
-  * emoji shortcodes with suggestions
-  * optional TLS (using `--tls-cert` and `--tls-key` options)
-  * tripcodes in `username#secret` format
-  * shareable URL QR codes
-  * every instance distributes the software by serving its own binary
-  * post IDs in URLs are error resistant and pronounceable Crockford Base 32
-  * pruning of stale posts (using `--prune-interval` and `--prune-max-age`)
+## Features
 
-# Installation
+* Markdown
+* emoji shortcodes with suggestions
+* optional TLS (using `--tls-cert` and `--tls-key` options)
+* tripcodes in `username#secret` format
+* shareable URL QR codes
+* every instance distributes the software by serving its own binary
+* post IDs in URLs are error resistant and pronounceable Crockford Base 32
+* pruning of stale posts (using `--prune-interval` and `--prune-max-age`)
+
+## Installation
 
 ```sh
 go install github.com/mmb/tmpbbs@latest
 ```
 
-# Container Images
+## Container Images
 
 ```sh
 docker run --name tmpbbs --publish 8080:8080 --pull always --rm mm62/tmpbbs:latest
@@ -46,9 +49,9 @@ or
 docker run --name tmpbbs --publish 8080:8080 --pull always --rm ghcr.io/mmb/tmpbbs:latest
 ```
 
-# Options
+## Options
 
-```
+```text
 % tmpbbs --help
 Usage of tmpbbs:
   -o, --config-file string            path to config file ($TMPBBS_CONFIG_FILE)
@@ -76,7 +79,7 @@ Usage of tmpbbs:
   -v, --version                       print version
 ```
 
-# Peering
+## Peering
 
 An instance can pull posts from any number of other instances by adding their
 `host:port` to the `--pull-peers` option, where port is the port in the peer's
@@ -91,7 +94,7 @@ in this case the gRPC traffic will not be encrypted.
 Two instances can pull from each other and posts will not be duplicated. ULIDs
 are used for globally unique post identifiers.
 
-## Topologies
+### Topologies
 
 * Backup - instance A pulls from instance B and vice versa, B is not actively
 used, can be used to overcome the loss of data if instance A restarts
@@ -122,7 +125,7 @@ them, instance C is on a portable device that periodically moves betwen A and B
 * Tree - an instance has N instances pulling from it, each of those has N
 instances pulling from it, etc., posts flow down a hierarchy
 
-# Deleting Posts
+## Deleting Posts
 
 Users can delete their own posts by replying with a post that starts with
 `!delete`. The tripcodes for the post being deleted and the reply must match.
@@ -131,13 +134,13 @@ A list of superuser tripcodes can be passed in with `--superuser-tripcodes`.
 Users with those tripcodes can delete any post. Tripcodes are dependent on the
 tripcode salt so this option should be used together with  `--tripcode-salt`.
 
-# Pruning
+## Pruning
 
 By default posts older than 30 days are pruned every hour. This can be
 controlled (or disabled) with the `--prune-interval` and `--prune-max-age`
 options.
 
-# Adding a New Translation
+## Adding a New Translation
 
 Add the new language-region tag to the `lang` argument (comma-separated) in
 the `go:generate` line in `internal/tmpbbs/postgethandler.go`. Example adding
