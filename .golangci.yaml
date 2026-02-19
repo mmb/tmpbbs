@@ -146,6 +146,7 @@ linters:
         - identical
         - unused
         - opaque
+        - unexported
     nilnil:
       detect-opposite: true
     nolintlint:
