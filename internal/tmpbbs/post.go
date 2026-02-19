@@ -12,15 +12,15 @@ import (
 
 type post struct {
 	time                 time.Time
-	Parent               *post
+	Parent               *post `yaml:"parent"`
 	parentRepliesElement *list.Element
 	postsElement         *list.Element
-	Replies              *list.List
-	Author               string
-	Body                 string
+	Replies              *list.List `yaml:"replies"`
+	Author               string     `yaml:"author"`
+	Body                 string     `yaml:"body"`
 	id                   string
-	Title                string
-	Tripcode             string
+	Title                string `yaml:"title"`
+	Tripcode             string `yaml:"tripcode"`
 	superuser            bool
 }
 
