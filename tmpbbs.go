@@ -74,7 +74,7 @@ func main() {
 	}
 
 	if viper.GetBool("version") {
-		fmt.Printf("%s-%s-%s\n", version, commit, date)
+		fmt.Fprintf(os.Stdout, "%s-%s-%s\n", version, commit, date)
 		os.Exit(0)
 	}
 
