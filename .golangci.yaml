@@ -68,7 +68,7 @@ linters:
     - misspell
     - mnd
     - modernize
-    # - musttag
+    - musttag
     - nakedret
     - nestif
     - nilerr
