@@ -44,6 +44,10 @@ jobs:
           go-version-file: go.mod
           go-version-input:
           output-format: sarif
+          output-file: govulncheck.sarif
+      - uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: govulncheck.sarif
   hadolint:
     name: hadolint
     runs-on: ubuntu-latest
@@ -111,11 +115,11 @@ jobs:
         with:
           scan-type: fs
           format: sarif
-          output: trivy-results.sarif
+          output: trivy.sarif
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v4
         with:
-          sarif_file: trivy-results.sarif
+          sarif_file: trivy.sarif
   yamllint:
     name: yamllint
     runs-on: ubuntu-latest
