@@ -15,27 +15,21 @@ permissions:
 
 jobs:
   eslint:
-    name: eslint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
-        with:
-          node-version: v23.11.0
       - name: Run ESLint
-        run: npm install eslint && npx eslint
+        run: npm install eslint @eslint/js globals && npx eslint
   golangci-lint:
-    name: golangci-lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
-      - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@1e7e51e771db61008b38414a730f564565cf7c20  # yamllint disable rule:line-length
+      - uses: golangci/golangci-lint-action@1e7e51e771db61008b38414a730f564565cf7c20  # yamllint disable rule:line-length
   govulcheck:
-    name: govulncheck
     runs-on: ubuntu-latest
     steps:
       - uses: golang/govulncheck-action@v1
@@ -44,18 +38,18 @@ jobs:
           go-version-file: go.mod
           go-version-input:
           output-format: sarif
-          output-file: govulncheck.sarif
+          output-file: ${{ github.ref == 'refs/heads/main' && 'govulncheck.sarif' || '' }}
+        continue-on-error: ${{ github.ref == 'refs/heads/main' && true || false }}
       - uses: github/codeql-action/upload-sarif@v4
+        if: github.ref == 'refs/heads/main'
         with:
           sarif_file: govulncheck.sarif
   hadolint:
-    name: hadolint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: hadolint/hadolint-action@2332a7b74a6de0dda2e2221d575162eba76ba5e5
   htmlhint:
-    name: htmlhint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -70,7 +64,6 @@ jobs:
           htmlhint http://localhost:8080/
           kill $!
   kubeconform:
-    name: kubeconform
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -83,7 +76,6 @@ jobs:
           curl --location --remote-name "https://dl.k8s.io/release/$(curl --location --silent https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
           kubectl kustomize kubernetes | kubeconform -strict -summary
   markdownlint-cli2:
-    name: markdownlint-cli2
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -91,37 +83,34 @@ jobs:
         with:
           globs: '**/*.md'
   shellcheck:
-    name: shellcheck
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - name: Run shellcheck
-        run: find . -type f -name "*.sh" -exec shellcheck {} +
+        run: find . -type f -name "*.sh" -exec shellcheck --format gcc {} +
   stylelint:
-    name: stylelint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
       - name: Run Stylelint
-        run: npm install stylelint stylelint-config-standard && npx stylelint --formatter=compact '**/*.css'
+        run: npm install stylelint stylelint-config-standard && npx stylelint --formatter unix '**/*.css'
   trivy:
-    name: trivy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Run Trivy vulnerability scanner on repo
-        uses: aquasecurity/trivy-action@c1824fd6edce30d7ab345a9989de00bbd46ef284
+      - uses: aquasecurity/trivy-action@c1824fd6edce30d7ab345a9989de00bbd46ef284
         with:
+          exit-code: '1'
           scan-type: fs
           format: sarif
-          output: trivy.sarif
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v4
+          output: ${{ github.ref == 'refs/heads/main' && 'trivy.sarif' || '' }}
+        continue-on-error: ${{ github.ref == 'refs/heads/main' && true || false }}
+      - uses: github/codeql-action/upload-sarif@v4
+        if: github.ref == 'refs/heads/main'
         with:
           sarif_file: trivy.sarif
   yamllint:
-    name: yamllint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
