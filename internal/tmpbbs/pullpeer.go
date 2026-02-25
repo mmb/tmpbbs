@@ -4,7 +4,9 @@ import (
 	"container/list"
 	"context"
 	"crypto/tls"
+	"crypto/x509"
 	"log/slog"
+	"os"
 	"strings"
 	"time"
 
@@ -26,12 +28,20 @@ type pullPeer struct {
 	maxResults   int32
 }
 
-func newPullPeer(address string, interval time.Duration, postStore *PostStore) (*pullPeer, error) {
+func newPullPeer(address string, caCertPool *x509.CertPool, interval time.Duration,
+	postStore *PostStore,
+) (*pullPeer, error) {
 	var creds credentials.TransportCredentials
 
 	if strings.HasPrefix(address, "tls://") {
 		address = address[6:]
-		creds = credentials.NewTLS(&tls.Config{InsecureSkipVerify: true}) // #nosec G402 -- should work with self-signed certs
+
+		tlsConfig := tls.Config{RootCAs: caCertPool}
+		if caCertPool == nil {
+			tlsConfig.InsecureSkipVerify = true // #nosec G402 -- if no trusted CAs, allow self-signed
+		}
+
+		creds = credentials.NewTLS(&tlsConfig)
 	} else {
 		creds = insecure.NewCredentials()
 	}
@@ -131,14 +141,26 @@ func (pp *pullPeer) sync() int {
 // RunPullPeers creates a PullPeer for each peer address and starts syncing.
 // It calculates a time to wait before starting for each peer so they run
 // staggered.
-func RunPullPeers(addresses []string, interval time.Duration, postStore *PostStore) error {
+func RunPullPeers(addresses []string, trustedCAPath string, interval time.Duration, postStore *PostStore) error {
+	var caCertPool *x509.CertPool
+
+	if trustedCAPath != "" {
+		pemCerts, err := os.ReadFile(trustedCAPath)
+		if err != nil {
+			return err
+		}
+
+		caCertPool = x509.NewCertPool()
+		caCertPool.AppendCertsFromPEM(pemCerts)
+	}
+
 	var waitBetween time.Duration
 	if len(addresses) > 0 {
 		waitBetween = interval / time.Duration(len(addresses))
 	}
 
 	for index, address := range addresses {
-		pullPeer, err := newPullPeer(address, interval, postStore)
+		pullPeer, err := newPullPeer(address, caCertPool, interval, postStore)
 		if err != nil {
 			return err
 		}

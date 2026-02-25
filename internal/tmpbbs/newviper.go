@@ -104,6 +104,7 @@ func initFlags() {
 	pflag.StringP("title", "t", "tmpbbs", "site title ($TMPBBS_TITLE)")
 	pflag.StringP("tls-cert", "c", "", "path to PEM server certificate ($TMPBBS_TLS_CERT)")
 	pflag.StringP("tls-key", "k", "", "path to PEM server key ($TMPBBS_TLS_KEY)")
+	pflag.StringP("tls-trusted-ca", "x", "", "path to file of trusted peer CA PEMs ($TMPBBS_TLS_TRUSTED_CA)")
 	pflag.StringP("tripcode-salt", "a", "", "random salt to use for generating tripcodes ($TMPBBS_TRIPCODE_SALT)")
 	pflag.BoolP("version", "v", false, "print version")
 }

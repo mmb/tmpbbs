@@ -75,6 +75,7 @@ Usage of tmpbbs:
   -t, --title string                  site title ($TMPBBS_TITLE) (default "tmpbbs")
   -c, --tls-cert string               path to PEM server certificate ($TMPBBS_TLS_CERT)
   -k, --tls-key string                path to PEM server key ($TMPBBS_TLS_KEY)
+  -x, --tls-trusted-ca string         path to file of trusted peer CA PEMs ($TMPBBS_TLS_TRUSTED_CA)
   -a, --tripcode-salt string          random salt to use for generating tripcodes ($TMPBBS_TRIPCODE_SALT)
   -v, --version                       print version
 ```
