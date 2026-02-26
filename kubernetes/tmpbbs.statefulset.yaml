@@ -17,10 +17,6 @@ spec:
     spec:
       containers:
         - env:
-            - name: GOMEMLIMIT
-              valueFrom:
-                resourceFieldRef:
-                  resource: limits.memory
             - name: POD_NAME
               valueFrom:
                 fieldRef:
