@@ -16,7 +16,7 @@ func NewServeMux(vipr *viper.Viper, commit string, staticFS embed.FS, postStore 
 ) (http.Handler, error) {
 	serveMux := http.NewServeMux()
 
-	serveMux.HandleFunc("/healthz", func(responseWriter http.ResponseWriter, _ *http.Request) {
+	serveMux.HandleFunc("GET /healthz", func(responseWriter http.ResponseWriter, _ *http.Request) {
 		fmt.Fprint(responseWriter, "ok")
 	})
 
