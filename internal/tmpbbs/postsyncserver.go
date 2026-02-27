@@ -40,7 +40,7 @@ func (pss *PostSyncServer) Get(ctx context.Context, request *proto.PostSyncReque
 	logger := slog.Default().With("clientAddress", clientAddress)
 
 	maxResults := min(int(request.GetMaxResults()), maxMaxResults)
-	if maxResults == 0 {
+	if maxResults <= 0 {
 		maxResults = maxMaxResults
 	}
 
