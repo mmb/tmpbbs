@@ -15,7 +15,7 @@ func ServeFSPaths(paths []string, serveMux *http.ServeMux) error {
 		urlPrefix, dir := parts[0], parts[1]
 
 		_, err := os.Stat(dir)
-		if os.IsNotExist(err) {
+		if err != nil {
 			return err
 		}
 
