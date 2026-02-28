@@ -25,7 +25,7 @@ spec:
               value: /config/$(POD_NAME).yaml
             - name: TMPBBS_JSON_LOG
               value: 'true'
-          image: mm62/tmpbbs:latest
+          image: mm62/tmpbbs:6.1.1
           livenessProbe:
             httpGet:
               path: /healthz

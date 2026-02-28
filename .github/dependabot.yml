@@ -2,7 +2,9 @@
 version: 2
 updates:
   - package-ecosystem: docker
-    directory: /
+    directories:
+      - /
+      - /kubernetes
     schedule:
       interval: daily
   - package-ecosystem: github-actions
