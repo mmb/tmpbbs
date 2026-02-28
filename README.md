@@ -1,4 +1,4 @@
-# <img src="static/favicon.svg" alt="tmpbbs mushroom logo"> tmpbbs
+# ![tmpbbs mushroom logo](static/favicon.svg) tmpbbs
 
 A single instance of tmpbbs is an ephemeral, anonymous forum site. All posts
 are stored in memory and lost when the process stops. It's a single static
