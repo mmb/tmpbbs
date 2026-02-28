@@ -23,8 +23,6 @@ spec:
                   fieldPath: metadata.name
             - name: TMPBBS_CONFIG_FILE
               value: /config/$(POD_NAME).yaml
-            - name: TMPBBS_JSON_LOG
-              value: 'true'
           image: mm62/tmpbbs:6.1.1
           livenessProbe:
             httpGet:
