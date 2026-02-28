@@ -1,6 +1,3 @@
 ---
 MD013:
   code_blocks: false
-MD033:
-  allowed_elements:
-    - img
