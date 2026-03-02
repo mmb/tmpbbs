@@ -2,10 +2,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: tmpbbs-grpc
+  name: tmpbbs
 spec:
   clusterIP: None
-  ports:
-    - port: 8081
   selector:
     app: tmpbbs

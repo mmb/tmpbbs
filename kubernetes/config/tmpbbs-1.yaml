@@ -1,4 +1,4 @@
 ---
 pull-peers:
-  - tmpbbs-0.tmpbbs-grpc:8081
-  - tmpbbs-2.tmpbbs-grpc:8081
+  - tmpbbs-0.tmpbbs:8081
+  - tmpbbs-2.tmpbbs:8081

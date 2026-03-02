@@ -9,7 +9,7 @@ configMapGenerator:
 namespace: tmpbbs
 
 resources:
-  - tmpbbs-grpc.service.yaml
   - tmpbbs-http.service.yaml
   - tmpbbs.namespace.yaml
+  - tmpbbs.service.yaml
   - tmpbbs.statefulset.yaml
