@@ -158,6 +158,17 @@ linters:
     presets:
       - common-false-positives
       - std-error-handling
+    rules:
+      - path: tests/integration
+        linters:
+          - gochecknoglobals
+          - godoclint
+          - gosec
+          - paralleltest
+      - path: tests/integration
+        linters:
+          - revive
+        text: dot-imports
 formatters:
   enable:
     - gci

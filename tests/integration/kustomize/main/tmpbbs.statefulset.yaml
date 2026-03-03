@@ -1,0 +1,13 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: tmpbbs
+spec:
+  template:
+    spec:
+      containers:
+        - name: tmpbbs
+          env:
+            - name: TMPBBS_TRIPCODE_SALT
+              value: secret
