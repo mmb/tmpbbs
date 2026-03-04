@@ -4,7 +4,6 @@ kind: StatefulSet
 metadata:
   name: tmpbbs
 spec:
-  minReadySeconds: 30
   replicas: 3
   selector:
     matchLabels:
