@@ -4,6 +4,8 @@ images:
     newName: kind-registry:5000/tmpbbs
     newTag: test
 
+namespace: tmpbbs-main
+
 patches:
   - path: tmpbbs.statefulset.yaml
 
