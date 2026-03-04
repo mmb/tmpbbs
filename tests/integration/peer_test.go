@@ -28,14 +28,14 @@ var _ = Describe("peer", Ordered, func() {
 		Expect(err).NotTo(HaveOccurred())
 		Expect(resp.StatusCode).To(Equal(http.StatusOK))
 
-		Eventually(func() string {
+		Eventually(func() []byte {
 			peerResp, peerErr := http.Get(tmpbbsURL)
 			Expect(peerErr).NotTo(HaveOccurred())
 			Expect(peerResp.StatusCode).To(Equal(http.StatusOK))
 			body, bodyErr := io.ReadAll(peerResp.Body)
 			Expect(bodyErr).NotTo(HaveOccurred())
 
-			return string(body)
+			return body
 		}, "1m15s").Should(SatisfyAll(
 			ContainSubstring("test title"),
 			ContainSubstring("test author"),
