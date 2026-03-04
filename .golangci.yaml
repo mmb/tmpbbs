@@ -164,6 +164,7 @@ linters:
           - gochecknoglobals
           - godoclint
           - gosec
+          - noctx
           - paralleltest
       - path: tests/integration
         linters:
