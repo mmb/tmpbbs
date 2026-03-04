@@ -58,7 +58,7 @@ import (
 // If commit is not set by go build (during development, for example) set it to the current time because it's used for
 // caching.
 var (
-	commit  = strconv.FormatInt(time.Now().UnixNano(), 10) //nolint:gochecknoglobals // used with go build -X
+	commit  = "" //nolint:gochecknoglobals // used with go build -X
 	version = ""
 	date    = "" //nolint:gochecknoglobals // used with go build -X
 )
@@ -67,6 +67,10 @@ var (
 var staticFS embed.FS
 
 func main() {
+	if commit == "" {
+		commit = strconv.FormatInt(time.Now().UnixNano(), 10)
+	}
+
 	ctx := context.Background()
 
 	viper, err := tmpbbs.NewViper()
