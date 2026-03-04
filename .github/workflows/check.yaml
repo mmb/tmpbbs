@@ -101,7 +101,7 @@ jobs:
       - name: Install ginkgo
         run: go install github.com/onsi/ginkgo/v2/ginkgo
       - name: Run integration tests
-        run: ginkgo -r
+        run: ginkgo -p -r
   kubeconform:
     runs-on: ubuntu-latest
     steps:

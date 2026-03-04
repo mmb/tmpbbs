@@ -16,9 +16,7 @@ const mainPort = 7800
 
 var mainURL = fmt.Sprintf("http://localhost:%d", mainPort)
 
-var _ = BeforeSuite(func() {
-	deployOverlay("main", mainPort)
-})
+var _ = SynchronizedBeforeSuite(func() { deployOverlay("main", mainPort) }, func() {})
 
 func TestIntegration(t *testing.T) {
 	RegisterFailHandler(Fail)
