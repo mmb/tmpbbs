@@ -75,9 +75,9 @@ func post(ctx context.Context, url string, title string, author string, body str
 	Expect(chromedp.Run(ctx,
 		chromedp.Navigate(url),
 		chromedp.WaitVisible(`input[type="submit"]`),
-		chromedp.SendKeys(`#title`, title),
-		chromedp.SendKeys(`#author`, author),
-		chromedp.SendKeys(`#body`, body),
+		chromedp.SendKeys("#title", title),
+		chromedp.SendKeys("#author", author),
+		chromedp.SendKeys("#body", body),
 		chromedp.Click(`input[type="submit"]`),
 	)).To(Succeed())
 }
