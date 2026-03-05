@@ -161,6 +161,7 @@ linters:
     rules:
       - path: tests/integration
         linters:
+          - fatcontext
           - gochecknoglobals
           - godoclint
           - gosec
