@@ -1,11 +1,13 @@
 package integration_test
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"path/filepath"
 	"testing"
 
+	"github.com/chromedp/chromedp"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
@@ -14,9 +16,25 @@ import (
 
 const mainPort = 7800
 
-var mainURL = fmt.Sprintf("http://localhost:%d", mainPort)
+var (
+	mainURL = fmt.Sprintf("http://localhost:%d", mainPort)
+	browser context.Context
+)
 
-var _ = SynchronizedBeforeSuite(func() { deployOverlay("main", mainPort) }, func() {})
+var _ = SynchronizedBeforeSuite(
+	func() {
+		deployOverlay("main", mainPort)
+	},
+	func() {
+		execAllocator, cancel := chromedp.NewExecAllocator(context.Background(),
+			append(chromedp.DefaultExecAllocatorOptions[:],
+				chromedp.Flag("disable-dev-shm-usage", true),
+				chromedp.Flag("no-sandbox", true),
+			)...)
+		DeferCleanup(cancel)
+		browser, cancel = chromedp.NewContext(execAllocator)
+		DeferCleanup(cancel)
+	})
 
 func TestIntegration(t *testing.T) {
 	RegisterFailHandler(Fail)
@@ -51,4 +69,22 @@ func deployOverlay(name string, port int) {
 	DeferCleanup(func() {
 		portForwardSession.Terminate()
 	})
+}
+
+func post(ctx context.Context, url string, title string, author string, body string) {
+	Expect(chromedp.Run(ctx,
+		chromedp.Navigate(url),
+		chromedp.WaitVisible(`input[type="submit"]`),
+		chromedp.SendKeys(`#title`, title),
+		chromedp.SendKeys(`#author`, author),
+		chromedp.SendKeys(`#body`, body),
+		chromedp.Click(`input[type="submit"]`),
+	)).To(Succeed())
+}
+
+func get(ctx context.Context, url string) string {
+	var html string
+	Expect(chromedp.Run(ctx, chromedp.Navigate(url), chromedp.OuterHTML("html", &html))).To(Succeed())
+
+	return html
 }

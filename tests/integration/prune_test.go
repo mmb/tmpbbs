@@ -1,17 +1,20 @@
 package integration_test
 
 import (
+	"context"
 	"fmt"
-	"io"
-	"net/http"
-	"net/url"
 
+	"github.com/chromedp/chromedp"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("prune", Ordered, func() {
-	var tmpbbsURL string
+	var (
+		tmpbbsURL string
+		mainTab   context.Context
+		checkTab  context.Context
+	)
 
 	BeforeAll(func() {
 		port := 7802
@@ -19,26 +22,24 @@ var _ = Describe("prune", Ordered, func() {
 		tmpbbsURL = fmt.Sprintf("http://localhost:%d", port)
 	})
 
+	BeforeEach(func() {
+		var cancel context.CancelFunc
+
+		mainTab, cancel = chromedp.NewContext(browser)
+		DeferCleanup(cancel)
+		checkTab, cancel = chromedp.NewContext(browser)
+		DeferCleanup(cancel)
+	})
+
 	It("prunes posts", func() {
-		resp, err := http.PostForm(tmpbbsURL, url.Values{"body": []string{"prune test"}})
-		Expect(err).NotTo(HaveOccurred())
-		Expect(resp.StatusCode).To(Equal(http.StatusOK))
+		post(mainTab, tmpbbsURL, "", "", "prune test")
 
-		resp, err = http.Get(tmpbbsURL)
-		Expect(err).NotTo(HaveOccurred())
-		Expect(resp.StatusCode).To(Equal(http.StatusOK))
-		body, bodyErr := io.ReadAll(resp.Body)
-		Expect(bodyErr).NotTo(HaveOccurred())
-		Expect(body).To(ContainSubstring("prune test"))
+		Eventually(func() string {
+			return get(checkTab, tmpbbsURL)
+		}, "5s").Should(ContainSubstring("prune test"))
 
-		Eventually(func() []byte {
-			afterResp, afterErr := http.Get(tmpbbsURL)
-			Expect(afterErr).NotTo(HaveOccurred())
-			Expect(afterResp.StatusCode).To(Equal(http.StatusOK))
-			afterBody, afterBodyErr := io.ReadAll(afterResp.Body)
-			Expect(afterBodyErr).NotTo(HaveOccurred())
-
-			return afterBody
-		}, "10s").ShouldNot(ContainSubstring("prune test"))
+		Eventually(func() string {
+			return get(checkTab, tmpbbsURL)
+		}, "5s").ShouldNot(ContainSubstring("prune test"))
 	})
 })

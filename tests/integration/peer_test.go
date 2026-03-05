@@ -1,17 +1,20 @@
 package integration_test
 
 import (
+	"context"
 	"fmt"
-	"io"
-	"net/http"
-	"net/url"
 
+	"github.com/chromedp/chromedp"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("peer", Ordered, func() {
-	var tmpbbsURL string
+	var (
+		tmpbbsURL string
+		mainTab   context.Context
+		peerTab   context.Context
+	)
 
 	BeforeAll(func() {
 		port := 7801
@@ -19,23 +22,20 @@ var _ = Describe("peer", Ordered, func() {
 		tmpbbsURL = fmt.Sprintf("http://localhost:%d", port)
 	})
 
+	BeforeEach(func() {
+		var cancel context.CancelFunc
+
+		mainTab, cancel = chromedp.NewContext(browser)
+		DeferCleanup(cancel)
+		peerTab, cancel = chromedp.NewContext(browser)
+		DeferCleanup(cancel)
+	})
+
 	It("pulls a post from main", func() {
-		resp, err := http.PostForm(mainURL, url.Values{
-			"title":  []string{"test title"},
-			"author": []string{"test author#tripcode"},
-			"body":   []string{"test body"},
-		})
-		Expect(err).NotTo(HaveOccurred())
-		Expect(resp.StatusCode).To(Equal(http.StatusOK))
+		post(mainTab, mainURL, "test title", "test author#tripcode", "test body")
 
-		Eventually(func() []byte {
-			peerResp, peerErr := http.Get(tmpbbsURL)
-			Expect(peerErr).NotTo(HaveOccurred())
-			Expect(peerResp.StatusCode).To(Equal(http.StatusOK))
-			body, bodyErr := io.ReadAll(peerResp.Body)
-			Expect(bodyErr).NotTo(HaveOccurred())
-
-			return body
+		Eventually(func() string {
+			return get(peerTab, tmpbbsURL)
 		}, "1m15s").Should(SatisfyAll(
 			ContainSubstring("test title"),
 			ContainSubstring("test author"),
