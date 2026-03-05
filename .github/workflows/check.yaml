@@ -62,7 +62,7 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
-      - name: Run htmlhint
+      - name: Run HTMLhint
         run: |
           npm install --global htmlhint
           go run tmpbbs.go &
@@ -98,15 +98,19 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
-      - name: Install ginkgo
+      - name: Install Ginkgo
         run: go install github.com/onsi/ginkgo/v2/ginkgo
+      - name: Install Chromium
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes chromium-browser
       - name: Run integration tests
         run: ginkgo -p -r
   kubeconform:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: kustomize
+      - name: Kustomize
         run: kubectl kustomize kubernetes > kustomized.yaml
       - uses: docker://ghcr.io/yannh/kubeconform@sha256:85dbef6b4b312b99133decc9c6fc9495e9fc5f92293d4ff3b7e1b30f5611823c
         with:
@@ -122,7 +126,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Run shellcheck
+      - name: Run ShellCheck
         run: find . -type f -name "*.sh" -exec shellcheck --format gcc {} +
   stylelint:
     runs-on: ubuntu-latest
