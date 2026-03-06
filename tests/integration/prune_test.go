@@ -2,7 +2,6 @@ package integration_test
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/chromedp/chromedp"
 	. "github.com/onsi/ginkgo/v2"
@@ -11,15 +10,13 @@ import (
 
 var _ = Describe("prune", Ordered, func() {
 	var (
-		tmpbbsURL string
-		mainTab   context.Context
-		checkTab  context.Context
+		pruneURL string
+		mainTab  context.Context
+		checkTab context.Context
 	)
 
 	BeforeAll(func() {
-		port := 7802
-		deployOverlay("prune", port)
-		tmpbbsURL = fmt.Sprintf("http://localhost:%d", port)
+		pruneURL = deployOverlay("prune", 7902)
 	})
 
 	BeforeEach(func() {
@@ -32,14 +29,14 @@ var _ = Describe("prune", Ordered, func() {
 	})
 
 	It("prunes posts", func() {
-		post(mainTab, tmpbbsURL, "", "", "prune test")
+		post(mainTab, pruneURL, "", "", "prune test")
 
 		Eventually(func() string {
-			return get(checkTab, tmpbbsURL)
+			return get(checkTab, pruneURL)
 		}, "5s").Should(ContainSubstring("prune test"))
 
 		Eventually(func() string {
-			return get(checkTab, tmpbbsURL)
+			return get(checkTab, pruneURL)
 		}, "10s").ShouldNot(ContainSubstring("prune test"))
 	})
 })
