@@ -22,7 +22,7 @@ var _ = Describe("emoji suggestions", func() {
 		var suggestions string
 
 		Expect(chromedp.Run(mainTab,
-			chromedp.Navigate(mainURL),
+			chromedp.Navigate(tmpbbsURL),
 			chromedp.WaitVisible("#body"),
 			chromedp.SendKeys("#body", ":sku"),
 			chromedp.Poll(`document.querySelectorAll('#emoji-suggestions > *').length == 4`, nil),

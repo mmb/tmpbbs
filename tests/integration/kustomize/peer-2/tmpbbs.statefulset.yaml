@@ -1,0 +1,17 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: tmpbbs
+spec:
+  template:
+    spec:
+      containers:
+        - name: tmpbbs
+          env:
+            - name: TMPBBS_CONFIG_FILE
+              value:
+            - name: TMPBBS_PULL_INTERVAL
+              value: 2s
+            - name: TMPBBS_PULL_PEERS
+              value: tmpbbs-0.tmpbbs.tmpbbs-test-peer-1.svc.cluster.local:8081

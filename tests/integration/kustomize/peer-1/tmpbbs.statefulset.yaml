@@ -11,5 +11,5 @@ spec:
           env:
             - name: TMPBBS_CONFIG_FILE
               value:
-            - name: TMPBBS_PULL_PEERS
-              value: tmpbbs-2.tmpbbs.tmpbbs-main.svc.cluster.local:8081
+            - name: TMPBBS_TRIPCODE_SALT
+              value: secret

@@ -4,7 +4,7 @@ images:
     newName: kind-registry:5000/tmpbbs
     newTag: test
 
-namespace: tmpbbs-test-prune
+namespace: tmpbbs-test-peer-1
 
 patches:
   - path: tmpbbs.statefulset.yaml
