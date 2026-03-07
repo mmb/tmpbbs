@@ -106,7 +106,7 @@ func main() {
 
 	if viper.GetString("grpc-listen-address") != "" {
 		go func() {
-			log.Fatal(tmpbbs.ServeGRPC(viper.GetString("grpc-listen-address"), viper.GetString("tls-cert"),
+			log.Fatal(tmpbbs.ServeGRPC(ctx, viper.GetString("grpc-listen-address"), viper.GetString("tls-cert"),
 				viper.GetString("tls-key"), tmpbbs.NewPostSyncServer(postStore)))
 		}()
 	}
@@ -122,6 +122,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Fatal(tmpbbs.Serve(viper.GetString("listen-address"), viper.GetString("tls-cert"), viper.GetString("tls-key"),
+	log.Fatal(tmpbbs.Serve(ctx, viper.GetString("listen-address"), viper.GetString("tls-cert"), viper.GetString("tls-key"),
 		serveMux))
 }

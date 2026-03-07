@@ -65,15 +65,13 @@ func (pp *pullPeer) run(initialWait time.Duration) {
 	time.Sleep(initialWait)
 
 	for {
-		if pp.sync() < int(pp.maxResults) {
+		if pp.sync(context.Background()) < int(pp.maxResults) {
 			time.Sleep(pp.interval)
 		}
 	}
 }
 
-func (pp *pullPeer) sync() int {
-	ctx := context.Background()
-
+func (pp *pullPeer) sync(ctx context.Context) int {
 	response, err := pp.client.Get(ctx, &proto.PostSyncRequest{Id: pp.lastIDSynced, MaxResults: pp.maxResults},
 		grpc.UseCompressor(gzip.Name))
 	if err != nil {

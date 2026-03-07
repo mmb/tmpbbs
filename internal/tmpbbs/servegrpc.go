@@ -12,8 +12,9 @@ import (
 )
 
 // ServeGRPC creates and configures a grpc.Server then starts listening.
-func ServeGRPC(listenAddress string, tlsCertFile string, tlsKeyFile string, postSyncServer *PostSyncServer) error {
-	ctx := context.Background()
+func ServeGRPC(ctx context.Context, listenAddress string, tlsCertFile string, tlsKeyFile string,
+	postSyncServer *PostSyncServer,
+) error {
 	listenConfig := net.ListenConfig{}
 
 	listener, err := listenConfig.Listen(ctx, "tcp", listenAddress)
