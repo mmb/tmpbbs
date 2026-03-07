@@ -92,7 +92,7 @@ func (p *post) bump() {
 func (p *post) delete() {
 	p.Title = ""
 	p.Author = ""
-	p.Body = "deleted"
+	p.Body = ":headstone: deleted"
 }
 
 func (p *post) readableID() string {
