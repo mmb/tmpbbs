@@ -13,3 +13,4 @@ spec:
               value: c7a487a357
             - name: TMPBBS_TRIPCODE_SALT
               value: secret
+          imagePullPolicy: Always

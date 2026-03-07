@@ -27,7 +27,14 @@ var (
 )
 
 var _ = SynchronizedBeforeSuite(
-	func() {},
+	func() {
+		if os.Getenv("TMPBBS_BUILD_IMAGE") == "true" {
+			command := exec.Command("docker", "build", "../..", "--tag", "kind-registry:5000/tmpbbs:test")
+			session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
+			Expect(err).NotTo(HaveOccurred())
+			Eventually(session, "1m").Should(gexec.Exit(0))
+		}
+	},
 	func() {
 		name := strconv.Itoa(GinkgoParallelProcess())
 		overlayPath := filepath.Join("kustomize", name)
