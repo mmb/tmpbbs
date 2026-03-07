@@ -34,17 +34,17 @@ var _ = Describe("deleting posts", func() {
 	})
 
 	It("allows users to delete their own posts", func() {
-		post(mainTab, testRootURL, "delete test title", "mikami1#secret", "delete test body")
+		post(mainTab, testRootURL, "delete test title", "mikami#secret", "delete test body")
 		Eventually(func() string {
 			return get(checkTab, testRootURL)
 		}, "5s").Should(ContainSubstring("delete test body"))
 		postURL := mostRecentReplyURL(checkTab, testRootURL)
 
-		post(mainTab, postURL, "", "mikami1#secret", "!delete")
+		post(mainTab, postURL, "", "mikami#secret", "!delete")
 		Eventually(func() string {
 			return get(checkTab, postURL)
 		}, "5s").Should(SatisfyAll(
-			ContainSubstring("deleted"),
+			ContainSubstring("🪦 deleted"),
 			Not(ContainSubstring("delete test title")),
 		))
 	})
@@ -56,7 +56,7 @@ var _ = Describe("deleting posts", func() {
 		}, "5s").Should(ContainSubstring("delete test body"))
 		postURL := mostRecentReplyURL(checkTab, testRootURL)
 
-		post(mainTab, postURL, "", "mikami1#other", "!delete")
+		post(mainTab, postURL, "", "mikami#other", "!delete")
 		Eventually(func() string {
 			return get(checkTab, postURL)
 		}, "5s").Should(ContainSubstring("!delete"))
@@ -73,9 +73,10 @@ var _ = Describe("deleting posts", func() {
 		Eventually(func() string {
 			return get(checkTab, postURL)
 		}, "5s").Should(SatisfyAll(
-			ContainSubstring("deleted"),
+			ContainSubstring("🪦 deleted"),
 			Not(ContainSubstring("delete test title")),
 			Not(ContainSubstring("mikami")),
+			Not(ContainSubstring("!eafe4f1258")),
 		))
 	})
 })
