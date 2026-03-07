@@ -104,6 +104,11 @@ func (ps *PostStore) get(postID string, callback func(*post)) bool {
 // delete removes all references to a post from the PostStore.
 // Write lock must be obtained before calling.
 func (ps *PostStore) delete(ctx context.Context, postToDelete *post) {
+	_, found := ps.idMap[postToDelete.id]
+	if !found {
+		return
+	}
+
 	slog.InfoContext(ctx, "delete post", "id", postToDelete.id)
 
 	for reply := postToDelete.Replies.Front(); reply != nil; reply = reply.Next() {
