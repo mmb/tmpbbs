@@ -85,7 +85,7 @@ jobs:
           buildkitd-config-inline: |
             [registry."kind-registry:5000"]
             http = true
-      - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
+      - uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294
         with:
           tags: ${{ steps.kind.outputs.LOCAL_REGISTRY }}/tmpbbs:test
           build-args: |
