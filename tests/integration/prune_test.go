@@ -37,6 +37,6 @@ var _ = Describe("prune", Ordered, func() {
 
 		Eventually(func() string {
 			return get(checkTab, pruneURL)
-		}, "10s").ShouldNot(ContainSubstring("prune test"))
+		}, "15s").ShouldNot(ContainSubstring("prune test"))
 	})
 })

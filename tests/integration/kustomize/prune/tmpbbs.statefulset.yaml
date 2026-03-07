@@ -14,4 +14,4 @@ spec:
             - name: TMPBBS_PRUNE_INTERVAL
               value: 1s
             - name: TMPBBS_PRUNE_MAX_AGE
-              value: 5s
+              value: 10s

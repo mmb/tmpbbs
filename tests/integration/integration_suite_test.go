@@ -55,19 +55,18 @@ func TestIntegration(t *testing.T) {
 }
 
 func deployOverlay(name string, port int) string {
-	path := filepath.Join("kustomize", name)
-	command := exec.Command("kubectl", "apply", "--kustomize", path)
+	command := exec.Command("kubectl", "apply", "--kustomize", filepath.Join("kustomize", name))
 	session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 	Expect(err).NotTo(HaveOccurred())
 	Eventually(session, "5s").Should(gexec.Exit(0))
+	namespace := namespacePrefix + name
 	DeferCleanup(func() {
-		deleteCommand := exec.Command("kubectl", "delete", "--kustomize", path)
+		deleteCommand := exec.Command("kubectl", "delete", "namespace", namespace)
 		deleteSession, deleteErr := gexec.Start(deleteCommand, GinkgoWriter, GinkgoWriter)
 		Expect(deleteErr).NotTo(HaveOccurred())
 		Eventually(deleteSession, "30s").Should(gexec.Exit(0))
 	})
 
-	namespace := namespacePrefix + name
 	command = exec.Command("kubectl", "rollout", "status", "statefulset/tmpbbs", "--namespace", namespace)
 	session, err = gexec.Start(command, GinkgoWriter, GinkgoWriter)
 	Expect(err).NotTo(HaveOccurred())
@@ -99,4 +98,16 @@ func get(ctx context.Context, url string) string {
 	Expect(chromedp.Run(ctx, chromedp.Navigate(url), chromedp.OuterHTML("html", &html))).To(Succeed())
 
 	return html
+}
+
+func mostRecentReplyURL(ctx context.Context, parentURL string) string {
+	var replyURL string
+
+	Expect(chromedp.Run(ctx,
+		chromedp.Navigate(parentURL),
+		chromedp.WaitVisible("#replies-start + li a"),
+		chromedp.Evaluate("document.querySelector('#replies-start + li a').href", &replyURL),
+	)).To(Succeed())
+
+	return replyURL
 }

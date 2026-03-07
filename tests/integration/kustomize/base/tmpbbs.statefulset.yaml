@@ -9,5 +9,7 @@ spec:
       containers:
         - name: tmpbbs
           env:
+            - name: TMPBBS_SUPERUSER_TRIPCODES
+              value: c7a487a357
             - name: TMPBBS_TRIPCODE_SALT
               value: secret
