@@ -4,7 +4,6 @@ kind: Service
 metadata:
   name: tmpbbs-http
 spec:
-  externalTrafficPolicy: Local
   ports:
     - port: 8080
   selector:
