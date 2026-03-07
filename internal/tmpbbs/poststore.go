@@ -103,12 +103,11 @@ func (ps *PostStore) get(postID string, callback func(*post)) bool {
 
 // delete removes all references to a post from the PostStore.
 // Write lock must be obtained before calling.
-func (ps *PostStore) delete(postToDelete *post) {
-	ctx := context.Background()
+func (ps *PostStore) delete(ctx context.Context, postToDelete *post) {
 	slog.InfoContext(ctx, "delete post", "id", postToDelete.id)
 
 	for reply := postToDelete.Replies.Front(); reply != nil; reply = reply.Next() {
-		ps.delete(reply.Value.(*post)) //nolint:errcheck,forcetypeassert // only one type
+		ps.delete(ctx, reply.Value.(*post)) //nolint:errcheck,forcetypeassert // only one type
 	}
 
 	postToDelete.Parent.Replies.Remove(postToDelete.parentRepliesElement)
@@ -163,12 +162,11 @@ func (ps *PostStore) startPruner() {
 
 	for {
 		<-ticker.C
-		ps.prune()
+		ps.prune(context.Background())
 	}
 }
 
-func (ps *PostStore) prune() {
-	ctx := context.Background()
+func (ps *PostStore) prune(ctx context.Context) {
 	slog.InfoContext(ctx, "prune start")
 
 	var deletePosts []*post
@@ -186,7 +184,7 @@ func (ps *PostStore) prune() {
 	}
 
 	for _, p := range deletePosts {
-		ps.delete(p)
+		ps.delete(ctx, p)
 	}
 
 	afterCount := ps.posts.Len()

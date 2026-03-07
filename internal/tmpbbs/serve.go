@@ -8,8 +8,9 @@ import (
 )
 
 // Serve creates and configures an [http.Server] then starts listening.
-func Serve(listenAddress string, tlsCertFile string, tlsKeyFile string, serveMux http.Handler) error {
-	ctx := context.Background()
+func Serve(ctx context.Context, listenAddress string, tlsCertFile string, tlsKeyFile string,
+	serveMux http.Handler,
+) error {
 	server := &http.Server{
 		Addr:              listenAddress,
 		Handler:           newLogHandler(serveMux),
