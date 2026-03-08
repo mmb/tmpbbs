@@ -1,0 +1,7 @@
+*
+!go.mod
+!go.sum
+!tmpbbs.go
+!internal
+!static
+!LICENSE
