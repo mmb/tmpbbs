@@ -15,6 +15,7 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/encoding/gzip"
+	"google.golang.org/grpc/keepalive"
 )
 
 type pullPeer struct {
@@ -27,6 +28,8 @@ type pullPeer struct {
 	interval     time.Duration
 	maxResults   int32
 }
+
+const minClientTimeout = 15 * time.Second
 
 func newPullPeer(address string, caCertPool *x509.CertPool, interval time.Duration,
 	postStore *PostStore,
@@ -46,7 +49,14 @@ func newPullPeer(address string, caCertPool *x509.CertPool, interval time.Durati
 		creds = insecure.NewCredentials()
 	}
 
-	clientConn, err := grpc.NewClient(address, grpc.WithTransportCredentials(creds))
+	clientConn, err := grpc.NewClient(address,
+		grpc.WithKeepaliveParams(keepalive.ClientParameters{
+			Time:                grpcKeepAliveTime,
+			Timeout:             grpcKeepAliveTimeout,
+			PermitWithoutStream: true,
+		}),
+		grpc.WithTransportCredentials(creds),
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -72,10 +82,13 @@ func (pp *pullPeer) run(initialWait time.Duration) {
 }
 
 func (pp *pullPeer) sync(ctx context.Context) int {
-	response, err := pp.client.Get(ctx, &proto.PostSyncRequest{Id: pp.lastIDSynced, MaxResults: pp.maxResults},
+	clientCtx, cancel := context.WithTimeout(ctx, max(pp.interval-5*time.Second, minClientTimeout))
+	defer cancel()
+
+	response, err := pp.client.Get(clientCtx, &proto.PostSyncRequest{Id: pp.lastIDSynced, MaxResults: pp.maxResults},
 		grpc.UseCompressor(gzip.Name))
 	if err != nil {
-		pp.logger.ErrorContext(ctx, err.Error())
+		pp.logger.ErrorContext(ctx, "peer sync failed", "error", err)
 
 		return 0
 	}

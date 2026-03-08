@@ -5,10 +5,18 @@ import (
 	"crypto/tls"
 	"log/slog"
 	"net"
+	"time"
 
 	"github.com/mmb/tmpbbs/internal/tmpbbs/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/keepalive"
+)
+
+const (
+	grpcKeepAliveTime          = 25 * time.Second
+	grpcKeepAliveTimeout       = 10 * time.Second
+	grpcServerKeepAliveMinTime = 20 * time.Second
 )
 
 // ServeGRPC creates and configures a grpc.Server then starts listening.
@@ -25,6 +33,15 @@ func ServeGRPC(ctx context.Context, listenAddress string, tlsCertFile string, tl
 
 	var grpcServer *grpc.Server
 
+	keepAliveEnforcementPolicy := grpc.KeepaliveEnforcementPolicy(keepalive.EnforcementPolicy{
+		MinTime:             grpcServerKeepAliveMinTime,
+		PermitWithoutStream: true,
+	})
+	keepAliveParams := grpc.KeepaliveParams(keepalive.ServerParameters{
+		Time:    grpcKeepAliveTime,
+		Timeout: grpcKeepAliveTimeout,
+	})
+
 	if tlsCertFile != "" && tlsKeyFile != "" {
 		var certificate tls.Certificate
 
@@ -38,9 +55,9 @@ func ServeGRPC(ctx context.Context, listenAddress string, tlsCertFile string, tl
 			ClientAuth:   tls.NoClientCert,
 			MinVersion:   tls.VersionTLS13,
 		}
-		grpcServer = grpc.NewServer(grpc.Creds(credentials.NewTLS(config)))
+		grpcServer = grpc.NewServer(keepAliveEnforcementPolicy, keepAliveParams, grpc.Creds(credentials.NewTLS(config)))
 	} else {
-		grpcServer = grpc.NewServer()
+		grpcServer = grpc.NewServer(keepAliveEnforcementPolicy, keepAliveParams)
 	}
 
 	proto.RegisterPostSyncServer(grpcServer, postSyncServer)
