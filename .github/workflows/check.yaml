@@ -100,10 +100,6 @@ jobs:
           go-version-file: go.mod
       - name: Install Ginkgo
         run: go install github.com/onsi/ginkgo/v2/ginkgo
-      - name: Install Chromium
-        run: |
-          sudo apt-get update
-          sudo apt-get install --yes chromium-browser
       - name: Run integration tests
         run: ginkgo -p -r
   kubeconform:
