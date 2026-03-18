@@ -1,47 +1,33 @@
 package tmpbbs
 
 import (
+	"bytes"
 	"regexp"
 
 	"github.com/microcosm-cc/bluemonday"
-	"github.com/russross/blackfriday/v2"
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
 )
 
 type markdownParser struct {
-	blackfridayExtensions *blackfriday.Option
-	blackfridayRenderer   *blackfriday.Option
-	bluemondayPolicy      *bluemonday.Policy
+	markdown         goldmark.Markdown
+	bluemondayPolicy *bluemonday.Policy
 }
 
 func newMarkdownParser() *markdownParser {
-	blackfridayExtensions := blackfriday.WithExtensions(
-		blackfriday.Autolink |
-			blackfriday.DefinitionLists |
-			blackfriday.FencedCode |
-			blackfriday.NoIntraEmphasis |
-			blackfriday.Strikethrough |
-			blackfriday.Tables)
-
-	blackfridayRenderer := blackfriday.WithRenderer(
-		blackfriday.NewHTMLRenderer(
-			blackfriday.HTMLRendererParameters{
-				// disable XHTML
-				Flags: blackfriday.CommonHTMLFlags &^ blackfriday.UseXHTML,
-			}))
-
 	bluemondayPolicy := bluemonday.UGCPolicy()
 	bluemondayPolicy.RequireNoReferrerOnLinks(true)
 	bluemondayPolicy.AllowAttrs("class").Matching(regexp.MustCompile("^language-[a-zA-Z0-9]+$")).OnElements("code")
 
 	return &markdownParser{
-		blackfridayExtensions: &blackfridayExtensions,
-		blackfridayRenderer:   &blackfridayRenderer,
-		bluemondayPolicy:      bluemondayPolicy,
+		markdown:         goldmark.New(goldmark.WithExtensions(extension.DefinitionList, extension.GFM)),
+		bluemondayPolicy: bluemondayPolicy,
 	}
 }
 
 func (mp *markdownParser) parse(input string) string {
-	unsafe := blackfriday.Run([]byte(input), *mp.blackfridayExtensions, *mp.blackfridayRenderer)
+	var unsafe bytes.Buffer
+	mp.markdown.Convert([]byte(input), &unsafe) //nolint:errcheck,gosec // bytes.Buffer.Write() always return nil for error
 
-	return string(mp.bluemondayPolicy.SanitizeBytes(unsafe))
+	return string(mp.bluemondayPolicy.SanitizeBytes(unsafe.Bytes()))
 }
