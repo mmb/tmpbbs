@@ -1,10 +1,11 @@
 package tmpbbs
 
 import (
+	"cmp"
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"sort"
+	"slices"
 
 	"github.com/derekparker/trie"
 	"github.com/kyokomi/emoji/v2"
@@ -85,8 +86,8 @@ func (ah *emojiSuggestHandler) ServeHTTP(responseWriter http.ResponseWriter, req
 		i++
 	}
 
-	sort.Slice(result, func(i int, j int) bool {
-		return result[i].Suggestion < result[j].Suggestion
+	slices.SortFunc(result, func(a suggestion, b suggestion) int {
+		return cmp.Compare(a.Suggestion, b.Suggestion)
 	})
 
 	err := json.NewEncoder(responseWriter).Encode(result)
