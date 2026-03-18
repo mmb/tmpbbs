@@ -9,10 +9,10 @@ require (
 	github.com/kyokomi/emoji/v2 v2.2.13
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/oklog/ulid/v2 v2.1.1
-	github.com/russross/blackfriday/v2 v2.1.0
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/spf13/pflag v1.0.10
 	github.com/spf13/viper v1.21.0
+	github.com/yuin/goldmark v1.7.16
 	golang.org/x/text v0.35.0
 	google.golang.org/grpc v1.79.2
 	google.golang.org/protobuf v1.36.11
