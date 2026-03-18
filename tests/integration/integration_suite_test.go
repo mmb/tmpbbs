@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"testing"
+	"time"
 
 	"github.com/chromedp/chromedp"
 	. "github.com/onsi/ginkgo/v2"
@@ -50,6 +51,7 @@ var _ = SynchronizedBeforeSuite(
 			append(chromedp.DefaultExecAllocatorOptions[:],
 				chromedp.Flag("disable-dev-shm-usage", true),
 				chromedp.Flag("no-sandbox", true),
+				chromedp.WSURLReadTimeout(30*time.Second),
 			)...)
 		DeferCleanup(cancel)
 		browser, cancel = chromedp.NewContext(execAllocator)

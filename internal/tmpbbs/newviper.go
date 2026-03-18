@@ -64,6 +64,7 @@ func (lvs LoggedViperSettings) LogValue() slog.Value {
 		"title",
 		"tls-cert",
 		"tls-key",
+		"tls-trusted-ca",
 	}
 
 	attrs := make([]slog.Attr, len(logConfigKeys))
