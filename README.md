@@ -125,6 +125,9 @@ them, instance C is on a portable device that periodically moves betwen A and B
 * Tree - an instance has N instances pulling from it, each of those has N
 instances pulling from it, etc., posts flow down a hierarchy
 
+* Alternative access path - some instances in a mesh can be exposed as Tor
+onion services, allowing read from Tor, write from Tor or both
+
 ## Deleting Posts
 
 Users can delete their own posts by replying with a post that starts with
