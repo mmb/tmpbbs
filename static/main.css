@@ -59,7 +59,7 @@ textarea {
 }
 
 .emoji {
-  font-size: 200%;
+  font-size: 2em;
   vertical-align: middle;
 }
 
@@ -70,6 +70,10 @@ a > .emoji {
 
 .tripcode {
   font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+}
+
+details:has(> summary + p > .emoji:only-child) > summary + p > .emoji {
+  font-size: 4em;
 }
 
 img {
