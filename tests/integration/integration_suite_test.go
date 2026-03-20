@@ -50,8 +50,8 @@ var _ = SynchronizedBeforeSuite(
 		execAllocator, cancel := chromedp.NewExecAllocator(context.Background(),
 			append(chromedp.DefaultExecAllocatorOptions[:],
 				chromedp.Flag("disable-dev-shm-usage", true),
-				chromedp.Flag("no-sandbox", true),
-				chromedp.WSURLReadTimeout(30*time.Second),
+				chromedp.NoSandbox,
+				chromedp.WSURLReadTimeout(40*time.Second),
 			)...)
 		DeferCleanup(cancel)
 		browser, cancel = chromedp.NewContext(execAllocator)
