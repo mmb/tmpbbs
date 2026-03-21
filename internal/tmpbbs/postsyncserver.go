@@ -31,9 +31,7 @@ func (pss *PostSyncServer) Get(ctx context.Context, request *proto.PostSyncReque
 ) {
 	var clientAddress string
 
-	p, exists := peer.FromContext(ctx)
-
-	if exists {
+	if p, exists := peer.FromContext(ctx); exists {
 		clientAddress = p.Addr.String()
 	}
 
