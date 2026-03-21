@@ -22,7 +22,7 @@ spec:
                   fieldPath: metadata.name
             - name: TMPBBS_CONFIG_FILE
               value: /config/$(POD_NAME).yaml
-          image: mm62/tmpbbs:v6.3.0
+          image: mm62/tmpbbs:v6.4.0
           livenessProbe:
             httpGet:
               path: /healthz
