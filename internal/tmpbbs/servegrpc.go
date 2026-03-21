@@ -23,7 +23,7 @@ const (
 func ServeGRPC(ctx context.Context, listenAddress string, tlsCertFile string, tlsKeyFile string,
 	postSyncServer *PostSyncServer,
 ) error {
-	listenConfig := net.ListenConfig{}
+	var listenConfig net.ListenConfig
 
 	listener, err := listenConfig.Listen(ctx, "tcp", listenAddress)
 	if err != nil {
@@ -31,16 +31,16 @@ func ServeGRPC(ctx context.Context, listenAddress string, tlsCertFile string, tl
 	}
 	defer listener.Close()
 
-	var grpcServer *grpc.Server
-
-	keepAliveEnforcementPolicy := grpc.KeepaliveEnforcementPolicy(keepalive.EnforcementPolicy{
-		MinTime:             grpcServerKeepAliveMinTime,
-		PermitWithoutStream: true,
-	})
-	keepAliveParams := grpc.KeepaliveParams(keepalive.ServerParameters{
-		Time:    grpcKeepAliveTime,
-		Timeout: grpcKeepAliveTimeout,
-	})
+	serverOptions := []grpc.ServerOption{
+		grpc.KeepaliveEnforcementPolicy(keepalive.EnforcementPolicy{
+			MinTime:             grpcServerKeepAliveMinTime,
+			PermitWithoutStream: true,
+		}),
+		grpc.KeepaliveParams(keepalive.ServerParameters{
+			Time:    grpcKeepAliveTime,
+			Timeout: grpcKeepAliveTimeout,
+		}),
+	}
 
 	if tlsCertFile != "" && tlsKeyFile != "" {
 		var certificate tls.Certificate
@@ -52,16 +52,13 @@ func ServeGRPC(ctx context.Context, listenAddress string, tlsCertFile string, tl
 
 		config := &tls.Config{
 			Certificates: []tls.Certificate{certificate},
-			ClientAuth:   tls.NoClientCert,
 			MinVersion:   tls.VersionTLS13,
 		}
-		grpcServer = grpc.NewServer(keepAliveEnforcementPolicy, keepAliveParams, grpc.Creds(credentials.NewTLS(config)))
-	} else {
-		grpcServer = grpc.NewServer(keepAliveEnforcementPolicy, keepAliveParams)
+		serverOptions = append(serverOptions, grpc.Creds(credentials.NewTLS(config)))
 	}
 
+	grpcServer := grpc.NewServer(serverOptions...)
 	proto.RegisterPostSyncServer(grpcServer, postSyncServer)
-
 	slog.InfoContext(ctx, "listening for gRPC", "address", listenAddress, "tlsCertFile", tlsCertFile, "tlsKeyFile",
 		tlsKeyFile)
 

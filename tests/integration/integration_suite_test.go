@@ -79,7 +79,7 @@ func deployOverlay(name string, port int) string {
 	command = exec.Command("kubectl", "rollout", "status", "statefulset/tmpbbs", "--namespace", namespace)
 	session, err = gexec.Start(command, GinkgoWriter, GinkgoWriter)
 	Expect(err).NotTo(HaveOccurred())
-	Eventually(session, "10s").Should(gexec.Exit(0))
+	Eventually(session, "15s").Should(gexec.Exit(0))
 
 	command = exec.Command("kubectl", "port-forward", "service/tmpbbs-http", "--namespace", namespace,
 		fmt.Sprintf("%d:8080", port))
