@@ -16,9 +16,7 @@ func newQRCodeGetHandler() *qrCodeGetHandler {
 
 // ServeHTTP serves a QR code generated from a URL.
 func (qcgh *qrCodeGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
-	url := request.URL.Query().Get("url")
-
-	png, err := qrcode.Encode(url, qrcode.Medium, qrCodeSize)
+	png, err := qrcode.Encode(request.URL.Query().Get("url"), qrcode.Medium, qrCodeSize)
 	if err != nil {
 		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
 
