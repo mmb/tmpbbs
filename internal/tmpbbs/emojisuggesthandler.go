@@ -38,8 +38,6 @@ func newEmojiSuggestHandler() *emojiSuggestHandler {
 
 // ServeHTTP serves JSON emoji suggestions for autocomplete.
 func (ah *emojiSuggestHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
-	var keys []string
-
 	responseWriter.Header().Set("Content-Type", "application/json")
 
 	query := request.URL.Query().Get("q")
@@ -50,22 +48,9 @@ func (ah *emojiSuggestHandler) ServeHTTP(responseWriter http.ResponseWriter, req
 		return
 	}
 
-	if ah.trie.HasKeysWithPrefix(query) {
-		keys = ah.trie.PrefixSearch(query)
-	} else {
-		_, err := responseWriter.Write([]byte("[]"))
-		if err != nil {
-			http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
-
-			return
-		}
-
-		return
-	}
-
 	uniqueMap := make(map[suggestion]struct{})
 
-	for _, key := range keys {
+	for _, key := range ah.trie.PrefixSearch(query) {
 		value, _ := ah.trie.Find(key)
 
 		metaSuggestion, ok := value.Meta().(suggestion)
