@@ -19,14 +19,12 @@ func Serve(ctx context.Context, listenAddress string, tlsCertFile string, tlsKey
 		ReadTimeout:       5 * time.Second,   //nolint:mnd // not worth creating a const
 		WriteTimeout:      10 * time.Second,  //nolint:mnd // not worth creating a const
 	}
+	tlsEnabled := tlsCertFile != "" && tlsKeyFile != ""
+	slog.InfoContext(ctx, "listening for HTTP", "address", listenAddress, "tlsEnabled", tlsEnabled)
 
-	if tlsCertFile != "" && tlsKeyFile != "" {
-		slog.InfoContext(ctx, "listening for HTTP", "address", listenAddress, "tlsEnabled", true)
-
+	if tlsEnabled {
 		return server.ListenAndServeTLS(tlsCertFile, tlsKeyFile)
 	}
-
-	slog.InfoContext(ctx, "listening for HTTP", "address", listenAddress, "tlsEnabled", false)
 
 	return server.ListenAndServe()
 }
