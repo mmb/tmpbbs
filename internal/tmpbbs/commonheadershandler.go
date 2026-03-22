@@ -2,6 +2,7 @@ package tmpbbs
 
 import (
 	"net/http"
+	"strings"
 )
 
 type commonHeadersHandler struct {
@@ -10,18 +11,20 @@ type commonHeadersHandler struct {
 }
 
 func newCommonHeadersHandler(wrappedHandler http.Handler, externalCSS bool) *commonHeadersHandler {
-	cspHeader := "default-src 'self'; " +
-		"base-uri 'self'; " +
-		"form-action 'self'; " +
-		"frame-ancestors 'none'; " +
-		"img-src *; " +
-		"object-src 'none'"
+	cspHeaderParts := []string{
+		"default-src 'self'",
+		"base-uri 'self'",
+		"form-action 'self'",
+		"frame-ancestors 'none'",
+		"img-src *",
+		"object-src 'none'",
+	}
 	if externalCSS {
-		cspHeader += "; style-src *"
+		cspHeaderParts = append(cspHeaderParts, "style-src *")
 	}
 
 	return &commonHeadersHandler{
-		cspHeader:      cspHeader,
+		cspHeader:      strings.Join(cspHeaderParts, "; "),
 		wrappedHandler: wrappedHandler,
 	}
 }
