@@ -14,10 +14,12 @@ type markdownParser struct {
 	bluemondayPolicy *bluemonday.Policy
 }
 
+var allowedCodeClass = regexp.MustCompile("^language-[a-zA-Z0-9]+$")
+
 func newMarkdownParser() *markdownParser {
 	bluemondayPolicy := bluemonday.UGCPolicy()
 	bluemondayPolicy.RequireNoReferrerOnLinks(true)
-	bluemondayPolicy.AllowAttrs("class").Matching(regexp.MustCompile("^language-[a-zA-Z0-9]+$")).OnElements("code")
+	bluemondayPolicy.AllowAttrs("class").Matching(allowedCodeClass).OnElements("code")
 
 	return &markdownParser{
 		markdown:         goldmark.New(goldmark.WithExtensions(extension.DefinitionList, extension.GFM)),
