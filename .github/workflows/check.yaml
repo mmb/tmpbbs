@@ -28,6 +28,26 @@ jobs:
       - uses: actions/setup-node@v6
       - name: Run ESLint
         run: npm install eslint @eslint/js globals && npx eslint
+  go-generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+      - name: Install gotext and protoc
+        run: |
+          go install golang.org/x/text/cmd/gotext@latest
+          PROTOC_VERSION=$(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest | jq --raw-output '.tag_name[1:]')
+          curl --location --remote-name "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip"
+          unzip -d "$HOME/.local" "protoc-${PROTOC_VERSION}-linux-x86_64.zip"
+          chmod +x "$HOME/.local/bin/protoc"
+          go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+      - name: Check that go generated code is up to date
+        run: |
+          go generate ./...
+          git diff --exit-code
   golangci-lint:
     runs-on: ubuntu-latest
     steps:
