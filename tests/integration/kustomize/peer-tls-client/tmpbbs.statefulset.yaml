@@ -1,0 +1,26 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: tmpbbs
+spec:
+  template:
+    spec:
+      containers:
+        - name: tmpbbs
+          env:
+            - name: TMPBBS_CONFIG_FILE
+              value:
+            - name: TMPBBS_PULL_INTERVAL
+              value: 2s
+            - name: TMPBBS_PULL_PEERS
+              value: tls://tmpbbs-0.tmpbbs.tmpbbs-test-peer-tls-server.svc.cluster.local:8081  # yamllint disable rule:line-length
+            - name: TMPBBS_TLS_TRUSTED_CA
+              value: /tls/ca.crt
+          volumeMounts:
+            - name: tls
+              mountPath: /tls
+      volumes:
+        - name: tls
+          configMap:
+            name: tls

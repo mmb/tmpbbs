@@ -1,0 +1,29 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: tmpbbs
+spec:
+  template:
+    spec:
+      containers:
+        - name: tmpbbs
+          env:
+            - name: TMPBBS_CONFIG_FILE
+              value:
+            - name: TMPBBS_TLS_CERT
+              value: /tls/tls.crt
+            - name: TMPBBS_TLS_KEY
+              value: /tls/tls.key
+            - name: TMPBBS_TRIPCODE_SALT
+              value: secret
+          livenessProbe:
+            httpGet:
+              port: https
+          volumeMounts:
+            - name: tls
+              mountPath: /tls
+      volumes:
+        - name: tls
+          configMap:
+            name: tls
