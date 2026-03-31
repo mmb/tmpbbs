@@ -40,6 +40,7 @@ var _ = SynchronizedBeforeSuite(
 	func() {
 		name := strconv.Itoa(GinkgoParallelProcess())
 		overlayPath := filepath.Join("kustomize", name)
+		Expect(os.RemoveAll(overlayPath)).To(Succeed())
 		Expect(os.Mkdir(overlayPath, 0o755)).To(Succeed())
 		DeferCleanup(os.RemoveAll, overlayPath)
 
