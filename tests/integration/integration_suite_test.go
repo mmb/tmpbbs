@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -50,6 +51,7 @@ var _ = SynchronizedBeforeSuite(
 		execAllocator, cancel := chromedp.NewExecAllocator(context.Background(),
 			append(chromedp.DefaultExecAllocatorOptions[:],
 				chromedp.Flag("disable-dev-shm-usage", true),
+				chromedp.Flag("ignore-certificate-errors", true),
 				chromedp.NoSandbox,
 				chromedp.WSURLReadTimeout(40*time.Second),
 			)...)
@@ -88,7 +90,12 @@ func deployOverlay(name string, port int) string {
 	Eventually(portForwardSession, "10s").Should(gbytes.Say("Forwarding from"))
 	DeferCleanup(portForwardSession.Terminate)
 
-	return fmt.Sprintf("http://localhost:%d/", port)
+	scheme := "http"
+	if strings.Contains(name, "tls-server") {
+		scheme = "https"
+	}
+
+	return fmt.Sprintf("%s://localhost:%d/", scheme, port)
 }
 
 func post(ctx context.Context, url string, title string, author string, body string) {

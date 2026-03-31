@@ -8,33 +8,33 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("peering", Ordered, func() {
+var _ = Describe("peering with TLS", Ordered, func() {
 	var (
-		peer1URL string
-		peer2URL string
-		peer1Tab context.Context
-		peer2Tab context.Context
+		peerServerURL string
+		peerClientURL string
+		peerServerTab context.Context
+		peerClientTab context.Context
 	)
 
 	BeforeAll(func() {
-		peer1URL = deployOverlay("peer-1", 7900)
-		peer2URL = deployOverlay("peer-2", 7901)
+		peerServerURL = deployOverlay("peer-tls-server", 7903)
+		peerClientURL = deployOverlay("peer-tls-client", 7904)
 	})
 
 	BeforeEach(func() {
 		var cancel context.CancelFunc
 
-		peer1Tab, cancel = chromedp.NewContext(browser)
+		peerServerTab, cancel = chromedp.NewContext(browser)
 		DeferCleanup(cancel)
-		peer2Tab, cancel = chromedp.NewContext(browser)
+		peerClientTab, cancel = chromedp.NewContext(browser)
 		DeferCleanup(cancel)
 	})
 
 	It("pulls a post from a peer", func() {
-		post(peer1Tab, peer1URL, "test title", "test author#tripcode", "test body")
+		post(peerServerTab, peerServerURL, "test title", "test author#tripcode", "test body")
 
 		Eventually(func() string {
-			return get(peer2Tab, peer2URL)
+			return get(peerClientTab, peerClientURL)
 		}, "5s").Should(SatisfyAll(
 			ContainSubstring("test title"),
 			ContainSubstring("test author"),
