@@ -14,4 +14,4 @@ spec:
             - name: TMPBBS_PULL_INTERVAL
               value: 2s
             - name: TMPBBS_PULL_PEERS
-              value: tmpbbs-0.tmpbbs.tmpbbs-test-peer-1.svc.cluster.local:8081
+              value: tmpbbs-0.tmpbbs.tmpbbs-test-peer-server.svc.cluster.local:8081  # yamllint disable rule:line-length
