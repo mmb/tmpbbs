@@ -51,6 +51,7 @@ var _ = SynchronizedBeforeSuite(
 
 		execAllocator, cancel := chromedp.NewExecAllocator(context.Background(),
 			append(chromedp.DefaultExecAllocatorOptions[:],
+				chromedp.DisableGPU,
 				chromedp.Flag("disable-dev-shm-usage", true),
 				chromedp.Flag("ignore-certificate-errors", true),
 				chromedp.NoSandbox,

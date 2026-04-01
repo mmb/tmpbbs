@@ -72,7 +72,8 @@ a > .emoji {
   font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
 }
 
-details:has(> summary + p > .emoji:only-child) > summary + p > .emoji {
+details:has(> summary + p > .emoji:only-child) > summary + p > .emoji,
+ul.post:has(> li > p > .emoji:only-child) > li > p > .emoji {
   font-size: 4em;
 }
 
