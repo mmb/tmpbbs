@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/chromedp/chromedp"
 	. "github.com/onsi/ginkgo/v2"
@@ -19,13 +18,15 @@ import (
 )
 
 const (
-	namespacePrefix = "tmpbbs-test-"
-	basePort        = 7800
+	chromeDebuggingPort = "9222"
+	basePort            = 7800
+	namespacePrefix     = "tmpbbs-test-"
 )
 
 var (
-	tmpbbsURL string
-	browser   context.Context
+	tmpbbsURL          string
+	browser            context.Context
+	chromeWebSocketURL = "http://localhost:" + chromeDebuggingPort
 )
 
 var _ = SynchronizedBeforeSuite(
@@ -36,6 +37,18 @@ var _ = SynchronizedBeforeSuite(
 			Expect(err).NotTo(HaveOccurred())
 			Eventually(session, "1m").Should(gexec.Exit(0))
 		}
+
+		execAllocator, cancel := chromedp.NewExecAllocator(context.Background(),
+			append(chromedp.DefaultExecAllocatorOptions[:],
+				chromedp.Flag("disable-dev-shm-usage", true),
+				chromedp.Flag("ignore-certificate-errors", true),
+				chromedp.Flag("remote-debugging-port", chromeDebuggingPort),
+				chromedp.NoSandbox,
+			)...)
+		DeferCleanup(cancel)
+		browser, cancel = chromedp.NewContext(execAllocator)
+		DeferCleanup(cancel)
+		Expect(chromedp.Run(browser)).To(Succeed())
 	},
 	func() {
 		name := strconv.Itoa(GinkgoParallelProcess())
@@ -49,17 +62,9 @@ var _ = SynchronizedBeforeSuite(
 
 		tmpbbsURL = deployOverlay(name, basePort+GinkgoParallelProcess())
 
-		execAllocator, cancel := chromedp.NewExecAllocator(context.Background(),
-			append(chromedp.DefaultExecAllocatorOptions[:],
-				chromedp.DisableGPU,
-				chromedp.Flag("disable-dev-shm-usage", true),
-				chromedp.Flag("disable-features", "PartitionAlloc"),
-				chromedp.Flag("ignore-certificate-errors", true),
-				chromedp.NoSandbox,
-				chromedp.WSURLReadTimeout(40*time.Second),
-			)...)
+		remoteAllocator, cancel := chromedp.NewRemoteAllocator(context.Background(), chromeWebSocketURL)
 		DeferCleanup(cancel)
-		browser, cancel = chromedp.NewContext(execAllocator)
+		browser, cancel = chromedp.NewContext(remoteAllocator)
 		DeferCleanup(cancel)
 	})
 
