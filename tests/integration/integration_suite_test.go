@@ -53,6 +53,7 @@ var _ = SynchronizedBeforeSuite(
 			append(chromedp.DefaultExecAllocatorOptions[:],
 				chromedp.DisableGPU,
 				chromedp.Flag("disable-dev-shm-usage", true),
+				chromedp.Flag("disable-features", "PartitionAlloc"),
 				chromedp.Flag("ignore-certificate-errors", true),
 				chromedp.NoSandbox,
 				chromedp.WSURLReadTimeout(40*time.Second),

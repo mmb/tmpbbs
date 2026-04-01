@@ -97,6 +97,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
+        shell: bash
         working-directory: tests/integration
     steps:
       - id: kind
