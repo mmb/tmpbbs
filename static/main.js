@@ -69,7 +69,7 @@ class EmojiSuggester {
       button.type = 'button'
       button.className = 'emoji-suggestion'
       button.addEventListener('click', () => {
-        this.#replaceCurrentWord(suggestion.suggestion)
+        this.#replaceCurrentWord(`:${suggestion.suggestion}:`)
         this.input.focus()
       })
       emojiSpan.className = 'emoji'
