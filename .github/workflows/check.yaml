@@ -8,6 +8,10 @@ name: Check
   schedule:
     - cron: 6 6 * * 6
 
+defaults:
+  run:
+    shell: bash
+
 permissions:
   checks: write
   contents: read

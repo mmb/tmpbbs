@@ -5,6 +5,10 @@ name: Release a new version
     tags:
       - v*.*.*
 
+defaults:
+  run:
+    shell: bash
+
 env:
   DOCKER_HUB_IMAGE: mm62/tmpbbs
 
