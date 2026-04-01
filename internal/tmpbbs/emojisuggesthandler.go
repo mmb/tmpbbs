@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"slices"
+	"strings"
 
 	"github.com/derekparker/trie"
 	"github.com/kyokomi/emoji/v2"
@@ -26,7 +27,7 @@ func newEmojiSuggestHandler() *emojiSuggestHandler {
 	tri := trie.New()
 	for shortcode, pictogram := range emoji.CodeMap() {
 		tri.Add(shortcode, suggestion{
-			Suggestion: emoji.NormalizeShortCode(shortcode),
+			Suggestion: strings.Trim(emoji.NormalizeShortCode(shortcode), ":"),
 			Pictogram:  pictogram,
 		})
 	}
