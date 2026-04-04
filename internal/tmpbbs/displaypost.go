@@ -34,6 +34,8 @@ type displayPost struct {
 	wrappingEmojiParser parser
 }
 
+var strictPolicy = bluemonday.StrictPolicy() //nolint:gochecknoglobals // shared policy
+
 func newDisplayPost(post *post, lang language.Tag, printer *message.Printer, basicEmojiParser parser,
 	wrappingEmojiParser parser, markdownParser parser,
 ) *displayPost {
@@ -181,5 +183,5 @@ func (dp *displayPost) expandEmoji(input string, parser parser) string {
 }
 
 func (dp *displayPost) sanitizeAndExpandEmoji(input string, parser parser) string {
-	return dp.expandEmoji(strings.TrimSpace(bluemonday.StrictPolicy().Sanitize(input)), parser)
+	return dp.expandEmoji(strings.TrimSpace(strictPolicy.Sanitize(input)), parser)
 }
