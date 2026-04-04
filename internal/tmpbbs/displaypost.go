@@ -46,20 +46,20 @@ func newDisplayPost(post *post, printer *message.Printer, basicEmojiParser parse
 
 // BodyHTML returns a [template.HTML] of the post's body with Markdown and emoji
 // expanded.
-func (dp displayPost) BodyHTML() template.HTML {
+func (dp *displayPost) BodyHTML() template.HTML {
 	return template.HTML(
 		dp.expandEmoji(dp.markdownParser.parse(dp.Body), dp.wrappingEmojiParser)) // #nosec G203 -- sanitized
 }
 
 // DisplayAuthor returns a [template.HTML] of the posts's author with emoji
 // expanded.
-func (dp displayPost) DisplayAuthor() template.HTML {
+func (dp *displayPost) DisplayAuthor() template.HTML {
 	return template.HTML(dp.sanitizeAndExpandEmoji(dp.Author, dp.wrappingEmojiParser)) // #nosec G203 -- sanitized
 }
 
 // DisplayTitle returns a [template.HTML] of the posts's title with emoji
 // expanded.
-func (dp displayPost) DisplayTitle() template.HTML {
+func (dp *displayPost) DisplayTitle() template.HTML {
 	title := dp.sanitizeAndExpandEmoji(dp.Title, dp.wrappingEmojiParser)
 
 	if title == "" {
@@ -70,12 +70,12 @@ func (dp displayPost) DisplayTitle() template.HTML {
 }
 
 // NumReplies returns how many replies the post has in human lanuage.
-func (dp displayPost) NumReplies() string {
+func (dp *displayPost) NumReplies() string {
 	return dp.Printer.Sprintf("%d replies", dp.Replies.Len())
 }
 
 // PageTitle returns the HTML title for the post's page.
-func (dp displayPost) PageTitle() string {
+func (dp *displayPost) PageTitle() string {
 	title := dp.sanitizeAndExpandEmoji(dp.Title, dp.basicEmojiParser)
 
 	if title == "" {
@@ -86,13 +86,13 @@ func (dp displayPost) PageTitle() string {
 }
 
 // ParentDisplayPost returns the displayPost of the post's parent.
-func (dp displayPost) ParentDisplayPost() *displayPost {
+func (dp *displayPost) ParentDisplayPost() *displayPost {
 	return newDisplayPost(dp.Parent, dp.Printer, dp.basicEmojiParser, dp.wrappingEmojiParser, dp.markdownParser)
 }
 
 // RepliesNav returns a [template.HTML] with navigation links based on the
 // current page.
-func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) template.HTML {
+func (dp *displayPost) RepliesNav(currentPage int, perPage int, liClass string) template.HTML {
 	if dp.Replies.Len() == 0 {
 		return ""
 	}
@@ -131,7 +131,7 @@ func (dp displayPost) RepliesNav(currentPage int, perPage int, liClass string) t
 }
 
 // RepliesPage returns a page of the posts's replies.
-func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
+func (dp *displayPost) RepliesPage(page int, perPage int) []*displayPost {
 	start := min((max(0, page-1))*perPage, dp.Replies.Len())
 	end := min(start+perPage, dp.Replies.Len())
 	result := make([]*displayPost, end-start)
@@ -151,7 +151,7 @@ func (dp displayPost) RepliesPage(page int, perPage int) []*displayPost {
 }
 
 // TimeAgo returns roughly how long ago the post was made in human language.
-func (dp displayPost) TimeAgo() string {
+func (dp *displayPost) TimeAgo() string {
 	age := time.Since(dp.time.Round(0))
 	if age < 1*time.Hour {
 		return dp.Printer.Sprintf("%dm ago", int64(math.Round(age.Minutes())))
@@ -164,11 +164,11 @@ func (dp displayPost) TimeAgo() string {
 	return dp.Printer.Sprintf("%dh ago", int64(math.Round(age.Hours())))
 }
 
-func (dp displayPost) emptyTitle() string {
+func (dp *displayPost) emptyTitle() string {
 	return strings.ToLower(fmt.Sprintf("%s-%s", dp.id[20:24], dp.id[24:26]))
 }
 
-func (dp displayPost) expandEmoji(input string, parser parser) string {
+func (dp *displayPost) expandEmoji(input string, parser parser) string {
 	if parser == nil {
 		return input
 	}
@@ -176,6 +176,6 @@ func (dp displayPost) expandEmoji(input string, parser parser) string {
 	return parser.parse(input)
 }
 
-func (dp displayPost) sanitizeAndExpandEmoji(input string, parser parser) string {
+func (dp *displayPost) sanitizeAndExpandEmoji(input string, parser parser) string {
 	return dp.expandEmoji(strings.TrimSpace(bluemonday.StrictPolicy().Sanitize(input)), parser)
 }
