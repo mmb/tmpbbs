@@ -52,7 +52,7 @@ func (pss *PostSyncServer) Get(ctx context.Context, request *proto.PostSyncReque
 		}
 
 		protoPosts[index] = &proto.Post{
-			Time:      timestamppb.New(post.time),
+			Time:      timestamppb.New(post.Time),
 			Title:     post.Title,
 			Author:    post.Author,
 			Tripcode:  post.Tripcode,

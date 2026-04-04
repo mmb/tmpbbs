@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"html/template"
 	"maps"
-	"math"
 	"slices"
 	"strings"
 	"time"
@@ -156,18 +155,9 @@ func (dp *displayPost) RepliesPage(page int, perPage int) []*displayPost {
 	return result
 }
 
-// TimeAgo returns roughly how long ago the post was made in human language.
-func (dp *displayPost) TimeAgo() string {
-	age := time.Since(dp.time.Round(0))
-	if age < 1*time.Hour {
-		return dp.Printer.Sprintf("%dm ago", int64(math.Round(age.Minutes())))
-	}
-
-	if age >= 24*time.Hour {
-		return dp.Printer.Sprintf("%dd ago", int64(math.Round(age.Hours()/24))) //nolint:mnd // hours in a day, can't change
-	}
-
-	return dp.Printer.Sprintf("%dh ago", int64(math.Round(age.Hours())))
+// TimeRFC3339 returns the post's time in UTC formatted as RFC3339.
+func (dp *displayPost) TimeRFC3339() string {
+	return dp.Time.UTC().Format(time.RFC3339)
 }
 
 func (dp *displayPost) emptyTitle() string {
