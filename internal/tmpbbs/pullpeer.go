@@ -42,6 +42,7 @@ func newPullPeer(address string, caCertPool *x509.CertPool, interval time.Durati
 		tlsConfig := tls.Config{RootCAs: caCertPool}
 		if caCertPool == nil {
 			tlsConfig.InsecureSkipVerify = true // #nosec G402 -- if no trusted CAs, allow self-signed
+
 			slog.Warn("peer server certificate verification disabled, use --tls-trusted-ca to verify", "address", address)
 		}
 
