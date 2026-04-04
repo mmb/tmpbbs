@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"github.com/microcosm-cc/bluemonday"
+	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 )
 
@@ -27,16 +28,18 @@ type displayPost struct {
 	*post
 
 	basicEmojiParser    parser
+	Language            language.Tag
 	markdownParser      parser
 	Printer             *message.Printer
 	wrappingEmojiParser parser
 }
 
-func newDisplayPost(post *post, printer *message.Printer, basicEmojiParser parser, wrappingEmojiParser parser,
-	markdownParser parser,
+func newDisplayPost(post *post, lang language.Tag, printer *message.Printer, basicEmojiParser parser,
+	wrappingEmojiParser parser, markdownParser parser,
 ) *displayPost {
 	return &displayPost{
 		basicEmojiParser:    basicEmojiParser,
+		Language:            lang,
 		markdownParser:      markdownParser,
 		post:                post,
 		Printer:             printer,
@@ -87,7 +90,8 @@ func (dp *displayPost) PageTitle() string {
 
 // ParentDisplayPost returns the displayPost of the post's parent.
 func (dp *displayPost) ParentDisplayPost() *displayPost {
-	return newDisplayPost(dp.Parent, dp.Printer, dp.basicEmojiParser, dp.wrappingEmojiParser, dp.markdownParser)
+	return newDisplayPost(dp.Parent, dp.Language, dp.Printer, dp.basicEmojiParser, dp.wrappingEmojiParser,
+		dp.markdownParser)
 }
 
 // RepliesNav returns a [template.HTML] with navigation links based on the
@@ -143,7 +147,7 @@ func (dp *displayPost) RepliesPage(page int, perPage int) []*displayPost {
 
 	for i := 0; i < perPage && current != nil; i++ {
 		result[i] = newDisplayPost(current.Value.(*post), //nolint:errcheck,forcetypeassert // only one type
-			dp.Printer, dp.basicEmojiParser, dp.wrappingEmojiParser, dp.markdownParser)
+			dp.Language, dp.Printer, dp.basicEmojiParser, dp.wrappingEmojiParser, dp.markdownParser)
 		current = current.Next()
 	}
 
