@@ -121,7 +121,7 @@ func (pp *pullPeer) sync(ctx context.Context) int {
 			Body:      protoPost.GetBody(),
 			Replies:   list.New(),
 			id:        protoPost.GetId(),
-			time:      protoPost.GetTime().AsTime(),
+			Time:      protoPost.GetTime().AsTime(),
 			superuser: protoPost.GetSuperuser(),
 		}
 

@@ -1,7 +1,24 @@
 const commit = document.querySelector('meta[name="commit"]').content,
   debounceInterval = 150,
   emojiSuggestions = document.getElementById('emoji-suggestions'),
-  qrCodeDialog = document.getElementById('qr')
+  msPerSecond = 1000,
+  qrCodeDialog = document.getElementById('qr'),
+  relativeTime = new Intl.RelativeTimeFormat(document.documentElement.lang, { numeric: 'auto', style: 'short' }),
+  secondsPerDay = 86400,
+  secondsPerHour = 3600,
+  secondsPerMinute = 60,
+  timeAgo = (unixTimestamp) => {
+    const secondsAgo = Math.max(0, Math.floor(Date.now() / msPerSecond) - unixTimestamp)
+    if (secondsAgo < secondsPerMinute) { return relativeTime.format(-secondsAgo, 'second') }
+    if (secondsAgo < secondsPerHour) { return relativeTime.format(-Math.round(secondsAgo / secondsPerMinute), 'minute') }
+    if (secondsAgo < secondsPerDay) { return relativeTime.format(-Math.round(secondsAgo / secondsPerHour), 'hour') }
+    return relativeTime.format(-Math.round(secondsAgo / secondsPerDay), 'day')
+  }
+
+document.querySelectorAll('.time').forEach(element => {
+  element.textContent = timeAgo(element.dataset.time)
+  element.title = new Date(element.dataset.time * msPerSecond).toLocaleString()
+})
 
 class EmojiSuggester {
   constructor(input, displayContainer) {

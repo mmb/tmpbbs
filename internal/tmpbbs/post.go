@@ -11,8 +11,8 @@ import (
 )
 
 type post struct {
-	time                 time.Time
-	Parent               *post `yaml:"parent"`
+	Time                 time.Time `yaml:"time"`
+	Parent               *post     `yaml:"parent"`
 	parentRepliesElement *list.Element
 	postsElement         *list.Element
 	Replies              *list.List `yaml:"replies"`
@@ -47,7 +47,7 @@ func newPost(title string, author string, body string, tripcoder *Tripcoder) *po
 		id:        ulid.Make().String(),
 		Replies:   list.New(),
 		superuser: superuser,
-		time:      time.Now(),
+		Time:      time.Now(),
 		Title:     title,
 		Tripcode:  tripcode,
 	}
@@ -62,11 +62,6 @@ func (p *post) IsOriginalPoster() bool {
 // IsSuperuser returns true if the post was made by a superuser.
 func (p *post) IsSuperuser() bool {
 	return p.superuser
-}
-
-// Time returns the post's time formatted as RFC3339.
-func (p *post) Time() string {
-	return p.time.UTC().Format(time.RFC3339)
 }
 
 // URL returns the path part of the post's URL.
@@ -124,7 +119,7 @@ func (p *post) lastUpdate() time.Time {
 		return lastReply.Value.(*post).lastUpdate() //nolint:errcheck,forcetypeassert // only one type
 	}
 
-	return p.time.Round(0)
+	return p.Time.Round(0)
 }
 
 func (p *post) validate() []string {

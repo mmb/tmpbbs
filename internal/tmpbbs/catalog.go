@@ -39,30 +39,25 @@ func init() {
 
 var messageKeyToIndex = map[string]int{
 	"%d replies":             0,
-	"%dd ago":                3,
-	"%dh ago":                4,
-	"%dm ago":                2,
-	"Author#tripcode-secret": 6,
-	"Close":                  11,
-	"Insert emoji using shortcode between colons (:mushroom: becomes 🍄).": 8,
-	"Markdown is supported.": 7,
-	"Reply":                  9,
-	"Title":                  5,
-	"URL QR Code":            10,
+	"Author#tripcode-secret": 3,
+	"Close":                  8,
+	"Insert emoji using shortcode between colons (:mushroom: becomes 🍄).": 5,
+	"Markdown is supported.": 4,
+	"Reply":                  6,
+	"Title":                  2,
+	"URL QR Code":            7,
 	"page %d":                1,
 }
 
-var en_USIndex = []uint32{ // 13 elements
-	0x00000000, 0x0000000e, 0x00000019, 0x00000024,
-	0x0000002f, 0x0000003a, 0x00000040, 0x00000057,
-	0x0000006e, 0x000000b5, 0x000000bb, 0x000000c7,
-	0x000000cd,
-} // Size: 76 bytes
+var en_USIndex = []uint32{ // 10 elements
+	0x00000000, 0x0000000e, 0x00000019, 0x0000001f,
+	0x00000036, 0x0000004d, 0x00000094, 0x0000009a,
+	0x000000a6, 0x000000ac,
+} // Size: 64 bytes
 
-const en_USData string = "" + // Size: 205 bytes
-	"\x02%[1]d replies\x02page %[1]d\x02%[1]dm ago\x02%[1]dd ago\x02%[1]dh ag" +
-	"o\x02Title\x02Author#tripcode-secret\x02Markdown is supported.\x02Insert" +
-	" emoji using shortcode between colons (:mushroom: becomes 🍄).\x02Reply" +
-	"\x02URL QR Code\x02Close"
+const en_USData string = "" + // Size: 172 bytes
+	"\x02%[1]d replies\x02page %[1]d\x02Title\x02Author#tripcode-secret\x02Ma" +
+	"rkdown is supported.\x02Insert emoji using shortcode between colons (:mu" +
+	"shroom: becomes 🍄).\x02Reply\x02URL QR Code\x02Close"
 
-	// Total table size 281 bytes (0KiB); checksum: 73D9274F
+	// Total table size 236 bytes (0KiB); checksum: 33CAB334
