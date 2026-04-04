@@ -159,6 +159,10 @@ func (dp *displayPost) RepliesPage(page int, perPage int) []*displayPost {
 // TimeAgo returns roughly how long ago the post was made in human language.
 func (dp *displayPost) TimeAgo() string {
 	age := time.Since(dp.time.Round(0))
+	if age < 1*time.Minute {
+		return dp.Printer.Sprintf("just now")
+	}
+
 	if age < 1*time.Hour {
 		return dp.Printer.Sprintf("%dm ago", int64(math.Round(age.Minutes())))
 	}

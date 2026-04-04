@@ -39,30 +39,31 @@ func init() {
 
 var messageKeyToIndex = map[string]int{
 	"%d replies":             0,
-	"%dd ago":                3,
-	"%dh ago":                4,
-	"%dm ago":                2,
-	"Author#tripcode-secret": 6,
-	"Close":                  11,
-	"Insert emoji using shortcode between colons (:mushroom: becomes 🍄).": 8,
-	"Markdown is supported.": 7,
-	"Reply":                  9,
-	"Title":                  5,
-	"URL QR Code":            10,
+	"%dd ago":                4,
+	"%dh ago":                5,
+	"%dm ago":                3,
+	"Author#tripcode-secret": 7,
+	"Close":                  12,
+	"Insert emoji using shortcode between colons (:mushroom: becomes 🍄).": 9,
+	"Markdown is supported.": 8,
+	"Reply":                  10,
+	"Title":                  6,
+	"URL QR Code":            11,
+	"just now":               2,
 	"page %d":                1,
 }
 
-var en_USIndex = []uint32{ // 13 elements
-	0x00000000, 0x0000000e, 0x00000019, 0x00000024,
-	0x0000002f, 0x0000003a, 0x00000040, 0x00000057,
-	0x0000006e, 0x000000b5, 0x000000bb, 0x000000c7,
-	0x000000cd,
-} // Size: 76 bytes
+var en_USIndex = []uint32{ // 14 elements
+	0x00000000, 0x0000000e, 0x00000019, 0x00000022,
+	0x0000002d, 0x00000038, 0x00000043, 0x00000049,
+	0x00000060, 0x00000077, 0x000000be, 0x000000c4,
+	0x000000d0, 0x000000d6,
+} // Size: 80 bytes
 
-const en_USData string = "" + // Size: 205 bytes
-	"\x02%[1]d replies\x02page %[1]d\x02%[1]dm ago\x02%[1]dd ago\x02%[1]dh ag" +
-	"o\x02Title\x02Author#tripcode-secret\x02Markdown is supported.\x02Insert" +
-	" emoji using shortcode between colons (:mushroom: becomes 🍄).\x02Reply" +
-	"\x02URL QR Code\x02Close"
+const en_USData string = "" + // Size: 214 bytes
+	"\x02%[1]d replies\x02page %[1]d\x02just now\x02%[1]dm ago\x02%[1]dd ago" +
+	"\x02%[1]dh ago\x02Title\x02Author#tripcode-secret\x02Markdown is support" +
+	"ed.\x02Insert emoji using shortcode between colons (:mushroom: becomes 🍄" +
+	").\x02Reply\x02URL QR Code\x02Close"
 
-	// Total table size 281 bytes (0KiB); checksum: 73D9274F
+	// Total table size 294 bytes (0KiB); checksum: 53C4FA82
