@@ -90,14 +90,14 @@ class EmojiSuggester {
         this.input.focus()
       })
       emojiSpan.className = 'emoji'
-      emojiSpan.innerHTML = suggestion.pictogram
+      emojiSpan.textContent = suggestion.pictogram
       button.append(emojiSpan, document.createTextNode(` ${suggestion.suggestion}`))
       this.displayContainer.append(button)
     })
   }
 
   #clearSuggestions() {
-    this.displayContainer.innerHTML = ''
+    this.displayContainer.replaceChildren()
   }
 
   #replaceCurrentWord(replacement) {
