@@ -73,7 +73,7 @@ func (dp *displayPost) DisplayTitle() template.HTML {
 	return template.HTML(title) // #nosec G203 -- either sanitized above or no user input if empty
 }
 
-// NumReplies returns how many replies the post has in human lanuage.
+// NumReplies returns how many replies the post has in human language.
 func (dp *displayPost) NumReplies() string {
 	return dp.Printer.Sprintf("%d replies", dp.Replies.Len())
 }
