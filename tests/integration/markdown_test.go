@@ -1,30 +1,17 @@
 package integration_test
 
 import (
-	"context"
 	"fmt"
 	"time"
 
-	"github.com/chromedp/chromedp"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("markdown", func() {
-	var (
-		mainTab     context.Context
-		checkTab    context.Context
-		testRootURL string
-	)
+	var testRootURL string
 
 	BeforeEach(func() {
-		var cancel context.CancelFunc
-
-		mainTab, cancel = chromedp.NewContext(browser)
-		DeferCleanup(cancel)
-		checkTab, cancel = chromedp.NewContext(browser)
-		DeferCleanup(cancel)
-
 		testID := fmt.Sprintf("%d", time.Now().UnixNano())
 		post(mainTab, tmpbbsURL, testID, "", "")
 		Eventually(func() string {
