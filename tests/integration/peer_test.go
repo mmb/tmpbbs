@@ -1,9 +1,6 @@
 package integration_test
 
 import (
-	"context"
-
-	"github.com/chromedp/chromedp"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
@@ -12,8 +9,6 @@ var _ = Describe("peering", Ordered, func() {
 	var (
 		peerServerURL string
 		peerClientURL string
-		peerServerTab context.Context
-		peerClientTab context.Context
 	)
 
 	BeforeAll(func() {
@@ -21,20 +16,11 @@ var _ = Describe("peering", Ordered, func() {
 		peerClientURL = deployOverlay("peer-client", 7901)
 	})
 
-	BeforeEach(func() {
-		var cancel context.CancelFunc
-
-		peerServerTab, cancel = chromedp.NewContext(browser)
-		DeferCleanup(cancel)
-		peerClientTab, cancel = chromedp.NewContext(browser)
-		DeferCleanup(cancel)
-	})
-
 	It("pulls a post from a peer", func() {
-		post(peerServerTab, peerServerURL, "test title", "test author#tripcode", "test body")
+		post(mainTab, peerServerURL, "test title", "test author#tripcode", "test body")
 
 		Eventually(func() string {
-			return get(peerClientTab, peerClientURL)
+			return get(checkTab, peerClientURL)
 		}, "5s").Should(SatisfyAll(
 			ContainSubstring("test title"),
 			ContainSubstring("test author"),

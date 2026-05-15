@@ -27,6 +27,8 @@ var (
 	tmpbbsURL          string
 	browser            context.Context
 	chromeWebSocketURL = "http://localhost:" + chromeDebuggingPort
+	mainTab            context.Context
+	checkTab           context.Context
 )
 
 var _ = SynchronizedBeforeSuite(
@@ -67,6 +69,15 @@ var _ = SynchronizedBeforeSuite(
 		browser, cancel = chromedp.NewContext(remoteAllocator)
 		DeferCleanup(cancel)
 	})
+
+var _ = BeforeEach(func() {
+	var cancel context.CancelFunc
+
+	mainTab, cancel = chromedp.NewContext(browser)
+	DeferCleanup(cancel)
+	checkTab, cancel = chromedp.NewContext(browser)
+	DeferCleanup(cancel)
+})
 
 func TestIntegration(t *testing.T) {
 	RegisterFailHandler(Fail)

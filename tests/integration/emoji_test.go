@@ -1,26 +1,12 @@
 package integration_test
 
 import (
-	"context"
-
 	"github.com/chromedp/chromedp"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("emoji", func() {
-	var mainTab context.Context
-	var checkTab context.Context
-
-	BeforeEach(func() {
-		var cancel context.CancelFunc
-
-		mainTab, cancel = chromedp.NewContext(browser)
-		DeferCleanup(cancel)
-		checkTab, cancel = chromedp.NewContext(browser)
-		DeferCleanup(cancel)
-	})
-
 	It("suggests emoji completions", func() {
 		var suggestions string
 
