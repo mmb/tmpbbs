@@ -118,6 +118,11 @@ func deployOverlay(name string, port int) string {
 	Eventually(portForwardSession, "10s").Should(gbytes.Say("Forwarding from"))
 	DeferCleanup(portForwardSession.Terminate)
 
+	command = exec.Command("kubectl", "logs", "--follow", "--namespace", namespace, "--prefix", "--selector", "app=tmpbbs")
+	logSession, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
+	Expect(err).NotTo(HaveOccurred())
+	DeferCleanup(logSession.Terminate)
+
 	scheme := "http"
 	if strings.Contains(name, "tls-server") {
 		scheme = "https"
