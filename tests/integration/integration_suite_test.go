@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/chromedp/chromedp"
 	. "github.com/onsi/ginkgo/v2"
@@ -47,6 +48,7 @@ var _ = SynchronizedBeforeSuite(
 				chromedp.Flag("ignore-certificate-errors", true),
 				chromedp.Flag("remote-debugging-port", chromeDebuggingPort),
 				chromedp.NoSandbox,
+				chromedp.WSURLReadTimeout(1*time.Minute),
 			)...)
 		DeferCleanup(cancel)
 		browser, cancel = chromedp.NewContext(execAllocator)
@@ -79,6 +81,13 @@ var _ = SynchronizedBeforeSuite(
 		DeferCleanup(cancel)
 	})
 
+var _ = SynchronizedAfterSuite(func() {}, func() {
+	command := exec.Command("kubectl", "delete", "namespace", "--selector", "tmpbbs-test=true")
+	session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
+	Expect(err).NotTo(HaveOccurred())
+	Eventually(session, "30s").Should(gexec.Exit(0))
+})
+
 var _ = BeforeEach(func() {
 	var cancel context.CancelFunc
 
@@ -99,12 +108,6 @@ func deployOverlay(name string, port int) string {
 	Expect(err).NotTo(HaveOccurred())
 	Eventually(session, "5s").Should(gexec.Exit(0))
 	namespace := namespacePrefix + name
-	DeferCleanup(func() {
-		deleteCommand := exec.Command("kubectl", "delete", "namespace", namespace)
-		deleteSession, deleteErr := gexec.Start(deleteCommand, GinkgoWriter, GinkgoWriter)
-		Expect(deleteErr).NotTo(HaveOccurred())
-		Eventually(deleteSession, "30s").Should(gexec.Exit(0))
-	})
 
 	command = exec.Command("kubectl", "rollout", "status", "statefulset/tmpbbs", "--namespace", namespace)
 	session, err = gexec.Start(command, GinkgoWriter, GinkgoWriter)
