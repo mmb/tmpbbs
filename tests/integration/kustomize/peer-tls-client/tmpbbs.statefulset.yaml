@@ -11,8 +11,6 @@ spec:
           env:
             - name: TMPBBS_CONFIG_FILE
               value:
-            - name: TMPBBS_JSON_LOG
-              value: 'false'
             - name: TMPBBS_PULL_INTERVAL
               value: 2s
             - name: TMPBBS_PULL_PEERS

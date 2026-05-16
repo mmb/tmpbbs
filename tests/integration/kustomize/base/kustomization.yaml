@@ -1,13 +1,8 @@
 ---
-images:
-  - name: mm62/tmpbbs
-    newName: kind-registry:5000/tmpbbs
-    newTag: test
+components:
+  - ../components/test
 
 namespace: tmpbbs-main
-
-patches:
-  - path: tmpbbs.statefulset.yaml
 
 resources:
   - ../../../../kubernetes
