@@ -1,13 +1,11 @@
 ---
+components:
+  - ../components/test
+
 configmapGenerator:
   - name: tls
     files:
       - ca.crt
-
-images:
-  - name: mm62/tmpbbs
-    newName: kind-registry:5000/tmpbbs
-    newTag: test
 
 namespace: tmpbbs-test-peer-tls-client
 
