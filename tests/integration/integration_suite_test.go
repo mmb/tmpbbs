@@ -85,7 +85,7 @@ var _ = SynchronizedAfterSuite(func() {}, func() {
 	command := exec.Command("kubectl", "delete", "namespace", "--selector", "tmpbbs-test=true")
 	session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 	Expect(err).NotTo(HaveOccurred())
-	Eventually(session, "30s").Should(gexec.Exit(0))
+	Eventually(session, "1m").Should(gexec.Exit(0))
 })
 
 var _ = BeforeEach(func() {
