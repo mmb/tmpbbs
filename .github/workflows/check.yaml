@@ -26,6 +26,13 @@ jobs:
       - uses: docker://rhysd/actionlint@sha256:6f03470d0152251d7f07f7c4dc019dbe7024c72cd952f839544c7798843efa8f
         with:
           args: -color
+  committed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: crate-ci/committed@faeed42f2e10c244533a01525f13c4d8b6ce383f  # v1.11.1
   eslint:
     runs-on: ubuntu-latest
     steps:
