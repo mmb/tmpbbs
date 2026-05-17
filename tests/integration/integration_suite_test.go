@@ -35,6 +35,8 @@ var (
 
 var _ = SynchronizedBeforeSuite(
 	func() {
+		var browserCancel context.CancelFunc
+
 		if os.Getenv("TMPBBS_BUILD_IMAGE") == "true" {
 			command := exec.Command("docker", "build", "../..", "--tag", "kind-registry:5000/tmpbbs:test")
 			session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
@@ -42,7 +44,7 @@ var _ = SynchronizedBeforeSuite(
 			Eventually(session, "1m").Should(gexec.Exit(0))
 		}
 
-		execAllocator, cancel := chromedp.NewExecAllocator(context.Background(),
+		execAllocator, execAllocatorCancel := chromedp.NewExecAllocator(context.Background(),
 			append(chromedp.DefaultExecAllocatorOptions[:],
 				chromedp.Flag("disable-dev-shm-usage", true),
 				chromedp.Flag("ignore-certificate-errors", true),
@@ -50,9 +52,9 @@ var _ = SynchronizedBeforeSuite(
 				chromedp.NoSandbox,
 				chromedp.WSURLReadTimeout(1*time.Minute),
 			)...)
-		DeferCleanup(cancel)
-		browser, cancel = chromedp.NewContext(execAllocator)
-		DeferCleanup(cancel)
+		DeferCleanup(execAllocatorCancel)
+		browser, browserCancel = chromedp.NewContext(execAllocator)
+		DeferCleanup(browserCancel)
 		Expect(chromedp.Run(browser)).To(Succeed())
 
 		Eventually(func() error {
@@ -64,6 +66,8 @@ var _ = SynchronizedBeforeSuite(
 		}, "5s").Should(Succeed())
 	},
 	func() {
+		var browserCancel context.CancelFunc
+
 		name := strconv.Itoa(GinkgoParallelProcess())
 		overlayPath := filepath.Join("kustomize", name)
 		Expect(os.RemoveAll(overlayPath)).To(Succeed())
@@ -75,10 +79,10 @@ var _ = SynchronizedBeforeSuite(
 
 		tmpbbsURL = deployOverlay(name, basePort+GinkgoParallelProcess())
 
-		remoteAllocator, cancel := chromedp.NewRemoteAllocator(context.Background(), chromeWebSocketURL)
-		DeferCleanup(cancel)
-		browser, cancel = chromedp.NewContext(remoteAllocator)
-		DeferCleanup(cancel)
+		remoteAllocator, remoteAllocatorCancel := chromedp.NewRemoteAllocator(context.Background(), chromeWebSocketURL)
+		DeferCleanup(remoteAllocatorCancel)
+		browser, browserCancel = chromedp.NewContext(remoteAllocator)
+		DeferCleanup(browserCancel)
 	})
 
 var _ = SynchronizedAfterSuite(func() {}, func() {
