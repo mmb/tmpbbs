@@ -3,7 +3,6 @@ package integration_test
 import (
 	"context"
 	"fmt"
-	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -56,14 +55,6 @@ var _ = SynchronizedBeforeSuite(
 		browser, browserCancel = chromedp.NewContext(execAllocator)
 		DeferCleanup(browserCancel)
 		Expect(chromedp.Run(browser)).To(Succeed())
-
-		Eventually(func() error {
-			resp, err := http.Get(chromeWebSocketURL + "/json/version")
-			if err == nil {
-				resp.Body.Close()
-			}
-			return err
-		}, "5s").Should(Succeed())
 	},
 	func() {
 		var browserCancel context.CancelFunc
