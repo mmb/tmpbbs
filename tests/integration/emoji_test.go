@@ -14,6 +14,7 @@ var _ = Describe("emoji", func() {
 			chromedp.Navigate(tmpbbsURL),
 			chromedp.WaitVisible("#body"),
 			chromedp.SendKeys("#body", ":sku"),
+			chromedp.WaitVisible("#emoji-suggestions > *"),
 			chromedp.Poll("document.querySelectorAll('#emoji-suggestions > *').length == 4", nil),
 			chromedp.Text("#emoji-suggestions", &suggestions),
 		)).To(Succeed())
