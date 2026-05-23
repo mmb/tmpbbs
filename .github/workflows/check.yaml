@@ -120,8 +120,10 @@ jobs:
           buildkitd-config-inline: |
             [registry."kind-registry:5000"]
             http = true
+      - uses: actions/checkout@v6
       - uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf  # v7.2.0
         with:
+          context: .
           tags: ${{ steps.kind.outputs.LOCAL_REGISTRY }}/tmpbbs:test
           build-args: |
             VERSION=test
@@ -129,7 +131,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           push: true
-      - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
