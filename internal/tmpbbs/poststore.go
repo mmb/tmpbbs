@@ -65,23 +65,24 @@ func (ps *PostStore) LoadYAML(path string, tripcoder *Tripcoder) error {
 	return nil
 }
 
-func (ps *PostStore) put(post *post, parentID string) {
-	ps.mutex.Lock()
-	defer ps.mutex.Unlock()
-
-	if post.Parent = ps.getPostByID(parentID); post.Parent != nil {
-		post.parentRepliesElement = post.Parent.Replies.PushFront(post)
+// delete removes all references to a post from the PostStore.
+// Write lock must be obtained before calling.
+func (ps *PostStore) delete(ctx context.Context, postToDelete *post) {
+	_, found := ps.idMap[postToDelete.id]
+	if !found {
+		return
 	}
 
-	post.postsElement = ps.posts.PushBack(post)
-	ps.idMap[post.id] = post.postsElement
+	slog.InfoContext(ctx, "delete post", "id", postToDelete.id)
 
-	if (post.IsOriginalPoster() || post.IsSuperuser()) && strings.HasPrefix(post.Body, "!delete") && post.Parent != nil &&
-		post.Parent != ps.rootPost {
-		post.Parent.delete()
+	for reply := postToDelete.Replies.Front(); reply != nil; reply = reply.Next() {
+		ps.delete(ctx, reply.Value.(*post)) //nolint:errcheck,forcetypeassert // only one type
 	}
 
-	post.bump()
+	postToDelete.Parent.Replies.Remove(postToDelete.parentRepliesElement)
+
+	delete(ps.idMap, postToDelete.id)
+	ps.posts.Remove(postToDelete.postsElement)
 }
 
 func (ps *PostStore) get(postID string, callback func(*post)) bool {
@@ -101,24 +102,15 @@ func (ps *PostStore) get(postID string, callback func(*post)) bool {
 	return true
 }
 
-// delete removes all references to a post from the PostStore.
-// Write lock must be obtained before calling.
-func (ps *PostStore) delete(ctx context.Context, postToDelete *post) {
-	_, found := ps.idMap[postToDelete.id]
+// getPostByID returns the post with ID postID or nil if not found.
+// The caller must handle locking.
+func (ps *PostStore) getPostByID(postID string) *post {
+	element, found := ps.idMap[postID]
 	if !found {
-		return
+		return nil
 	}
 
-	slog.InfoContext(ctx, "delete post", "id", postToDelete.id)
-
-	for reply := postToDelete.Replies.Front(); reply != nil; reply = reply.Next() {
-		ps.delete(ctx, reply.Value.(*post)) //nolint:errcheck,forcetypeassert // only one type
-	}
-
-	postToDelete.Parent.Replies.Remove(postToDelete.parentRepliesElement)
-
-	delete(ps.idMap, postToDelete.id)
-	ps.posts.Remove(postToDelete.postsElement)
+	return element.Value.(*post) //nolint:errcheck,forcetypeassert // only one type
 }
 
 func (ps *PostStore) getSince(postID string, maxPosts int) []*post {
@@ -150,27 +142,6 @@ func (ps *PostStore) hasPost(postID string) bool {
 	return found
 }
 
-// getPostByID returns the post with ID postID or nil if not found.
-// The caller must handle locking.
-func (ps *PostStore) getPostByID(postID string) *post {
-	element, found := ps.idMap[postID]
-	if !found {
-		return nil
-	}
-
-	return element.Value.(*post) //nolint:errcheck,forcetypeassert // only one type
-}
-
-func (ps *PostStore) startPruner() {
-	ticker := time.NewTicker(ps.pruneInterval)
-	defer ticker.Stop()
-
-	for {
-		<-ticker.C
-		ps.prune(context.Background())
-	}
-}
-
 func (ps *PostStore) prune(ctx context.Context) {
 	slog.InfoContext(ctx, "prune start")
 
@@ -194,4 +165,33 @@ func (ps *PostStore) prune(ctx context.Context) {
 
 	afterCount := ps.posts.Len()
 	slog.InfoContext(ctx, "prune end", "prunedCount", beforeCount-afterCount)
+}
+
+func (ps *PostStore) put(post *post, parentID string) {
+	ps.mutex.Lock()
+	defer ps.mutex.Unlock()
+
+	if post.Parent = ps.getPostByID(parentID); post.Parent != nil {
+		post.parentRepliesElement = post.Parent.Replies.PushFront(post)
+	}
+
+	post.postsElement = ps.posts.PushBack(post)
+	ps.idMap[post.id] = post.postsElement
+
+	if (post.IsOriginalPoster() || post.IsSuperuser()) && strings.HasPrefix(post.Body, "!delete") && post.Parent != nil &&
+		post.Parent != ps.rootPost {
+		post.Parent.delete()
+	}
+
+	post.bump()
+}
+
+func (ps *PostStore) startPruner() {
+	ticker := time.NewTicker(ps.pruneInterval)
+	defer ticker.Stop()
+
+	for {
+		<-ticker.C
+		ps.prune(context.Background())
+	}
 }
