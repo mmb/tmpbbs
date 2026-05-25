@@ -91,25 +91,8 @@ func (p *post) delete() {
 	p.Tripcode = ""
 }
 
-func (p *post) readableID() string {
-	return strings.ToLower(fmt.Sprintf("%s-%s-%s-%s-%s-%s-%s", p.id[:4], p.id[4:8], p.id[8:12], p.id[12:16],
-		p.id[16:20], p.id[20:24], p.id[24:]))
-}
-
-func (p *post) repliesPageURL(page int, anchor string) string {
-	if anchor != "" {
-		anchor = "#" + anchor
-	}
-
-	return fmt.Sprintf("%s?p=%d%s", p.URL(), page, anchor)
-}
-
 func (p *post) hasRepliesPage(page int, perPage int) bool {
 	return page > 0 && page <= p.repliesLastPage(perPage)
-}
-
-func (p *post) repliesLastPage(perPage int) int {
-	return max(1, int(math.Ceil(float64(p.Replies.Len())/float64(perPage))))
 }
 
 // lastUpdate returns the last update time of the most recent reply or the
@@ -120,6 +103,23 @@ func (p *post) lastUpdate() time.Time {
 	}
 
 	return p.Time.Round(0)
+}
+
+func (p *post) readableID() string {
+	return strings.ToLower(fmt.Sprintf("%s-%s-%s-%s-%s-%s-%s", p.id[:4], p.id[4:8], p.id[8:12], p.id[12:16],
+		p.id[16:20], p.id[20:24], p.id[24:]))
+}
+
+func (p *post) repliesLastPage(perPage int) int {
+	return max(1, int(math.Ceil(float64(p.Replies.Len())/float64(perPage))))
+}
+
+func (p *post) repliesPageURL(page int, anchor string) string {
+	if anchor != "" {
+		anchor = "#" + anchor
+	}
+
+	return fmt.Sprintf("%s?p=%d%s", p.URL(), page, anchor)
 }
 
 func (p *post) validate() []string {

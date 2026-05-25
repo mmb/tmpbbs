@@ -124,6 +124,9 @@ linters:
       check-error-free-encoding: true
     fatcontext:
       check-struct-pointers: true
+    funcorder:
+      alphabetical: true
+      function: true
     gocritic:
       enable-all: true
       disabled-checks:
