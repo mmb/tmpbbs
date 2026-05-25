@@ -13,12 +13,17 @@ const commit = document.querySelector('meta[name="commit"]').content,
     if (secondsAgo < secondsPerHour) { return relativeTime.format(-Math.round(secondsAgo / secondsPerMinute), 'minute') }
     if (secondsAgo < secondsPerDay) { return relativeTime.format(-Math.round(secondsAgo / secondsPerHour), 'hour') }
     return relativeTime.format(-Math.round(secondsAgo / secondsPerDay), 'day')
+  },
+  timeAgoUpdateInterval = 60000,
+  updateTimeAgo = () => {
+    document.querySelectorAll('.time').forEach(element => {
+      element.textContent = timeAgo(element.dataset.time)
+      element.title = new Date(element.dataset.time * msPerSecond).toLocaleString()
+    })
   }
 
-document.querySelectorAll('.time').forEach(element => {
-  element.textContent = timeAgo(element.dataset.time)
-  element.title = new Date(element.dataset.time * msPerSecond).toLocaleString()
-})
+updateTimeAgo()
+setInterval(updateTimeAgo, timeAgoUpdateInterval)
 
 class EmojiSuggester {
   constructor(input, displayContainer) {
