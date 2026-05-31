@@ -11,6 +11,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/chromedp/cdproto/runtime"
 	"github.com/chromedp/chromedp"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -22,6 +23,7 @@ const (
 	chromeDebuggingPort = "9222"
 	basePort            = 7800
 	namespacePrefix     = "tmpbbs-test-"
+	chromeTimeout       = 1 * time.Minute
 )
 
 var (
@@ -84,12 +86,8 @@ var _ = SynchronizedAfterSuite(func() {}, func() {
 })
 
 var _ = BeforeEach(func() {
-	var cancel context.CancelFunc
-
-	mainTab, cancel = chromedp.NewContext(browser)
-	DeferCleanup(cancel)
-	checkTab, cancel = chromedp.NewContext(browser)
-	DeferCleanup(cancel)
+	mainTab = newTab()
+	checkTab = newTab()
 })
 
 func TestIntegration(t *testing.T) {
@@ -127,6 +125,21 @@ func deployOverlay(name string, port int) string {
 	}
 
 	return fmt.Sprintf("%s://localhost:%d/", scheme, port)
+}
+
+func newTab() context.Context {
+	tab, tabCancel := chromedp.NewContext(browser)
+	DeferCleanup(tabCancel)
+	tab, tabCancelTimeout := context.WithTimeout(tab, chromeTimeout)
+	DeferCleanup(tabCancelTimeout)
+
+	chromedp.ListenTarget(tab, func(ev any) {
+		if ev, ok := ev.(*runtime.EventExceptionThrown); ok {
+			GinkgoWriter.Printf("javascript exception: %s\n", ev.ExceptionDetails.Error())
+		}
+	})
+
+	return tab
 }
 
 func post(ctx context.Context, url string, title string, author string, body string) {
