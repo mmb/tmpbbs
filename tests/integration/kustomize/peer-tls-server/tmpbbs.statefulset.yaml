@@ -20,6 +20,9 @@ spec:
           livenessProbe:
             httpGet:
               port: https
+          readinessProbe:
+            httpGet:
+              port: https
           volumeMounts:
             - name: tls
               mountPath: /tls

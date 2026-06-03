@@ -4,6 +4,7 @@ kind: StatefulSet
 metadata:
   name: tmpbbs
 spec:
+  minReadySeconds: 30
   replicas: 3
   selector:
     matchLabels:
@@ -37,6 +38,10 @@ spec:
               containerPort: 8080
             - name: grpc
               containerPort: 8081
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
           resources:
             requests:
               cpu: 10m

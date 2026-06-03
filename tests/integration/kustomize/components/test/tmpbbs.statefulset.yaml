@@ -4,6 +4,7 @@ kind: StatefulSet
 metadata:
   name: tmpbbs
 spec:
+  minReadySeconds: 0
   template:
     spec:
       containers:
