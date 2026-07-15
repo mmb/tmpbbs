@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
       - name: Run ESLint
         run: npm install eslint @eslint/js globals && npx eslint
   go-generate:
@@ -164,7 +164,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
       - name: Run Stylelint
         run: npm install stylelint stylelint-config-standard && npx stylelint --formatter unix '**/*.css'
   trivy:
