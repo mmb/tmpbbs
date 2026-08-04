@@ -20,6 +20,7 @@ ARG UID
 COPY --from=build /app/tmpbbs /tmpbbs
 EXPOSE 8080/tcp
 EXPOSE 8081/tcp
+# hadolint ignore=DL3066
 USER ${UID}
 ENV TMPBBS_JSON_LOG=true
 ENTRYPOINT ["/tmpbbs"]
