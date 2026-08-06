@@ -33,6 +33,7 @@ func newCommonHeadersHandler(wrappedHandler http.Handler, externalCSS bool) *com
 func (chh *commonHeadersHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 	responseWriter.Header().Set("Cache-Control", "private, no-cache")
 	responseWriter.Header().Set("Content-Security-Policy", chh.cspHeader)
+	responseWriter.Header().Set("Cross-Origin-Resource-Policy", "same-origin")
 	responseWriter.Header().Set("Permissions-Policy", "geolocation=(), microphone=(), camera=()")
 	responseWriter.Header().Set("Referrer-Policy", "no-referrer")
 	responseWriter.Header().Set("X-Content-Type-Options", "nosniff")
