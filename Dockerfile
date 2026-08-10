@@ -17,6 +17,7 @@ RUN go build -ldflags "-s -w -X main.version=${VERSION:-$(git tag --points-at HE
 
 FROM scratch
 ARG UID
+COPY LICENSE /
 COPY --from=build /app/tmpbbs /tmpbbs
 EXPOSE 8080/tcp
 EXPOSE 8081/tcp
