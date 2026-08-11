@@ -146,7 +146,7 @@ options.
 ## Adding a New Translation
 
 Add the new language-region tag to the `lang` argument (comma-separated) in
-the `go:generate` line in `internal/tmpbbs/postgethandler.go`. Example adding
+the `go:generate` line in `internal/tmpbbs/generate.go`. Example adding
 `es-ES`:
 
 ```go
