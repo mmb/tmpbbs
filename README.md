@@ -150,13 +150,12 @@ the `go:generate` line in `internal/tmpbbs/postgethandler.go`. Example adding
 `es-ES`:
 
 ```go
-//go:generate gotext -srclang=en-US update -lang=es-ES -out=catalog.go github.com/mmb/tmpbbs/internal/tmpbbs
+//go:generate go tool gotext -srclang=en-US update -lang=es-ES -out=catalog.go github.com/mmb/tmpbbs/internal/tmpbbs
 ```
 
-Install gotext and run go generate:
+Run go generate:
 
 ```sh
-go install golang.org/x/text/cmd/gotext@latest
 go generate ./...
 ```
 
