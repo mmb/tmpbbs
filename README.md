@@ -150,7 +150,7 @@ the `go:generate` line in `internal/tmpbbs/generate.go`. Example adding
 `es-ES`:
 
 ```go
-//go:generate go tool gotext -srclang=en-US update -lang=es-ES -out=catalog.go github.com/mmb/tmpbbs/internal/tmpbbs
+//go:generate go tool -modfile=../../tools/go.mod gotext -srclang=en-US update -lang=es-ES -out=catalog.go github.com/mmb/tmpbbs/internal/tmpbbs
 ```
 
 Run go generate:
