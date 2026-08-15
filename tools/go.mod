@@ -1,6 +1,8 @@
 module github.com/mmb/tmpbbs/tools
 
-go 1.26.4
+go 1.26
+
+toolchain go1.26.6
 
 tool (
 	golang.org/x/text/cmd/gotext
