@@ -55,7 +55,7 @@ jobs:
           curl --location --remote-name "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip"
           unzip -d "$HOME/.local" "protoc-${PROTOC_VERSION}-linux-x86_64.zip"
           chmod +x "$HOME/.local/bin/protoc"
-          go get -u tool
+          go get -modfile=tools/go.mod -u tool
       - name: Check that go generated code is up to date
         run: |
           go generate ./...
