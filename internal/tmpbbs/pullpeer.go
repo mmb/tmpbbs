@@ -5,6 +5,8 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
+	"errors"
+	"fmt"
 	"log/slog"
 	"os"
 	"strings"
@@ -30,6 +32,10 @@ type pullPeer struct {
 }
 
 const minClientTimeout = 15 * time.Second
+
+// ErrTrustedCAParsing is caused by failure to parse any trusted CA
+// certificates from a PEM file.
+var ErrTrustedCAParsing = errors.New("error parsing trusted CA certificates")
 
 func newPullPeer(address string, caCertPool *x509.CertPool, interval time.Duration,
 	postStore *PostStore,
@@ -164,7 +170,9 @@ func RunPullPeers(addresses []string, trustedCAPath string, interval time.Durati
 		}
 
 		caCertPool = x509.NewCertPool()
-		caCertPool.AppendCertsFromPEM(pemCerts)
+		if !caCertPool.AppendCertsFromPEM(pemCerts) {
+			return fmt.Errorf("%w: %s", ErrTrustedCAParsing, trustedCAPath)
+		}
 	}
 
 	var waitBetween time.Duration
