@@ -1,6 +1,6 @@
 ARG UID="1000"
 
-FROM golang:1.26 AS build
+FROM golang:1.27rc3 AS build
 ARG TARGETARCH
 ARG TARGETOS
 ARG VERSION
