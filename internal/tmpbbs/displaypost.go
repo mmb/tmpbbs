@@ -137,7 +137,7 @@ func (dp *displayPost) RepliesNav(currentPage int, perPage int, liClass string) 
 
 // RepliesPage returns a page of the posts's replies.
 func (dp *displayPost) RepliesPage(page int, perPage int) []*displayPost {
-	start := min((max(0, page-1))*perPage, dp.Replies.Len())
+	start := min(max(0, page-1)*perPage, dp.Replies.Len())
 	end := min(start+perPage, dp.Replies.Len())
 	result := make([]*displayPost, end-start)
 
