@@ -1,6 +1,7 @@
 package tmpbbs
 
 import (
+	"errors"
 	"log/slog"
 	"strings"
 	"time"
@@ -12,6 +13,10 @@ import (
 // LoggedViperSettings makes a map[string]any satisfy the slog LogValuer
 // interface.
 type LoggedViperSettings map[string]any
+
+// ErrRepliesPerPageInvalid is caused by replies per page being an integer less
+// than 1.
+var ErrRepliesPerPageInvalid = errors.New("replies per page must be greater than or equal to 1")
 
 // NewViper returns a new viper.Viper with flags configured and the command
 // line parsed.
@@ -37,6 +42,11 @@ func NewViper() (*viper.Viper, error) {
 		if err != nil {
 			return nil, err
 		}
+	}
+
+	err = validateViper(vipr)
+	if err != nil {
+		return nil, err
 	}
 
 	return vipr, nil
@@ -108,4 +118,14 @@ func initFlags() {
 	pflag.StringP("tls-trusted-ca", "x", "", "path to file of trusted peer CA PEMs ($TMPBBS_TLS_TRUSTED_CA)")
 	pflag.StringP("tripcode-salt", "a", "", "random salt to use for generating tripcodes ($TMPBBS_TRIPCODE_SALT)")
 	pflag.BoolP("version", "v", false, "print version")
+}
+
+func validateViper(vipr *viper.Viper) error {
+	var errs []error
+
+	if vipr.GetInt("replies-per-page") < 1 {
+		errs = append(errs, ErrRepliesPerPageInvalid)
+	}
+
+	return errors.Join(errs...)
 }
