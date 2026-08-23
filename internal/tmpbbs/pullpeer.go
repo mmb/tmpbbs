@@ -37,6 +37,41 @@ const minClientTimeout = 15 * time.Second
 // certificates from a PEM file.
 var ErrTrustedCAParsing = errors.New("error parsing trusted CA certificates")
 
+// RunPullPeers creates a PullPeer for each peer address and starts syncing.
+// It calculates a time to wait before starting for each peer so they run
+// staggered.
+func RunPullPeers(addresses []string, trustedCAPath string, interval time.Duration, postStore *PostStore) error {
+	var caCertPool *x509.CertPool
+
+	if trustedCAPath != "" {
+		pemCerts, err := os.ReadFile(trustedCAPath)
+		if err != nil {
+			return err
+		}
+
+		caCertPool = x509.NewCertPool()
+		if !caCertPool.AppendCertsFromPEM(pemCerts) {
+			return fmt.Errorf("%w: %s", ErrTrustedCAParsing, trustedCAPath)
+		}
+	}
+
+	var waitBetween time.Duration
+	if len(addresses) > 0 {
+		waitBetween = interval / time.Duration(len(addresses))
+	}
+
+	for index, address := range addresses {
+		pullPeer, err := newPullPeer(address, caCertPool, interval, postStore)
+		if err != nil {
+			return err
+		}
+
+		go pullPeer.run(time.Duration(index) * waitBetween)
+	}
+
+	return nil
+}
+
 func newPullPeer(address string, caCertPool *x509.CertPool, interval time.Duration,
 	postStore *PostStore,
 ) (*pullPeer, error) {
@@ -155,39 +190,4 @@ func (pp *pullPeer) sync(ctx context.Context) int {
 	}
 
 	return len(protoPosts)
-}
-
-// RunPullPeers creates a PullPeer for each peer address and starts syncing.
-// It calculates a time to wait before starting for each peer so they run
-// staggered.
-func RunPullPeers(addresses []string, trustedCAPath string, interval time.Duration, postStore *PostStore) error {
-	var caCertPool *x509.CertPool
-
-	if trustedCAPath != "" {
-		pemCerts, err := os.ReadFile(trustedCAPath)
-		if err != nil {
-			return err
-		}
-
-		caCertPool = x509.NewCertPool()
-		if !caCertPool.AppendCertsFromPEM(pemCerts) {
-			return fmt.Errorf("%w: %s", ErrTrustedCAParsing, trustedCAPath)
-		}
-	}
-
-	var waitBetween time.Duration
-	if len(addresses) > 0 {
-		waitBetween = interval / time.Duration(len(addresses))
-	}
-
-	for index, address := range addresses {
-		pullPeer, err := newPullPeer(address, caCertPool, interval, postStore)
-		if err != nil {
-			return err
-		}
-
-		go pullPeer.run(time.Duration(index) * waitBetween)
-	}
-
-	return nil
 }
