@@ -6,6 +6,7 @@ import (
 	"math"
 	"strings"
 	"time"
+	"unicode/utf16"
 
 	"github.com/oklog/ulid/v2"
 )
@@ -25,6 +26,7 @@ type post struct {
 }
 
 const (
+	// Field max sizes are in UTF-16 code units to match browser behavior.
 	maxTitleSize  = 30
 	maxAuthorSize = 28
 	maxBodySize   = 8192
@@ -125,17 +127,21 @@ func (p *post) repliesPageURL(page int, anchor string) string {
 func (p *post) validate() []string {
 	var errors []string
 
-	if len(p.Title) > maxTitleSize {
+	if utf16CodeUnits(p.Title) > maxTitleSize {
 		errors = append(errors, fmt.Sprintf("Title size cannot exceed %d characters.", maxTitleSize))
 	}
 
-	if len(p.Author) > maxAuthorSize {
+	if utf16CodeUnits(p.Author) > maxAuthorSize {
 		errors = append(errors, fmt.Sprintf("Author size cannot exceed %d characters.", maxAuthorSize))
 	}
 
-	if len(p.Body) > maxBodySize {
+	if utf16CodeUnits(p.Body) > maxBodySize {
 		errors = append(errors, fmt.Sprintf("Body size cannot exceed %d characters.", maxBodySize))
 	}
 
 	return errors
+}
+
+func utf16CodeUnits(s string) int {
+	return len(utf16.Encode([]rune(s)))
 }

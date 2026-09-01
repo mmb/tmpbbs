@@ -11,10 +11,10 @@ type postPostHandler struct {
 	tripcoder *Tripcoder
 }
 
-// The body is application/x-www-form-urlencoded so the max size is 3 times
-// the field limits (if every character were encoded) plus 20 bytes for the
-// field names, equals signs and & separators.
-const maxRequestBodyBytes = (maxTitleSize+maxAuthorSize+maxBodySize)*3 + 20
+// Field max sizes are in UTF-16 code units. The maximum size of each is 3 bytes
+// times 3 if percent encoded. 20 bytes are added for the field names, equals
+// signs and & separators.
+const maxRequestBodyBytes = (maxTitleSize+maxAuthorSize+maxBodySize)*9 + 20
 
 func newPostPostHandler(postStore *PostStore, tripcoder *Tripcoder) *postPostHandler {
 	return &postPostHandler{
