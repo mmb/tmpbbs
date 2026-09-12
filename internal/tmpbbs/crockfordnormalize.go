@@ -7,7 +7,6 @@ var crockfordReplacer = strings.NewReplacer( //nolint:gochecknoglobals // consta
 	"I", "1",
 	"L", "1",
 	"O", "0",
-	"U", "",
 )
 
 func crockfordNormalize(s string) string {
