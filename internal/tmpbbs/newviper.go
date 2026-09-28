@@ -18,6 +18,10 @@ type LoggedViperSettings map[string]any
 // than 1.
 var ErrRepliesPerPageInvalid = errors.New("replies per page must be greater than or equal to 1")
 
+// ErrSuperuserTripcodesRequireSalt is caused by setting superuser tripcodes but
+// not setting a tripcode salt.
+var ErrSuperuserTripcodesRequireSalt = errors.New("superuser tripcodes require tripcode salt to be set")
+
 // NewViper returns a new viper.Viper with flags configured and the command
 // line parsed.
 func NewViper() (*viper.Viper, error) {
@@ -125,6 +129,10 @@ func validateViper(vipr *viper.Viper) error {
 
 	if vipr.GetInt("replies-per-page") < 1 {
 		errs = append(errs, ErrRepliesPerPageInvalid)
+	}
+
+	if len(vipr.GetStringSlice("superuser-tripcodes")) > 0 && vipr.GetString("tripcode-salt") == "" {
+		errs = append(errs, ErrSuperuserTripcodesRequireSalt)
 	}
 
 	return errors.Join(errs...)
