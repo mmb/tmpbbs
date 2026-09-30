@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io"
+	"log/slog"
 	"strings"
 )
 
@@ -15,23 +16,27 @@ type Tripcoder struct {
 	salt               []byte
 }
 
-const randomSaltLength = 16
+const randomSaltLength = 10 // 10 random bytes (80 bits of entropy) Crockford encodes to a 16 character string
 
 // NewTripcoder returns a new Tripcoder with the passed in salt. If the salt
-// is empty a random 16-byte salt is generated.
+// is empty 10 random bytes are generated that are Crockford Base 32 encoded to
+// a 16 character salt.
 func NewTripcoder(salt string, superuserTripcodes []string, randReader io.Reader) (*Tripcoder, error) {
 	var saltBytes []byte
 
 	if salt == "" {
-		saltBytes = make([]byte, randomSaltLength)
+		randomBytes := make([]byte, randomSaltLength)
 
-		_, err := randReader.Read(saltBytes)
+		_, err := io.ReadFull(randReader, randomBytes)
 		if err != nil {
 			return nil, err
 		}
-	} else {
-		saltBytes = []byte(salt)
+
+		salt = crockfordEncoding.EncodeToString(randomBytes)
+		slog.Info("generated tripcode salt", "salt", salt)
 	}
+
+	saltBytes = []byte(salt)
 
 	tripcoder := &Tripcoder{
 		salt:               saltBytes,
