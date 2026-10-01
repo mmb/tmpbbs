@@ -11,9 +11,9 @@ var _ = Describe("peering with TLS", Ordered, func() {
 		peerClientURL string
 	)
 
-	BeforeAll(func() {
-		peerServerURL = deployOverlay("peer-tls-server", 7903)
-		peerClientURL = deployOverlay("peer-tls-client", 7904)
+	BeforeAll(func(ctx SpecContext) {
+		peerServerURL = deployOverlay(ctx, "peer-tls-server", 7903)
+		peerClientURL = deployOverlay(ctx, "peer-tls-client", 7904)
 	})
 
 	It("pulls a post from a peer", func() {

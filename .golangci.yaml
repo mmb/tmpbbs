@@ -169,7 +169,6 @@ linters:
           - godoclint
           - gosec
           - gosmopolitan
-          - noctx
           - paralleltest
       - path: tests/integration
         linters:

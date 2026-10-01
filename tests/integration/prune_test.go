@@ -8,8 +8,8 @@ import (
 var _ = Describe("prune", Ordered, func() {
 	var pruneURL string
 
-	BeforeAll(func() {
-		pruneURL = deployOverlay("prune", 7902)
+	BeforeAll(func(ctx SpecContext) {
+		pruneURL = deployOverlay(ctx, "prune", 7902)
 	})
 
 	It("prunes posts", func() {
