@@ -35,11 +35,11 @@ var (
 )
 
 var _ = SynchronizedBeforeSuite(
-	func() {
+	func(ctx SpecContext) {
 		var browserCancel context.CancelFunc
 
 		if os.Getenv("TMPBBS_BUILD_IMAGE") == "true" {
-			command := exec.Command("docker", "build", "../..", "--tag", "kind-registry:5000/tmpbbs:test")
+			command := exec.CommandContext(ctx, "docker", "build", "../..", "--tag", "kind-registry:5000/tmpbbs:test")
 			session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
 			Eventually(session, "1m").Should(gexec.Exit(0))
@@ -59,7 +59,7 @@ var _ = SynchronizedBeforeSuite(
 		DeferCleanup(browserCancel)
 		Expect(chromedp.Run(browser)).To(Succeed())
 	},
-	func() {
+	func(ctx SpecContext) {
 		var browserCancel context.CancelFunc
 
 		name := strconv.Itoa(GinkgoParallelProcess())
@@ -71,7 +71,7 @@ var _ = SynchronizedBeforeSuite(
 		kustomizationYaml := fmt.Appendf(nil, "namespace: %s%s\nresources: [../base]", namespacePrefix, name)
 		Expect(os.WriteFile(filepath.Join(overlayPath, "kustomization.yaml"), kustomizationYaml, 0o644)).To(Succeed())
 
-		tmpbbsURL = deployOverlay(name, basePort+GinkgoParallelProcess())
+		tmpbbsURL = deployOverlay(ctx, name, basePort+GinkgoParallelProcess())
 
 		remoteAllocator, remoteAllocatorCancel := chromedp.NewRemoteAllocator(context.Background(), chromeWebSocketURL)
 		DeferCleanup(remoteAllocatorCancel)
@@ -80,8 +80,8 @@ var _ = SynchronizedBeforeSuite(
 		DeferCleanup(browserCancel)
 	})
 
-var _ = SynchronizedAfterSuite(func() {}, func() {
-	command := exec.Command("kubectl", "delete", "namespace", "--selector", "tmpbbs-test=true")
+var _ = SynchronizedAfterSuite(func() {}, func(ctx SpecContext) {
+	command := exec.CommandContext(ctx, "kubectl", "delete", "namespace", "--selector", "tmpbbs-test=true")
 	session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 	Expect(err).NotTo(HaveOccurred())
 	Eventually(session, "1m").Should(gexec.Exit(0))
@@ -97,27 +97,28 @@ func TestIntegration(t *testing.T) {
 	RunSpecs(t, "Integration Suite")
 }
 
-func deployOverlay(name string, port int) string {
-	command := exec.Command("kubectl", "apply", "--kustomize", filepath.Join("kustomize", name))
+func deployOverlay(ctx context.Context, name string, port int) string {
+	command := exec.CommandContext(ctx, "kubectl", "apply", "--kustomize", filepath.Join("kustomize", name))
 	session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 	Expect(err).NotTo(HaveOccurred())
 	Eventually(session, "5s").Should(gexec.Exit(0))
 
 	namespace := namespacePrefix + name
 
-	command = exec.Command("kubectl", "rollout", "status", "statefulset/tmpbbs", "--namespace", namespace)
+	command = exec.CommandContext(ctx, "kubectl", "rollout", "status", "statefulset/tmpbbs", "--namespace", namespace)
 	session, err = gexec.Start(command, GinkgoWriter, GinkgoWriter)
 	Expect(err).NotTo(HaveOccurred())
 	Eventually(session, "30s").Should(gexec.Exit(0))
 
-	command = exec.Command("kubectl", "port-forward", "service/tmpbbs-http", "--namespace", namespace,
-		fmt.Sprintf("%d:8080", port))
+	command = exec.Command("kubectl", "port-forward", "service/tmpbbs-http", //nolint:noctx // needs to keep running
+		"--namespace", namespace, fmt.Sprintf("%d:8080", port))
 	portForwardSession, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 	Expect(err).NotTo(HaveOccurred())
 	Eventually(portForwardSession, "10s").Should(gbytes.Say("Forwarding from"))
 	DeferCleanup(portForwardSession.Terminate)
 
-	command = exec.Command("kubectl", "logs", "--follow", "--namespace", namespace, "--prefix", "--selector", "app=tmpbbs")
+	command = exec.Command("kubectl", "logs", "--follow", "--namespace", namespace, //nolint:noctx // needs to keep running
+		"--prefix", "--selector", "app=tmpbbs")
 	logSession, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 	Expect(err).NotTo(HaveOccurred())
 	DeferCleanup(logSession.Terminate)
