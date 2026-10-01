@@ -1,7 +1,7 @@
 package integration_test
 
 import (
-	"fmt"
+	"strconv"
 	"time"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -12,11 +12,12 @@ var _ = Describe("deleting posts", func() {
 	var testRootURL string
 
 	BeforeEach(func() {
-		testID := fmt.Sprintf("%d", time.Now().UnixNano())
+		testID := strconv.FormatInt(time.Now().UnixNano(), 10)
 		post(mainTab, tmpbbsURL, testID, "", "")
 		Eventually(func() string {
 			return get(checkTab, tmpbbsURL)
 		}, "5s").Should(ContainSubstring(testID))
+
 		testRootURL = mostRecentReplyURL(checkTab, tmpbbsURL)
 	})
 
@@ -25,6 +26,7 @@ var _ = Describe("deleting posts", func() {
 		Eventually(func() string {
 			return get(checkTab, testRootURL)
 		}, "5s").Should(ContainSubstring("delete test body"))
+
 		postURL := mostRecentReplyURL(checkTab, testRootURL)
 
 		post(mainTab, postURL, "", "mikami#secret", "!delete")
@@ -41,6 +43,7 @@ var _ = Describe("deleting posts", func() {
 		Eventually(func() string {
 			return get(checkTab, testRootURL)
 		}, "5s").Should(ContainSubstring("delete test body"))
+
 		postURL := mostRecentReplyURL(checkTab, testRootURL)
 
 		post(mainTab, postURL, "", "mikami#other", "!delete")
@@ -54,6 +57,7 @@ var _ = Describe("deleting posts", func() {
 		Eventually(func() string {
 			return get(checkTab, testRootURL)
 		}, "5s").Should(ContainSubstring("delete test body"))
+
 		postURL := mostRecentReplyURL(checkTab, testRootURL)
 
 		post(mainTab, postURL, "", "superuser#secret", "!delete")

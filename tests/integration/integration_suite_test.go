@@ -54,6 +54,7 @@ var _ = SynchronizedBeforeSuite(
 				chromedp.WSURLReadTimeout(1*time.Minute),
 			)...)
 		DeferCleanup(execAllocatorCancel)
+
 		browser, browserCancel = chromedp.NewContext(execAllocator)
 		DeferCleanup(browserCancel)
 		Expect(chromedp.Run(browser)).To(Succeed())
@@ -74,6 +75,7 @@ var _ = SynchronizedBeforeSuite(
 
 		remoteAllocator, remoteAllocatorCancel := chromedp.NewRemoteAllocator(context.Background(), chromeWebSocketURL)
 		DeferCleanup(remoteAllocatorCancel)
+
 		browser, browserCancel = chromedp.NewContext(remoteAllocator)
 		DeferCleanup(browserCancel)
 	})
@@ -100,6 +102,7 @@ func deployOverlay(name string, port int) string {
 	session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 	Expect(err).NotTo(HaveOccurred())
 	Eventually(session, "5s").Should(gexec.Exit(0))
+
 	namespace := namespacePrefix + name
 
 	command = exec.Command("kubectl", "rollout", "status", "statefulset/tmpbbs", "--namespace", namespace)
@@ -130,6 +133,7 @@ func deployOverlay(name string, port int) string {
 func newTab() context.Context {
 	tab, tabCancel := chromedp.NewContext(browser)
 	DeferCleanup(tabCancel)
+
 	tab, tabCancelTimeout := context.WithTimeout(tab, chromeTimeout)
 	DeferCleanup(tabCancelTimeout)
 

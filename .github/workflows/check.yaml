@@ -62,12 +62,20 @@ jobs:
           git diff --exit-code
   golangci-lint:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dir:
+          - .
+          - tests/integration
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-go@v7
         with:
-          go-version-file: go.mod
+          go-version-file: ${{ matrix.dir }}/go.mod
       - uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a  # v9.3.0
+        with:
+          working-directory: ${{ matrix.dir }}
+          args: --config=${{ github.workspace }}/.golangci.yaml
   govulncheck:
     runs-on: ubuntu-latest
     steps:

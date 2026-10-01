@@ -1,7 +1,7 @@
 package integration_test
 
 import (
-	"fmt"
+	"strconv"
 	"time"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -12,11 +12,12 @@ var _ = Describe("tripcode", func() {
 	var testRootURL string
 
 	BeforeEach(func() {
-		testID := fmt.Sprintf("%d", time.Now().UnixNano())
+		testID := strconv.FormatInt(time.Now().UnixNano(), 10)
 		post(mainTab, tmpbbsURL, testID, "", "")
 		Eventually(func() string {
 			return get(checkTab, tmpbbsURL)
 		}, "5s").Should(ContainSubstring(testID))
+
 		testRootURL = mostRecentReplyURL(checkTab, tmpbbsURL)
 	})
 

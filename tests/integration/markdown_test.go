@@ -1,7 +1,7 @@
 package integration_test
 
 import (
-	"fmt"
+	"strconv"
 	"time"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -12,11 +12,12 @@ var _ = Describe("markdown", func() {
 	var testRootURL string
 
 	BeforeEach(func() {
-		testID := fmt.Sprintf("%d", time.Now().UnixNano())
+		testID := strconv.FormatInt(time.Now().UnixNano(), 10)
 		post(mainTab, tmpbbsURL, testID, "", "")
 		Eventually(func() string {
 			return get(checkTab, tmpbbsURL)
 		}, "5s").Should(ContainSubstring(testID))
+
 		testRootURL = mostRecentReplyURL(checkTab, tmpbbsURL)
 	})
 
@@ -27,10 +28,13 @@ var _ = Describe("markdown", func() {
 				return get(checkTab, testRootURL)
 			}, "5s").Should(ContainSubstring(output))
 		},
-		Entry("definition list", "test term\n:   test definition", "<dl>\n<dt>test term</dt>\n<dd>test definition</dd>\n</dl>"),
+		Entry("definition list", "test term\n:   test definition",
+			"<dl>\n<dt>test term</dt>\n<dd>test definition</dd>\n</dl>"),
 		Entry("fenced code blocks", "```test\ntest = 1\n```", "<pre><code class=\"language-test\">test = 1\n</code></pre>"),
 		Entry("linkify", "http://test.test/", `<a href="http://test.test/" rel="nofollow noreferrer">http://test.test/</a>`),
 		Entry("strikethrough", "~strikethrough test~", "<del>strikethrough test</del>"),
-		Entry("table", "| test column 1 | test column 2 |\n --- | --- |\n| test 1 | test 2 |", "<table>\n<thead>\n<tr>\n<th>test column 1</th>\n<th>test column 2</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>test 1</td>\n<td>test 2</td>\n</tr>\n</tbody>\n</table>"),
+		Entry("table", "| test column 1 | test column 2 |\n --- | --- |\n| test 1 | test 2 |",
+			"<table>\n<thead>\n<tr>\n<th>test column 1</th>\n<th>test column 2</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n"+
+				"<td>test 1</td>\n<td>test 2</td>\n</tr>\n</tbody>\n</table>"),
 	)
 })
