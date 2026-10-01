@@ -1,9 +1,9 @@
 package integration_test
 
 import (
-	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
@@ -15,11 +15,12 @@ var _ = Describe("maximum input length", func() {
 	var testRootURL string
 
 	BeforeEach(func() {
-		testID := fmt.Sprintf("%d", time.Now().UnixNano())
+		testID := strconv.FormatInt(time.Now().UnixNano(), 10)
 		post(mainTab, tmpbbsURL, testID, "", "")
 		Eventually(func() string {
 			return get(checkTab, tmpbbsURL)
 		}, "5s").Should(ContainSubstring(testID))
+
 		testRootURL = mostRecentReplyURL(checkTab, tmpbbsURL)
 	})
 
@@ -28,7 +29,9 @@ var _ = Describe("maximum input length", func() {
 			func(input string, expectedStatus int) {
 				resp, err := http.PostForm(testRootURL, url.Values{"title": {input}})
 				Expect(err).NotTo(HaveOccurred())
+
 				defer resp.Body.Close()
+
 				Expect(resp.StatusCode).To(Equal(expectedStatus))
 			},
 			Entry("30 ASCII characters", strings.Repeat("A", 30), http.StatusOK),
@@ -58,7 +61,9 @@ var _ = Describe("maximum input length", func() {
 			func(input string, expectedStatus int) {
 				resp, err := http.PostForm(testRootURL, url.Values{"author": {input}})
 				Expect(err).NotTo(HaveOccurred())
+
 				defer resp.Body.Close()
+
 				Expect(resp.StatusCode).To(Equal(expectedStatus))
 			},
 			Entry("28 ASCII characters", strings.Repeat("A", 28), http.StatusOK),
@@ -88,7 +93,9 @@ var _ = Describe("maximum input length", func() {
 			func(input string, expectedStatus int) {
 				resp, err := http.PostForm(testRootURL, url.Values{"body": {input}})
 				Expect(err).NotTo(HaveOccurred())
+
 				defer resp.Body.Close()
+
 				Expect(resp.StatusCode).To(Equal(expectedStatus))
 			},
 			Entry("8192 ASCII characters", strings.Repeat("A", 8192), http.StatusOK),

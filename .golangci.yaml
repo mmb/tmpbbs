@@ -161,6 +161,20 @@ linters:
     presets:
       - common-false-positives
       - std-error-handling
+    rules:
+      - path: tests/integration
+        linters:
+          - fatcontext
+          - gochecknoglobals
+          - godoclint
+          - gosec
+          - gosmopolitan
+          - noctx
+          - paralleltest
+      - path: tests/integration
+        linters:
+          - revive
+        text: dot-imports
 formatters:
   enable:
     - gci
