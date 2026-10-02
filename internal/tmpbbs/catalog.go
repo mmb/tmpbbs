@@ -28,6 +28,7 @@ func (d *dictionary) Lookup(key string) (data string, ok bool) {
 func init() {
 	dict := map[string]catalog.Dictionary{
 		"en_US": &dictionary{index: en_USIndex, data: en_USData},
+		"hi_IN": &dictionary{index: hi_INIndex, data: hi_INData},
 		"zh_CN": &dictionary{index: zh_CNIndex, data: zh_CNData},
 	}
 	fallback := language.MustParse("en-US")
@@ -61,6 +62,17 @@ const en_USData string = "" + // Size: 172 bytes
 	"rkdown is supported.\x02Insert emoji using shortcode between colons (:mu" +
 	"shroom: becomes 🍄).\x02Reply\x02URL QR Code\x02Close"
 
+var hi_INIndex = []uint32{ // 10 elements
+	0x00000000, 0x00000013, 0x00000029, 0x0000003c,
+	0x0000007e, 0x000000a7, 0x00000141, 0x0000014e,
+	0x0000016f, 0x00000186,
+} // Size: 64 bytes
+
+const hi_INData string = "" + // Size: 390 bytes
+	"\x02%[1]d जवाब\x02पृष्ठ %[1]d\x02शीर्षक\x02लेखक#ट्रिपकोड-गुप्तशब्द\x02Ma" +
+	"rkdown समर्थित है।\x02कोलन के बीच शॉर्टकोड डालकर इमोजी जोड़ें (:mushroom" +
+	": 🍄 बन जाता है)।\x02जवाब\x02URL क्यूआर कोड\x02बंद करें"
+
 var zh_CNIndex = []uint32{ // 10 elements
 	0x00000000, 0x00000010, 0x0000001e, 0x00000025,
 	0x00000039, 0x00000053, 0x000000a2, 0x000000a9,
@@ -71,4 +83,4 @@ const zh_CNData string = "" + // Size: 190 bytes
 	"\x02%[1]d 条回复\x02第 %[1]d 页\x02标题\x02作者#暗号密钥\x02支持 Markdown 语法。\x02使用冒号包裹" +
 	"的短代码插入表情符号(:mushroom: 会变成 🍄)。\x02回复\x02URL 二维码\x02关闭"
 
-	// Total table size 490 bytes (0KiB); checksum: 17BAC720
+	// Total table size 944 bytes (0KiB); checksum: B12013D8
