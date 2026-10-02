@@ -28,6 +28,7 @@ func (d *dictionary) Lookup(key string) (data string, ok bool) {
 func init() {
 	dict := map[string]catalog.Dictionary{
 		"en_US": &dictionary{index: en_USIndex, data: en_USData},
+		"zh_CN": &dictionary{index: zh_CNIndex, data: zh_CNData},
 	}
 	fallback := language.MustParse("en-US")
 	cat, err := catalog.NewFromMap(dict, catalog.Fallback(fallback))
@@ -60,4 +61,14 @@ const en_USData string = "" + // Size: 172 bytes
 	"rkdown is supported.\x02Insert emoji using shortcode between colons (:mu" +
 	"shroom: becomes 🍄).\x02Reply\x02URL QR Code\x02Close"
 
-	// Total table size 236 bytes (0KiB); checksum: 33CAB334
+var zh_CNIndex = []uint32{ // 10 elements
+	0x00000000, 0x00000010, 0x0000001e, 0x00000025,
+	0x00000039, 0x00000053, 0x000000a2, 0x000000a9,
+	0x000000b7, 0x000000be,
+} // Size: 64 bytes
+
+const zh_CNData string = "" + // Size: 190 bytes
+	"\x02%[1]d 条回复\x02第 %[1]d 页\x02标题\x02作者#暗号密钥\x02支持 Markdown 语法。\x02使用冒号包裹" +
+	"的短代码插入表情符号(:mushroom: 会变成 🍄)。\x02回复\x02URL 二维码\x02关闭"
+
+	// Total table size 490 bytes (0KiB); checksum: 17BAC720
