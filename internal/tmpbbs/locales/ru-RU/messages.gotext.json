@@ -1,0 +1,70 @@
+{
+  "language": "ru-RU",
+  "messages": [
+    {
+      "id": "{Len} replies",
+      "message": "{Len} replies",
+      "translation": "{Len} ответов",
+      "placeholders": [
+        {
+          "id": "Len",
+          "string": "%[1]d",
+          "type": "int",
+          "underlyingType": "int",
+          "argNum": 1,
+          "expr": "dp.Replies.Len()"
+        }
+      ]
+    },
+    {
+      "id": "page {Page}",
+      "message": "page {Page}",
+      "translation": "страница {Page}",
+      "placeholders": [
+        {
+          "id": "Page",
+          "string": "%[1]d",
+          "type": "int",
+          "underlyingType": "int",
+          "argNum": 1,
+          "expr": "page"
+        }
+      ]
+    },
+    {
+      "id": "Title",
+      "message": "Title",
+      "translation": "Заголовок"
+    },
+    {
+      "id": "Author#tripcode-secret",
+      "message": "Author#tripcode-secret",
+      "translation": "Автор#трипкод-секрет"
+    },
+    {
+      "id": "Markdown is supported.",
+      "message": "Markdown is supported.",
+      "translation": "Поддерживается Markdown."
+    },
+    {
+      "id": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+      "message": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+      "translation": "Вставляйте эмодзи с помощью кода между двоеточиями (:mushroom: превращается в 🍄)."
+    },
+    {
+      "id": "Reply",
+      "message": "Reply",
+      "translation": "Ответить"
+    },
+    {
+      "id": "URL QR Code",
+      "message": "URL QR Code",
+      "translation": "QR-код URL"
+    },
+    {
+      "id": "Close",
+      "message": "Close",
+      "translation": "Закрыть"
+    }
+  ]
+}

@@ -30,6 +30,7 @@ func init() {
 		"en_US":  &dictionary{index: en_USIndex, data: en_USData},
 		"es_419": &dictionary{index: es_419Index, data: es_419Data},
 		"hi_IN":  &dictionary{index: hi_INIndex, data: hi_INData},
+		"ru_RU":  &dictionary{index: ru_RUIndex, data: ru_RUData},
 		"zh_CN":  &dictionary{index: zh_CNIndex, data: zh_CNData},
 		"zh_TW":  &dictionary{index: zh_TWIndex, data: zh_TWData},
 	}
@@ -87,6 +88,18 @@ const hi_INData string = "" + // Size: 390 bytes
 	"rkdown समर्थित है।\x02कोलन के बीच शॉर्टकोड डालकर इमोजी जोड़ें (:mushroom" +
 	": 🍄 बन जाता है)।\x02जवाब\x02URL क्यूआर कोड\x02बंद करें"
 
+var ru_RUIndex = []uint32{ // 10 elements
+	0x00000000, 0x00000015, 0x0000002c, 0x0000003f,
+	0x00000066, 0x0000008d, 0x0000011b, 0x0000012c,
+	0x0000013a, 0x00000149,
+} // Size: 64 bytes
+
+const ru_RUData string = "" + // Size: 329 bytes
+	"\x02%[1]d ответов\x02страница %[1]d\x02Заголовок\x02Автор#трипкод-секрет" +
+	"\x02Поддерживается Markdown.\x02Вставляйте эмодзи с помощью кода между д" +
+	"воеточиями (:mushroom: превращается в 🍄).\x02Ответить\x02QR-код URL\x02" +
+	"Закрыть"
+
 var zh_CNIndex = []uint32{ // 10 elements
 	0x00000000, 0x00000010, 0x0000001e, 0x00000025,
 	0x00000039, 0x00000053, 0x000000a2, 0x000000a9,
@@ -107,4 +120,4 @@ const zh_TWData string = "" + // Size: 194 bytes
 	"\x02%[1]d 則回覆\x02第 %[1]d 頁\x02標題\x02作者#暗號密鑰\x02支援 Markdown 語法。\x02在冒號之間輸" +
 	"入短代碼即可插入表情符號(:mushroom: 會變成 🍄)。\x02回覆\x02URL QR Code\x02關閉"
 
-	// Total table size 1476 bytes (1KiB); checksum: 6D391599
+	// Total table size 1869 bytes (1KiB); checksum: 6152464F
