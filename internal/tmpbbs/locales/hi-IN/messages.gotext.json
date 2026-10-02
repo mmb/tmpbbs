@@ -1,0 +1,70 @@
+{
+  "language": "hi-IN",
+  "messages": [
+    {
+      "id": "{Len} replies",
+      "message": "{Len} replies",
+      "translation": "{Len} जवाब",
+      "placeholders": [
+        {
+          "id": "Len",
+          "string": "%[1]d",
+          "type": "int",
+          "underlyingType": "int",
+          "argNum": 1,
+          "expr": "dp.Replies.Len()"
+        }
+      ]
+    },
+    {
+      "id": "page {Page}",
+      "message": "page {Page}",
+      "translation": "पृष्ठ {Page}",
+      "placeholders": [
+        {
+          "id": "Page",
+          "string": "%[1]d",
+          "type": "int",
+          "underlyingType": "int",
+          "argNum": 1,
+          "expr": "page"
+        }
+      ]
+    },
+    {
+      "id": "Title",
+      "message": "Title",
+      "translation": "शीर्षक"
+    },
+    {
+      "id": "Author#tripcode-secret",
+      "message": "Author#tripcode-secret",
+      "translation": "लेखक#ट्रिपकोड-गुप्तशब्द"
+    },
+    {
+      "id": "Markdown is supported.",
+      "message": "Markdown is supported.",
+      "translation": "Markdown समर्थित है।"
+    },
+    {
+      "id": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+      "message": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+      "translation": "कोलन के बीच शॉर्टकोड डालकर इमोजी जोड़ें (:mushroom: 🍄 बन जाता है)।"
+    },
+    {
+      "id": "Reply",
+      "message": "Reply",
+      "translation": "जवाब"
+    },
+    {
+      "id": "URL QR Code",
+      "message": "URL QR Code",
+      "translation": "URL क्यूआर कोड"
+    },
+    {
+      "id": "Close",
+      "message": "Close",
+      "translation": "बंद करें"
+    }
+  ]
+}
