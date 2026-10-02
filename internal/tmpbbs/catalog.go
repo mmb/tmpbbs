@@ -27,9 +27,10 @@ func (d *dictionary) Lookup(key string) (data string, ok bool) {
 
 func init() {
 	dict := map[string]catalog.Dictionary{
-		"en_US": &dictionary{index: en_USIndex, data: en_USData},
-		"hi_IN": &dictionary{index: hi_INIndex, data: hi_INData},
-		"zh_CN": &dictionary{index: zh_CNIndex, data: zh_CNData},
+		"en_US":  &dictionary{index: en_USIndex, data: en_USData},
+		"es_419": &dictionary{index: es_419Index, data: es_419Data},
+		"hi_IN":  &dictionary{index: hi_INIndex, data: hi_INData},
+		"zh_CN":  &dictionary{index: zh_CNIndex, data: zh_CNData},
 	}
 	fallback := language.MustParse("en-US")
 	cat, err := catalog.NewFromMap(dict, catalog.Fallback(fallback))
@@ -62,6 +63,18 @@ const en_USData string = "" + // Size: 172 bytes
 	"rkdown is supported.\x02Insert emoji using shortcode between colons (:mu" +
 	"shroom: becomes 🍄).\x02Reply\x02URL QR Code\x02Close"
 
+var es_419Index = []uint32{ // 10 elements
+	0x00000000, 0x00000011, 0x0000001f, 0x00000027,
+	0x0000003e, 0x00000052, 0x000000ac, 0x000000b6,
+	0x000000cb, 0x000000d2,
+} // Size: 64 bytes
+
+const es_419Data string = "" + // Size: 210 bytes
+	"\x02%[1]d respuestas\x02página %[1]d\x02Título\x02Autor#tripcode-secreto" +
+	"\x02Se admite Markdown.\x02Inserta emojis usando códigos cortos entre do" +
+	"s puntos (:mushroom: se convierte en 🍄).\x02Responder\x02Código QR de la" +
+	" URL\x02Cerrar"
+
 var hi_INIndex = []uint32{ // 10 elements
 	0x00000000, 0x00000013, 0x00000029, 0x0000003c,
 	0x0000007e, 0x000000a7, 0x00000141, 0x0000014e,
@@ -83,4 +96,4 @@ const zh_CNData string = "" + // Size: 190 bytes
 	"\x02%[1]d 条回复\x02第 %[1]d 页\x02标题\x02作者#暗号密钥\x02支持 Markdown 语法。\x02使用冒号包裹" +
 	"的短代码插入表情符号(:mushroom: 会变成 🍄)。\x02回复\x02URL 二维码\x02关闭"
 
-	// Total table size 944 bytes (0KiB); checksum: B12013D8
+	// Total table size 1218 bytes (1KiB); checksum: E0AB3DC3
