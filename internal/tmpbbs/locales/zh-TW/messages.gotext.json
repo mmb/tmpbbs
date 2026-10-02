@@ -1,0 +1,70 @@
+{
+  "language": "zh-TW",
+  "messages": [
+    {
+      "id": "{Len} replies",
+      "message": "{Len} replies",
+      "translation": "{Len} 則回覆",
+      "placeholders": [
+        {
+          "id": "Len",
+          "string": "%[1]d",
+          "type": "int",
+          "underlyingType": "int",
+          "argNum": 1,
+          "expr": "dp.Replies.Len()"
+        }
+      ]
+    },
+    {
+      "id": "page {Page}",
+      "message": "page {Page}",
+      "translation": "第 {Page} 頁",
+      "placeholders": [
+        {
+          "id": "Page",
+          "string": "%[1]d",
+          "type": "int",
+          "underlyingType": "int",
+          "argNum": 1,
+          "expr": "page"
+        }
+      ]
+    },
+    {
+      "id": "Title",
+      "message": "Title",
+      "translation": "標題"
+    },
+    {
+      "id": "Author#tripcode-secret",
+      "message": "Author#tripcode-secret",
+      "translation": "作者#暗號密鑰"
+    },
+    {
+      "id": "Markdown is supported.",
+      "message": "Markdown is supported.",
+      "translation": "支援 Markdown 語法。"
+    },
+    {
+      "id": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+      "message": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+      "translation": "在冒號之間輸入短代碼即可插入表情符號(:mushroom: 會變成 🍄)。"
+    },
+    {
+      "id": "Reply",
+      "message": "Reply",
+      "translation": "回覆"
+    },
+    {
+      "id": "URL QR Code",
+      "message": "URL QR Code",
+      "translation": "URL QR Code"
+    },
+    {
+      "id": "Close",
+      "message": "Close",
+      "translation": "關閉"
+    }
+  ]
+}
