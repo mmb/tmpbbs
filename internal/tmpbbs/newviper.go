@@ -14,13 +14,16 @@ import (
 // interface.
 type LoggedViperSettings map[string]any
 
-// ErrRepliesPerPageInvalid is caused by replies per page being an integer less
+// ErrRepliesPerPageInvalid is caused by replies-per-page being an integer less
 // than 1.
-var ErrRepliesPerPageInvalid = errors.New("replies per page must be greater than or equal to 1")
+var ErrRepliesPerPageInvalid = errors.New("replies-per-page must be greater than or equal to 1")
 
-// ErrSuperuserTripcodesRequireSalt is caused by setting superuser tripcodes but
-// not setting a tripcode salt.
-var ErrSuperuserTripcodesRequireSalt = errors.New("superuser tripcodes require tripcode salt to be set")
+// ErrSuperuserTripcodesRequireSalt is caused by setting superuser-tripcodes but
+// not setting tripcode-salt.
+var ErrSuperuserTripcodesRequireSalt = errors.New("superuser-tripcodes requires tripcode-salt to be set")
+
+// ErrTLSCertKeyTogether is caused by setting only one of tls-cert and tls-key.
+var ErrTLSCertKeyTogether = errors.New("tls-cert and tls-key must be used together")
 
 // NewViper returns a new viper.Viper with flags configured and the command
 // line parsed.
@@ -133,6 +136,10 @@ func validateViper(vipr *viper.Viper) error {
 
 	if len(vipr.GetStringSlice("superuser-tripcodes")) > 0 && vipr.GetString("tripcode-salt") == "" {
 		errs = append(errs, ErrSuperuserTripcodesRequireSalt)
+	}
+
+	if (vipr.GetString("tls-cert") == "") != (vipr.GetString("tls-key") == "") {
+		errs = append(errs, ErrTLSCertKeyTogether)
 	}
 
 	return errors.Join(errs...)
