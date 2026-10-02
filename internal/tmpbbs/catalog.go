@@ -31,6 +31,7 @@ func init() {
 		"es_419": &dictionary{index: es_419Index, data: es_419Data},
 		"hi_IN":  &dictionary{index: hi_INIndex, data: hi_INData},
 		"zh_CN":  &dictionary{index: zh_CNIndex, data: zh_CNData},
+		"zh_TW":  &dictionary{index: zh_TWIndex, data: zh_TWData},
 	}
 	fallback := language.MustParse("en-US")
 	cat, err := catalog.NewFromMap(dict, catalog.Fallback(fallback))
@@ -96,4 +97,14 @@ const zh_CNData string = "" + // Size: 190 bytes
 	"\x02%[1]d 条回复\x02第 %[1]d 页\x02标题\x02作者#暗号密钥\x02支持 Markdown 语法。\x02使用冒号包裹" +
 	"的短代码插入表情符号(:mushroom: 会变成 🍄)。\x02回复\x02URL 二维码\x02关闭"
 
-	// Total table size 1218 bytes (1KiB); checksum: E0AB3DC3
+var zh_TWIndex = []uint32{ // 10 elements
+	0x00000000, 0x00000010, 0x0000001e, 0x00000025,
+	0x00000039, 0x00000053, 0x000000a8, 0x000000af,
+	0x000000bb, 0x000000c2,
+} // Size: 64 bytes
+
+const zh_TWData string = "" + // Size: 194 bytes
+	"\x02%[1]d 則回覆\x02第 %[1]d 頁\x02標題\x02作者#暗號密鑰\x02支援 Markdown 語法。\x02在冒號之間輸" +
+	"入短代碼即可插入表情符號(:mushroom: 會變成 🍄)。\x02回覆\x02URL QR Code\x02關閉"
+
+	// Total table size 1476 bytes (1KiB); checksum: 6D391599
