@@ -1,0 +1,70 @@
+{
+  "language": "es-419",
+  "messages": [
+    {
+      "id": "{Len} replies",
+      "message": "{Len} replies",
+      "translation": "{Len} respuestas",
+      "placeholders": [
+        {
+          "id": "Len",
+          "string": "%[1]d",
+          "type": "int",
+          "underlyingType": "int",
+          "argNum": 1,
+          "expr": "dp.Replies.Len()"
+        }
+      ]
+    },
+    {
+      "id": "page {Page}",
+      "message": "page {Page}",
+      "translation": "página {Page}",
+      "placeholders": [
+        {
+          "id": "Page",
+          "string": "%[1]d",
+          "type": "int",
+          "underlyingType": "int",
+          "argNum": 1,
+          "expr": "page"
+        }
+      ]
+    },
+    {
+      "id": "Title",
+      "message": "Title",
+      "translation": "Título"
+    },
+    {
+      "id": "Author#tripcode-secret",
+      "message": "Author#tripcode-secret",
+      "translation": "Autor#tripcode-secreto"
+    },
+    {
+      "id": "Markdown is supported.",
+      "message": "Markdown is supported.",
+      "translation": "Se admite Markdown."
+    },
+    {
+      "id": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+      "message": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+      "translation": "Inserta emojis usando códigos cortos entre dos puntos (:mushroom: se convierte en 🍄)."
+    },
+    {
+      "id": "Reply",
+      "message": "Reply",
+      "translation": "Responder"
+    },
+    {
+      "id": "URL QR Code",
+      "message": "URL QR Code",
+      "translation": "Código QR de la URL"
+    },
+    {
+      "id": "Close",
+      "message": "Close",
+      "translation": "Cerrar"
+    }
+  ]
+}
