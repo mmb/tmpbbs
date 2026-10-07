@@ -8,12 +8,10 @@ import (
 
 var _ = Describe("healthz", func() {
 	It("returns ok", func() {
-		var body string
+		Expect(chromedp.Do(mainTab, chromedp.Navigate(tmpbbsURL+"healthz"))).To(Succeed())
 
-		Expect(chromedp.Run(mainTab,
-			chromedp.Navigate(tmpbbsURL+"healthz"),
-			chromedp.Text("body", &body),
-		)).To(Succeed())
+		body, err := chromedp.Run(mainTab, chromedp.Text("body"))
+		Expect(err).NotTo(HaveOccurred())
 
 		Expect(body).To(Equal("ok"))
 	})
