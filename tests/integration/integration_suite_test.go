@@ -13,6 +13,7 @@ import (
 
 	"github.com/chromedp/cdproto/runtime"
 	"github.com/chromedp/chromedp"
+	"github.com/chromedp/chromedp/remote"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
@@ -52,12 +53,13 @@ var _ = SynchronizedBeforeSuite(
 				chromedp.Flag("remote-debugging-port", chromeDebuggingPort),
 				chromedp.NoSandbox,
 				chromedp.WSURLReadTimeout(1*time.Minute),
+				remote.WebSocket,
 			)...)
 		DeferCleanup(execAllocatorCancel)
 
 		browser, browserCancel = chromedp.NewContext(execAllocator)
 		DeferCleanup(browserCancel)
-		Expect(chromedp.Run(browser)).To(Succeed())
+		Expect(chromedp.Do(browser)).To(Succeed())
 	},
 	func(ctx SpecContext) {
 		var browserCancel context.CancelFunc
@@ -73,7 +75,7 @@ var _ = SynchronizedBeforeSuite(
 
 		tmpbbsURL = deployOverlay(ctx, name, basePort+GinkgoParallelProcess())
 
-		remoteAllocator, remoteAllocatorCancel := chromedp.NewRemoteAllocator(context.Background(), chromeWebSocketURL)
+		remoteAllocator, remoteAllocatorCancel := remote.NewAllocator(context.Background(), chromeWebSocketURL)
 		DeferCleanup(remoteAllocatorCancel)
 
 		browser, browserCancel = chromedp.NewContext(remoteAllocator)
@@ -138,17 +140,23 @@ func newTab() context.Context {
 	tab, tabCancelTimeout := context.WithTimeout(tab, chromeTimeout)
 	DeferCleanup(tabCancelTimeout)
 
-	chromedp.ListenTarget(tab, func(ev any) {
-		if ev, ok := ev.(*runtime.EventExceptionThrown); ok {
-			GinkgoWriter.Printf("javascript exception: %s\n", ev.ExceptionDetails.Error())
+	exceptions := chromedp.Events(tab, runtime.ExceptionThrown)
+	go func() {
+		for exception, err := range exceptions {
+			if err != nil {
+				return
+			}
+
+			GinkgoWriter.Printf("javascript exception: %s\n",
+				&chromedp.ExceptionError{ExceptionDetails: exception.ExceptionDetails})
 		}
-	})
+	}()
 
 	return tab
 }
 
 func post(ctx context.Context, url string, title string, author string, body string) {
-	Expect(chromedp.Run(ctx,
+	Expect(chromedp.Do(ctx,
 		chromedp.Navigate(url),
 		chromedp.WaitVisible(`input[type="submit"]`),
 		chromedp.SendKeys("#title", title),
@@ -159,20 +167,24 @@ func post(ctx context.Context, url string, title string, author string, body str
 }
 
 func get(ctx context.Context, url string) string {
-	var html string
-	Expect(chromedp.Run(ctx, chromedp.Navigate(url), chromedp.OuterHTML("html", &html))).To(Succeed())
+	Expect(chromedp.Do(ctx, chromedp.Navigate(url))).To(Succeed())
+
+	html, err := chromedp.Run(ctx, chromedp.OuterHTML("html"))
+	Expect(err).NotTo(HaveOccurred())
 
 	return html
 }
 
 func mostRecentReplyURL(ctx context.Context, parentURL string) string {
-	var replyURL string
-
-	Expect(chromedp.Run(ctx,
+	Expect(chromedp.Do(ctx,
 		chromedp.Navigate(parentURL),
 		chromedp.WaitVisible("#replies-start + li a"),
-		chromedp.Evaluate("document.querySelector('#replies-start + li a').href", &replyURL),
 	)).To(Succeed())
+
+	replyURL, err := chromedp.Run(ctx,
+		chromedp.Evaluate[string]("document.querySelector('#replies-start + li a').href"),
+	)
+	Expect(err).NotTo(HaveOccurred())
 
 	return replyURL
 }

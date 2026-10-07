@@ -8,16 +8,16 @@ import (
 
 var _ = Describe("emoji", func() {
 	It("suggests emoji completions", func() {
-		var suggestions string
-
-		Expect(chromedp.Run(mainTab,
+		Expect(chromedp.Do(mainTab,
 			chromedp.Navigate(tmpbbsURL),
 			chromedp.WaitVisible("#body"),
 			chromedp.SendKeys("#body", ":sku"),
 			chromedp.WaitVisible("#emoji-suggestions > *"),
-			chromedp.Poll("document.querySelectorAll('#emoji-suggestions > *').length == 4", nil),
-			chromedp.Text("#emoji-suggestions", &suggestions),
+			chromedp.Poll[chromedp.Void]("document.querySelectorAll('#emoji-suggestions > *').length == 4"),
 		)).To(Succeed())
+
+		suggestions, err := chromedp.Run(mainTab, chromedp.Text("#emoji-suggestions"))
+		Expect(err).NotTo(HaveOccurred())
 
 		Expect(suggestions).To(SatisfyAll(
 			ContainSubstring("💀"),
