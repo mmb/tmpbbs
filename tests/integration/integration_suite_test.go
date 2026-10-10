@@ -24,7 +24,7 @@ const (
 	chromeDebuggingPort = "9222"
 	basePort            = 7800
 	namespacePrefix     = "tmpbbs-test-"
-	chromeTimeout       = 1 * time.Minute
+	chromeTimeout       = 90 * time.Second
 )
 
 var (
