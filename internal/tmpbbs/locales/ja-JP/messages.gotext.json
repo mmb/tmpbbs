@@ -1,0 +1,85 @@
+{
+    "language": "ja-JP",
+    "messages": [
+        {
+            "id": "by {Author}",
+            "message": "by {Author}",
+            "translation": "{Author}による投稿",
+            "placeholders": [
+                {
+                    "id": "Author",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "author"
+                }
+            ]
+        },
+        {
+            "id": "{Len} replies",
+            "message": "{Len} replies",
+            "translation": "返信 {Len} 件",
+            "placeholders": [
+                {
+                    "id": "Len",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "dp.Replies.Len()"
+                }
+            ]
+        },
+        {
+            "id": "page {Page}",
+            "message": "page {Page}",
+            "translation": "{Page}ページ",
+            "placeholders": [
+                {
+                    "id": "Page",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "page"
+                }
+            ]
+        },
+        {
+            "id": "Title",
+            "message": "Title",
+            "translation": "タイトル"
+        },
+        {
+            "id": "Author#tripcode-secret",
+            "message": "Author#tripcode-secret",
+            "translation": "投稿者#トリップキー"
+        },
+        {
+            "id": "Markdown is supported.",
+            "message": "Markdown is supported.",
+            "translation": "Markdownに対応しています。"
+        },
+        {
+            "id": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "message": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "translation": "コロンで囲んだショートコードを使って絵文字を入力できます（:mushroom: は 🍄 になります）。"
+        },
+        {
+            "id": "Reply",
+            "message": "Reply",
+            "translation": "返信"
+        },
+        {
+            "id": "URL QR Code",
+            "message": "URL QR Code",
+            "translation": "URLのQRコード"
+        },
+        {
+            "id": "Close",
+            "message": "Close",
+            "translation": "閉じる"
+        }
+    ]
+}
