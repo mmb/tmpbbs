@@ -21,7 +21,20 @@
         {
             "id": "{Len} replies",
             "message": "{Len} replies",
-            "translation": "{Len} replies",
+            "translation": {
+                "select": {
+                    "feature": "plural",
+                    "arg": "Len",
+                    "cases": {
+                        "one": {
+                            "msg": "{Len} reply"
+                        },
+                        "other": {
+                            "msg": "{Len} replies"
+                        }
+                    }
+                }
+            },
             "translatorComment": "Copied from source.",
             "placeholders": [
                 {
