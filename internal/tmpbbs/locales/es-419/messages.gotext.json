@@ -19,7 +19,21 @@
         {
             "id": "{Len} replies",
             "message": "{Len} replies",
-            "translation": "{Len} respuestas",
+            "translation": {
+                "select": {
+                    "feature": "plural",
+                    "arg": "Len",
+                    "cases": {
+                        "one": {
+                            "msg": "{Len} respuesta"
+                        },
+                        "other": {
+                            "msg": "{Len} respuestas"
+                        }
+                    }
+                }
+            },
+
             "placeholders": [
                 {
                     "id": "Len",
