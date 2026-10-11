@@ -2,6 +2,21 @@
     "language": "ru-RU",
     "messages": [
         {
+            "id": "by {Author}",
+            "message": "by {Author}",
+            "translation": "от {Author}",
+            "placeholders": [
+                {
+                    "id": "Author",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "author"
+                }
+            ]
+        },
+        {
             "id": "{Len} replies",
             "message": "{Len} replies",
             "translation": "{Len} ответов",

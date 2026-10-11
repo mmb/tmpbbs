@@ -56,9 +56,16 @@ func (dp *displayPost) BodyHTML() template.HTML {
 }
 
 // DisplayAuthor returns a [template.HTML] of the posts's author with emoji
-// expanded.
+// expanded wrapped in a bdi tag and prefixed with "by ".
 func (dp *displayPost) DisplayAuthor() template.HTML {
-	return template.HTML(dp.sanitizeAndExpandEmoji(dp.Author, dp.wrappingEmojiParser)) // #nosec G203 -- sanitized
+	authorSanitized := dp.sanitizeAndExpandEmoji(dp.Author, dp.wrappingEmojiParser)
+	if authorSanitized == "" {
+		return ""
+	}
+
+	author := `<bdi class="author">` + authorSanitized + "</bdi>"
+
+	return template.HTML(dp.Printer.Sprintf("by %s", author)) // #nosec G203 -- sanitized
 }
 
 // DisplayTitle returns a [template.HTML] of the posts's title with emoji

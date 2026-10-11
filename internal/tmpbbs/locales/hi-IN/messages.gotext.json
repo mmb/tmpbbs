@@ -2,6 +2,21 @@
     "language": "hi-IN",
     "messages": [
         {
+            "id": "by {Author}",
+            "message": "by {Author}",
+            "translation": "{Author} द्वारा",
+            "placeholders": [
+                {
+                    "id": "Author",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "author"
+                }
+            ]
+        },
+        {
             "id": "{Len} replies",
             "message": "{Len} replies",
             "translation": "{Len} जवाब",

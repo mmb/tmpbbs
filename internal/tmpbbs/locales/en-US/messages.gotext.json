@@ -2,6 +2,23 @@
     "language": "en-US",
     "messages": [
         {
+            "id": "by {Author}",
+            "message": "by {Author}",
+            "translation": "by {Author}",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Author",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "author"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
             "id": "{Len} replies",
             "message": "{Len} replies",
             "translation": "{Len} replies",
