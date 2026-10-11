@@ -47,6 +47,21 @@
             ]
         },
         {
+            "id": "Superuser",
+            "message": "Superuser",
+            "translation": "超级用户"
+        },
+        {
+            "id": "Original Poster",
+            "message": "Original Poster",
+            "translation": "楼主"
+        },
+        {
+            "id": "Reply",
+            "message": "Reply",
+            "translation": "回复"
+        },
+        {
             "id": "Title",
             "message": "Title",
             "translation": "标题"
@@ -65,11 +80,6 @@
             "id": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
             "message": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
             "translation": "使用冒号包裹的短代码插入表情符号(:mushroom: 会变成 🍄)。"
-        },
-        {
-            "id": "Reply",
-            "message": "Reply",
-            "translation": "回复"
         },
         {
             "id": "URL QR Code",

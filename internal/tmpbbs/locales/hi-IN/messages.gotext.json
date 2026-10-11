@@ -47,6 +47,21 @@
             ]
         },
         {
+            "id": "Superuser",
+            "message": "Superuser",
+            "translation": "सुपरयूज़र"
+        },
+        {
+            "id": "Original Poster",
+            "message": "Original Poster",
+            "translation": "मूल पोस्टकर्ता"
+        },
+        {
+            "id": "Reply",
+            "message": "Reply",
+            "translation": "जवाब"
+        },
+        {
             "id": "Title",
             "message": "Title",
             "translation": "शीर्षक"
@@ -65,11 +80,6 @@
             "id": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
             "message": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
             "translation": "कोलन के बीच शॉर्टकोड डालकर इमोजी जोड़ें (:mushroom: 🍄 बन जाता है)।"
-        },
-        {
-            "id": "Reply",
-            "message": "Reply",
-            "translation": "जवाब"
         },
         {
             "id": "URL QR Code",

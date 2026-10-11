@@ -47,6 +47,21 @@
             ]
         },
         {
+            "id": "Superuser",
+            "message": "Superuser",
+            "translation": "スーパーユーザー"
+        },
+        {
+            "id": "Original Poster",
+            "message": "Original Poster",
+            "translation": "元の投稿者"
+        },
+        {
+            "id": "Reply",
+            "message": "Reply",
+            "translation": "返信"
+        },
+        {
             "id": "Title",
             "message": "Title",
             "translation": "タイトル"
@@ -65,11 +80,6 @@
             "id": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
             "message": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
             "translation": "コロンで囲んだショートコードを使って絵文字を入力できます（:mushroom: は 🍄 になります）。"
-        },
-        {
-            "id": "Reply",
-            "message": "Reply",
-            "translation": "返信"
         },
         {
             "id": "URL QR Code",
