@@ -9,11 +9,13 @@ import "golang.org/x/text/message"
 func neverCalled() { //nolint:unused // never called, see comment
 	printer := message.NewPrinter(message.MatchLanguage("en"))
 
+	printer.Sprintf("Superuser")
+	printer.Sprintf("Original Poster")
+	printer.Sprintf("Reply")
 	printer.Sprintf("Title")
 	printer.Sprintf("Author#tripcode-secret")
 	printer.Sprintf("Markdown is supported.")
 	printer.Sprintf("Insert emoji using shortcode between colons (:mushroom: becomes 🍄).")
-	printer.Sprintf("Reply")
 	printer.Sprintf("URL QR Code")
 	printer.Sprintf("Close")
 }

@@ -66,6 +66,27 @@
             "fuzzy": true
         },
         {
+            "id": "Superuser",
+            "message": "Superuser",
+            "translation": "Superuser",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Original Poster",
+            "message": "Original Poster",
+            "translation": "Original Poster",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Reply",
+            "message": "Reply",
+            "translation": "Reply",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
             "id": "Title",
             "message": "Title",
             "translation": "Title",
@@ -90,13 +111,6 @@
             "id": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
             "message": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
             "translation": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
-            "translatorComment": "Copied from source.",
-            "fuzzy": true
-        },
-        {
-            "id": "Reply",
-            "message": "Reply",
-            "translation": "Reply",
             "translatorComment": "Copied from source.",
             "fuzzy": true
         },

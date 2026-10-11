@@ -33,7 +33,6 @@
                     }
                 }
             },
-
             "placeholders": [
                 {
                     "id": "Len",
@@ -61,6 +60,21 @@
             ]
         },
         {
+            "id": "Superuser",
+            "message": "Superuser",
+            "translation": "Superusuario"
+        },
+        {
+            "id": "Original Poster",
+            "message": "Original Poster",
+            "translation": "Autor original"
+        },
+        {
+            "id": "Reply",
+            "message": "Reply",
+            "translation": "Responder"
+        },
+        {
             "id": "Title",
             "message": "Title",
             "translation": "Título"
@@ -79,11 +93,6 @@
             "id": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
             "message": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
             "translation": "Inserta emojis usando códigos cortos entre dos puntos (:mushroom: se convierte en 🍄)."
-        },
-        {
-            "id": "Reply",
-            "message": "Reply",
-            "translation": "Responder"
         },
         {
             "id": "URL QR Code",
