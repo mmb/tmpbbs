@@ -30,6 +30,7 @@ func init() {
 		"en_US":  &dictionary{index: en_USIndex, data: en_USData},
 		"es_419": &dictionary{index: es_419Index, data: es_419Data},
 		"hi_IN":  &dictionary{index: hi_INIndex, data: hi_INData},
+		"ja_JP":  &dictionary{index: ja_JPIndex, data: ja_JPData},
 		"ru_RU":  &dictionary{index: ru_RUIndex, data: ru_RUData},
 		"zh_CN":  &dictionary{index: zh_CNIndex, data: zh_CNData},
 		"zh_TW":  &dictionary{index: zh_TWIndex, data: zh_TWData},
@@ -89,6 +90,17 @@ const hi_INData string = "" + // Size: 415 bytes
 	"-गुप्तशब्द\x02Markdown समर्थित है।\x02कोलन के बीच शॉर्टकोड डालकर इमोजी ज" +
 	"ोड़ें (:mushroom: 🍄 बन जाता है)।\x02जवाब\x02URL क्यूआर कोड\x02बंद करें"
 
+var ja_JPIndex = []uint32{ // 11 elements
+	0x00000000, 0x00000015, 0x00000026, 0x00000035,
+	0x00000042, 0x0000005f, 0x00000083, 0x00000104,
+	0x0000010b, 0x0000011d, 0x00000127,
+} // Size: 68 bytes
+
+const ja_JPData string = "" + // Size: 295 bytes
+	"\x02%[1]sによる投稿\x02返信 %[1]d 件\x02%[1]dページ\x02タイトル\x02投稿者#トリップキー\x02Markdo" +
+	"wnに対応しています。\x02コロンで囲んだショートコードを使って絵文字を入力できます（:mushroom: は 🍄 になります）。\x02返信" +
+	"\x02URLのQRコード\x02閉じる"
+
 var ru_RUIndex = []uint32{ // 11 elements
 	0x00000000, 0x0000000b, 0x00000020, 0x00000037,
 	0x0000004a, 0x00000071, 0x00000098, 0x00000126,
@@ -121,4 +133,4 @@ const zh_TWData string = "" + // Size: 209 bytes
 	"\x02作者：%[1]s\x02%[1]d 則回覆\x02第 %[1]d 頁\x02標題\x02作者#暗號密鑰\x02支援 Markdown 語" +
 	"法。\x02在冒號之間輸入短代碼即可插入表情符號(:mushroom: 會變成 🍄)。\x02回覆\x02URL QR Code\x02關閉"
 
-	// Total table size 1978 bytes (1KiB); checksum: 3910F47F
+	// Total table size 2341 bytes (2KiB); checksum: D8A76176
