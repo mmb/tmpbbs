@@ -44,7 +44,7 @@ func init() {
 }
 
 var messageKeyToIndex = map[string]int{
-	"%d replies":             1,
+	"(%d replies)":           1,
 	"Author#tripcode-secret": 7,
 	"Close":                  11,
 	"Insert emoji using shortcode between colons (:mushroom: becomes 🍄).": 9,
@@ -59,95 +59,95 @@ var messageKeyToIndex = map[string]int{
 }
 
 var en_USIndex = []uint32{ // 13 elements
-	0x00000000, 0x00000009, 0x0000002c, 0x00000037,
-	0x00000041, 0x00000051, 0x00000057, 0x0000005d,
-	0x00000074, 0x0000008b, 0x000000d2, 0x000000de,
-	0x000000e4,
+	0x00000000, 0x00000009, 0x00000030, 0x0000003b,
+	0x00000045, 0x00000055, 0x0000005b, 0x00000061,
+	0x00000078, 0x0000008f, 0x000000d6, 0x000000e2,
+	0x000000e8,
 } // Size: 76 bytes
 
-const en_USData string = "" + // Size: 228 bytes
-	"\x02by %[1]s\x14\x01\x81\x01\x00\x02\x0c\x02%[1]d reply\x00\x0e\x02%[1]d" +
-	" replies\x02page %[1]d\x02Superuser\x02Original Poster\x02Reply\x02Title" +
-	"\x02Author#tripcode-secret\x02Markdown is supported.\x02Insert emoji usi" +
-	"ng shortcode between colons (:mushroom: becomes 🍄).\x02URL QR Code\x02Cl" +
-	"ose"
+const en_USData string = "" + // Size: 232 bytes
+	"\x02by %[1]s\x14\x01\x81\x01\x00\x02\x0e\x02(%[1]d reply)\x00\x10\x02(%[" +
+	"1]d replies)\x02page %[1]d\x02Superuser\x02Original Poster\x02Reply\x02T" +
+	"itle\x02Author#tripcode-secret\x02Markdown is supported.\x02Insert emoji" +
+	" using shortcode between colons (:mushroom: becomes 🍄).\x02URL QR Code" +
+	"\x02Close"
 
 var es_419Index = []uint32{ // 13 elements
-	0x00000000, 0x0000000a, 0x00000034, 0x00000042,
-	0x0000004f, 0x0000005e, 0x00000068, 0x00000070,
-	0x00000087, 0x0000009b, 0x000000f5, 0x0000010a,
-	0x00000111,
+	0x00000000, 0x0000000a, 0x00000038, 0x00000046,
+	0x00000053, 0x00000062, 0x0000006c, 0x00000074,
+	0x0000008b, 0x0000009f, 0x000000f9, 0x0000010e,
+	0x00000115,
 } // Size: 76 bytes
 
-const es_419Data string = "" + // Size: 273 bytes
-	"\x02por %[1]s\x14\x01\x81\x01\x00\x02\x10\x02%[1]d respuesta\x00\x11\x02" +
-	"%[1]d respuestas\x02página %[1]d\x02Superusuario\x02Autor original\x02Re" +
-	"sponder\x02Título\x02Autor#tripcode-secreto\x02Se admite Markdown.\x02In" +
-	"serta emojis usando códigos cortos entre dos puntos (:mushroom: se convi" +
-	"erte en 🍄).\x02Código QR de la URL\x02Cerrar"
+const es_419Data string = "" + // Size: 277 bytes
+	"\x02por %[1]s\x14\x01\x81\x01\x00\x02\x12\x02(%[1]d respuesta)\x00\x13" +
+	"\x02(%[1]d respuestas)\x02página %[1]d\x02Superusuario\x02Autor original" +
+	"\x02Responder\x02Título\x02Autor#tripcode-secreto\x02Se admite Markdown." +
+	"\x02Inserta emojis usando códigos cortos entre dos puntos (:mushroom: se" +
+	" convierte en 🍄).\x02Código QR de la URL\x02Cerrar"
 
 var hi_INIndex = []uint32{ // 13 elements
-	0x00000000, 0x00000019, 0x0000002c, 0x00000042,
-	0x0000005e, 0x00000087, 0x00000094, 0x000000a7,
-	0x000000e9, 0x00000112, 0x000001ac, 0x000001cd,
-	0x000001e4,
+	0x00000000, 0x00000019, 0x0000002e, 0x00000044,
+	0x00000060, 0x00000089, 0x00000096, 0x000000a9,
+	0x000000eb, 0x00000114, 0x000001ae, 0x000001cf,
+	0x000001e6,
 } // Size: 76 bytes
 
-const hi_INData string = "" + // Size: 484 bytes
-	"\x02%[1]s द्वारा\x02%[1]d जवाब\x02पृष्ठ %[1]d\x02सुपरयूज़र\x02मूल पोस्टक" +
-	"र्ता\x02जवाब\x02शीर्षक\x02लेखक#ट्रिपकोड-गुप्तशब्द\x02Markdown समर्थित " +
-	"है।\x02कोलन के बीच शॉर्टकोड डालकर इमोजी जोड़ें (:mushroom: 🍄 बन जाता ह" +
-	"ै)।\x02URL क्यूआर कोड\x02बंद करें"
+const hi_INData string = "" + // Size: 486 bytes
+	"\x02%[1]s द्वारा\x02(%[1]d जवाब)\x02पृष्ठ %[1]d\x02सुपरयूज़र\x02मूल पोस्" +
+	"टकर्ता\x02जवाब\x02शीर्षक\x02लेखक#ट्रिपकोड-गुप्तशब्द\x02Markdown समर्थि" +
+	"त है।\x02कोलन के बीच शॉर्टकोड डालकर इमोजी जोड़ें (:mushroom: 🍄 बन जाता" +
+	" है)।\x02URL क्यूआर कोड\x02बंद करें"
 
 var ja_JPIndex = []uint32{ // 13 elements
-	0x00000000, 0x00000015, 0x00000026, 0x00000035,
-	0x0000004e, 0x0000005e, 0x00000065, 0x00000072,
-	0x0000008f, 0x000000b3, 0x00000134, 0x00000146,
-	0x00000150,
+	0x00000000, 0x00000015, 0x0000002c, 0x0000003b,
+	0x00000054, 0x00000064, 0x0000006b, 0x00000078,
+	0x00000095, 0x000000b9, 0x0000013a, 0x0000014c,
+	0x00000156,
 } // Size: 76 bytes
 
-const ja_JPData string = "" + // Size: 336 bytes
-	"\x02%[1]sによる投稿\x02返信 %[1]d 件\x02%[1]dページ\x02スーパーユーザー\x02元の投稿者\x02返信\x02タ" +
-	"イトル\x02投稿者#トリップキー\x02Markdownに対応しています。\x02コロンで囲んだショートコードを使って絵文字を入力できます" +
-	"（:mushroom: は 🍄 になります）。\x02URLのQRコード\x02閉じる"
+const ja_JPData string = "" + // Size: 342 bytes
+	"\x02%[1]sによる投稿\x02（返信 %[1]d 件）\x02%[1]dページ\x02スーパーユーザー\x02元の投稿者\x02返信" +
+	"\x02タイトル\x02投稿者#トリップキー\x02Markdownに対応しています。\x02コロンで囲んだショートコードを使って絵文字を入力で" +
+	"きます（:mushroom: は 🍄 になります）。\x02URLのQRコード\x02閉じる"
 
 var ru_RUIndex = []uint32{ // 13 elements
-	0x00000000, 0x0000000b, 0x00000064, 0x0000007b,
-	0x0000009e, 0x000000b2, 0x000000c3, 0x000000d6,
-	0x000000fd, 0x00000124, 0x000001b2, 0x000001c0,
-	0x000001cf,
+	0x00000000, 0x0000000b, 0x0000006c, 0x00000083,
+	0x000000a6, 0x000000ba, 0x000000cb, 0x000000de,
+	0x00000105, 0x0000012c, 0x000001ba, 0x000001c8,
+	0x000001d7,
 } // Size: 76 bytes
 
-const ru_RUData string = "" + // Size: 463 bytes
-	"\x02от %[1]s\x14\x01\x81\x01\x00\x04\x13\x02%[1]d ответа\x05\x15\x02%[1]" +
-	"d ответов\x02\x11\x02%[1]d ответ\x00\x13\x02%[1]d ответа\x02страница %[1" +
-	"]d\x02Суперпользователь\x02Автор темы\x02Ответить\x02Заголовок\x02Автор#" +
-	"трипкод-секрет\x02Поддерживается Markdown.\x02Вставляйте эмодзи с помощ" +
-	"ью кода между двоеточиями (:mushroom: превращается в 🍄).\x02QR-код URL" +
-	"\x02Закрыть"
+const ru_RUData string = "" + // Size: 471 bytes
+	"\x02от %[1]s\x14\x01\x81\x01\x00\x04\x15\x02(%[1]d ответа)\x05\x17\x02(%" +
+	"[1]d ответов)\x02\x13\x02(%[1]d ответ)\x00\x15\x02(%[1]d ответа)\x02стра" +
+	"ница %[1]d\x02Суперпользователь\x02Автор темы\x02Ответить\x02Заголовок" +
+	"\x02Автор#трипкод-секрет\x02Поддерживается Markdown.\x02Вставляйте эмодз" +
+	"и с помощью кода между двоеточиями (:mushroom: превращается в 🍄).\x02QR" +
+	"-код URL\x02Закрыть"
 
 var zh_CNIndex = []uint32{ // 13 elements
-	0x00000000, 0x0000000f, 0x0000001f, 0x0000002d,
-	0x0000003a, 0x00000041, 0x00000048, 0x0000004f,
-	0x00000063, 0x0000007d, 0x000000cc, 0x000000da,
-	0x000000e1,
+	0x00000000, 0x0000000f, 0x00000025, 0x00000033,
+	0x00000040, 0x00000047, 0x0000004e, 0x00000055,
+	0x00000069, 0x00000083, 0x000000d2, 0x000000e0,
+	0x000000e7,
 } // Size: 76 bytes
 
-const zh_CNData string = "" + // Size: 225 bytes
-	"\x02作者：%[1]s\x02%[1]d 条回复\x02第 %[1]d 页\x02超级用户\x02楼主\x02回复\x02标题\x02作者#暗" +
-	"号密钥\x02支持 Markdown 语法。\x02使用冒号包裹的短代码插入表情符号(:mushroom: 会变成 🍄)。\x02URL 二" +
+const zh_CNData string = "" + // Size: 231 bytes
+	"\x02作者：%[1]s\x02（%[1]d 条回复）\x02第 %[1]d 页\x02超级用户\x02楼主\x02回复\x02标题\x02作者" +
+	"#暗号密钥\x02支持 Markdown 语法。\x02使用冒号包裹的短代码插入表情符号(:mushroom: 会变成 🍄)。\x02URL 二" +
 	"维码\x02关闭"
 
 var zh_TWIndex = []uint32{ // 13 elements
-	0x00000000, 0x0000000f, 0x0000001f, 0x0000002d,
-	0x0000003d, 0x0000004a, 0x00000051, 0x00000058,
-	0x0000006c, 0x00000086, 0x000000db, 0x000000e7,
-	0x000000ee,
+	0x00000000, 0x0000000f, 0x00000025, 0x00000033,
+	0x00000043, 0x00000050, 0x00000057, 0x0000005e,
+	0x00000072, 0x0000008c, 0x000000e1, 0x000000ed,
+	0x000000f4,
 } // Size: 76 bytes
 
-const zh_TWData string = "" + // Size: 238 bytes
-	"\x02作者：%[1]s\x02%[1]d 則回覆\x02第 %[1]d 頁\x02超級使用者\x02原發文者\x02回覆\x02標題\x02作" +
-	"者#暗號密鑰\x02支援 Markdown 語法。\x02在冒號之間輸入短代碼即可插入表情符號(:mushroom: 會變成 🍄)。\x02" +
-	"URL QR Code\x02關閉"
+const zh_TWData string = "" + // Size: 244 bytes
+	"\x02作者：%[1]s\x02（%[1]d 則回覆）\x02第 %[1]d 頁\x02超級使用者\x02原發文者\x02回覆\x02標題" +
+	"\x02作者#暗號密鑰\x02支援 Markdown 語法。\x02在冒號之間輸入短代碼即可插入表情符號(:mushroom: 會變成 🍄)。" +
+	"\x02URL QR Code\x02關閉"
 
-	// Total table size 2779 bytes (2KiB); checksum: 7F51C7C9
+	// Total table size 2815 bytes (2KiB); checksum: E05A112E

@@ -17,18 +17,18 @@
             ]
         },
         {
-            "id": "{Len} replies",
-            "message": "{Len} replies",
+            "id": "({Len} replies)",
+            "message": "({Len} replies)",
             "translation": {
                 "select": {
                     "feature": "plural",
                     "arg": "Len",
                     "cases": {
                         "one": {
-                            "msg": "{Len} respuesta"
+                            "msg": "({Len} respuesta)"
                         },
                         "other": {
-                            "msg": "{Len} respuestas"
+                            "msg": "({Len} respuestas)"
                         }
                     }
                 }

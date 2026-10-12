@@ -17,9 +17,9 @@
             ]
         },
         {
-            "id": "{Len} replies",
-            "message": "{Len} replies",
-            "translation": "返信 {Len} 件",
+            "id": "({Len} replies)",
+            "message": "({Len} replies)",
+            "translation": "（返信 {Len} 件）",
             "placeholders": [
                 {
                     "id": "Len",

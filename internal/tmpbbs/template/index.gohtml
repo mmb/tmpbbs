@@ -5,7 +5,7 @@
 {{- if .IsSuperuser }} <span title="{{ .Printer.Sprintf "Superuser" }}" class="superuser">&#11088;</span>{{ end -}}
 {{- if .IsOriginalPoster }} <span title="{{ .Printer.Sprintf "Original Poster" }}" class="op">&#127793;</span>{{ end -}}
 {{ end }} <span data-time="{{ .Time.Unix }}" class="time">{{ .TimeRFC3339 }}</span>
-{{- if .Replies }} ({{ .NumReplies }}){{ end -}}
+{{- if and .Replies .NumReplies }} {{ .NumReplies }}{{ end -}}
 {{ end -}}
 
 {{ define "post" -}}
