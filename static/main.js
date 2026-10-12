@@ -18,7 +18,7 @@ const commit = document.querySelector('meta[name="commit"]').content,
   updateTimeAgo = () => {
     document.querySelectorAll('.time').forEach(element => {
       element.textContent = timeAgo(element.dataset.time)
-      element.title = new Date(element.dataset.time * msPerSecond).toLocaleString()
+      element.title = new Date(element.dataset.time * msPerSecond).toLocaleString(document.documentElement.lang)
     })
   }
 
