@@ -1,7 +1,7 @@
 {{- define "post_title" -}}
 <a href="{{ .URL }}">{{ .DisplayTitle }}</a>
 {{- if .DisplayAuthor }} {{ .DisplayAuthor }}{{ end -}}
-{{ if .Tripcode }} <span class="tripcode">!{{ .Tripcode }}</span>
+{{ if .Tripcode }} <span class="tripcode" dir="ltr">!{{ .Tripcode }}</span>
 {{- if .IsSuperuser }} <span title="{{ .Printer.Sprintf "Superuser" }}" class="superuser">&#11088;</span>{{ end -}}
 {{- if .IsOriginalPoster }} <span title="{{ .Printer.Sprintf "Original Poster" }}" class="op">&#127793;</span>{{ end -}}
 {{ end }} <span data-time="{{ .Time.Unix }}" class="time">{{ .TimeRFC3339 }}</span>
