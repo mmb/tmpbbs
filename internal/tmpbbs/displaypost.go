@@ -82,7 +82,11 @@ func (dp *displayPost) DisplayTitle() template.HTML {
 
 // NumReplies returns how many replies the post has in human language.
 func (dp *displayPost) NumReplies() string {
-	return dp.Printer.Sprintf("%d replies", dp.Replies.Len())
+	if dp.Replies.Len() == 0 {
+		return ""
+	}
+
+	return dp.Printer.Sprintf("(%d replies)", dp.Replies.Len())
 }
 
 // PageTitle returns the HTML title for the post's page.
