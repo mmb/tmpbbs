@@ -1,5 +1,5 @@
 {{- define "post_title" -}}
-<a href="{{ .URL }}">{{ .DisplayTitle }}</a>
+<bdi><a href="{{ .URL }}">{{ .DisplayTitle }}</a></bdi>
 {{- if .DisplayAuthor }} {{ .DisplayAuthor }}{{ end -}}
 {{ if .Tripcode }} <span class="tripcode" dir="ltr">!{{ .Tripcode }}</span>
 {{- if .IsSuperuser }} <span title="{{ .Printer.Sprintf "Superuser" }}" class="superuser">&#11088;</span>{{ end -}}
