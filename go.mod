@@ -2,7 +2,7 @@ module github.com/mmb/tmpbbs
 
 go 1.27
 
-toolchain go1.27.1
+toolchain go1.27.2
 
 require (
 	github.com/derekparker/trie v0.0.0-20230829180723-39f4de51ef7d
