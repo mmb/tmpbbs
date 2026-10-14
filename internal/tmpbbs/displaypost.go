@@ -80,6 +80,19 @@ func (dp *displayPost) DisplayTitle() template.HTML {
 	return template.HTML(title) // #nosec G203 -- either sanitized above or no user input if empty
 }
 
+// LanguageDirection returns the HTML text direction of the user's browser
+// language ("ltr" for left-to-right or "rtl" for right-to-left). Unrecognized
+// scripts return "ltr".
+func (dp *displayPost) LanguageDirection() string {
+	script, _ := dp.Language.Script()
+	switch script.String() {
+	case "Arab":
+		return "rtl"
+	default:
+		return "ltr"
+	}
+}
+
 // NumReplies returns how many replies the post has in human language.
 func (dp *displayPost) NumReplies() string {
 	if dp.Replies.Len() == 0 {

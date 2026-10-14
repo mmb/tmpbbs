@@ -1,0 +1,120 @@
+{
+    "language": "ar",
+    "messages": [
+        {
+            "id": "by {Author}",
+            "message": "by {Author}",
+            "translation": "بواسطة {Author}",
+            "placeholders": [
+                {
+                    "id": "Author",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "author"
+                }
+            ]
+        },
+        {
+            "id": "({Len} replies)",
+            "message": "({Len} replies)",
+            "translation": {
+                "select": {
+                    "feature": "plural",
+                    "arg": "Len",
+                    "cases": {
+                        "zero": {
+                            "msg": "(لا ردود)"
+                        },
+                        "one": {
+                            "msg": "(رد واحد)"
+                        },
+                        "two": {
+                            "msg": "(ردّان)"
+                        },
+                        "few": {
+                            "msg": "({Len} ردود)"
+                        },
+                        "many": {
+                            "msg": "({Len} ردًّا)"
+                        },
+                        "other": {
+                            "msg": "({Len} رد)"
+                        }
+                    }
+                }
+            },
+            "placeholders": [
+                {
+                    "id": "Len",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "dp.Replies.Len()"
+                }
+            ]
+        },
+        {
+            "id": "page {Page}",
+            "message": "page {Page}",
+            "translation": "الصفحة {Page}",
+            "placeholders": [
+                {
+                    "id": "Page",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "page"
+                }
+            ]
+        },
+        {
+            "id": "Superuser",
+            "message": "Superuser",
+            "translation": "مشرف عام"
+        },
+        {
+            "id": "Original Poster",
+            "message": "Original Poster",
+            "translation": "صاحب الموضوع"
+        },
+        {
+            "id": "Reply",
+            "message": "Reply",
+            "translation": "رد"
+        },
+        {
+            "id": "Title",
+            "message": "Title",
+            "translation": "العنوان"
+        },
+        {
+            "id": "Author#tripcode-secret",
+            "message": "Author#tripcode-secret",
+            "translation": "الكاتب#الرمز-السري"
+        },
+        {
+            "id": "Markdown is supported.",
+            "message": "Markdown is supported.",
+            "translation": "صيغة Markdown مدعومة."
+        },
+        {
+            "id": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "message": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "translation": "أدخل رمزًا تعبيريًا باستخدام الرمز المختصر بين نقطتين (\u200e:mushroom:\u200e تتحول إلى 🍄)."
+        },
+        {
+            "id": "URL QR Code",
+            "message": "URL QR Code",
+            "translation": "رمز QR للرابط"
+        },
+        {
+            "id": "Close",
+            "message": "Close",
+            "translation": "إغلاق"
+        }
+    ]
+}

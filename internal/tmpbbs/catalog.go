@@ -27,6 +27,7 @@ func (d *dictionary) Lookup(key string) (data string, ok bool) {
 
 func init() {
 	dict := map[string]catalog.Dictionary{
+		"ar":     &dictionary{index: arIndex, data: arData},
 		"en_US":  &dictionary{index: en_USIndex, data: en_USData},
 		"es_419": &dictionary{index: es_419Index, data: es_419Data},
 		"hi_IN":  &dictionary{index: hi_INIndex, data: hi_INData},
@@ -57,6 +58,21 @@ var messageKeyToIndex = map[string]int{
 	"by %s":                  0,
 	"page %d":                2,
 }
+
+var arIndex = []uint32{ // 13 elements
+	0x00000000, 0x00000013, 0x00000082, 0x00000095,
+	0x000000a5, 0x000000bd, 0x000000c2, 0x000000d1,
+	0x000000f4, 0x00000114, 0x000001a3, 0x000001ba,
+	0x000001c5,
+} // Size: 76 bytes
+
+const arData string = "" + // Size: 453 bytes
+	"\x02بواسطة %[1]s\x14\x01\x81\x01\x00\x04\x11\x02(%[1]d ردود)\x05\x13\x02" +
+	"(%[1]d ردًّا)\x02\x10\x02(رد واحد)\x03\x0d\x02(ردّان)\x01\x10\x02(لا ردو" +
+	"د)\x00\x0d\x02(%[1]d رد)\x02الصفحة %[1]d\x02مشرف عام\x02صاحب الموضوع" +
+	"\x02رد\x02العنوان\x02الكاتب#الرمز-السري\x02صيغة Markdown مدعومة.\x02أدخل" +
+	" رمزًا تعبيريًا باستخدام الرمز المختصر بين نقطتين (\u200e:mushroom:" +
+	"\u200e تتحول إلى 🍄).\x02رمز QR للرابط\x02إغلاق"
 
 var en_USIndex = []uint32{ // 13 elements
 	0x00000000, 0x00000009, 0x00000030, 0x0000003b,
@@ -150,4 +166,4 @@ const zh_TWData string = "" + // Size: 244 bytes
 	"\x02作者#暗號密鑰\x02支援 Markdown 語法。\x02在冒號之間輸入短代碼即可插入表情符號(:mushroom: 會變成 🍄)。" +
 	"\x02URL QR Code\x02關閉"
 
-	// Total table size 2815 bytes (2KiB); checksum: E05A112E
+	// Total table size 3344 bytes (3KiB); checksum: F3115F2F
