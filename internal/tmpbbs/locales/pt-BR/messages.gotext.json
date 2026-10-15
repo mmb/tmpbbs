@@ -1,0 +1,108 @@
+{
+    "language": "pt-BR",
+    "messages": [
+        {
+            "id": "by {Author}",
+            "message": "by {Author}",
+            "translation": "por {Author}",
+            "placeholders": [
+                {
+                    "id": "Author",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "author"
+                }
+            ]
+        },
+        {
+            "id": "({Len} replies)",
+            "message": "({Len} replies)",
+            "translation": {
+                "select": {
+                    "feature": "plural",
+                    "arg": "Len",
+                    "cases": {
+                        "one": {
+                            "msg": "({Len} resposta)"
+                        },
+                        "other": {
+                            "msg": "({Len} respostas)"
+                        }
+                    }
+                }
+            },
+            "placeholders": [
+                {
+                    "id": "Len",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "dp.Replies.Len()"
+                }
+            ]
+        },
+        {
+            "id": "page {Page}",
+            "message": "page {Page}",
+            "translation": "página {Page}",
+            "placeholders": [
+                {
+                    "id": "Page",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "page"
+                }
+            ]
+        },
+        {
+            "id": "Superuser",
+            "message": "Superuser",
+            "translation": "Superusuário"
+        },
+        {
+            "id": "Original Poster",
+            "message": "Original Poster",
+            "translation": "Autor do tópico"
+        },
+        {
+            "id": "Reply",
+            "message": "Reply",
+            "translation": "Responder"
+        },
+        {
+            "id": "Title",
+            "message": "Title",
+            "translation": "Título"
+        },
+        {
+            "id": "Author#tripcode-secret",
+            "message": "Author#tripcode-secret",
+            "translation": "Autor#segredo-do-tripcode"
+        },
+        {
+            "id": "Markdown is supported.",
+            "message": "Markdown is supported.",
+            "translation": "Há suporte a Markdown."
+        },
+        {
+            "id": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "message": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "translation": "Insira emojis digitando o atalho entre dois-pontos (:mushroom: vira 🍄)."
+        },
+        {
+            "id": "URL QR Code",
+            "message": "URL QR Code",
+            "translation": "QR code da URL"
+        },
+        {
+            "id": "Close",
+            "message": "Close",
+            "translation": "Fechar"
+        }
+    ]
+}
