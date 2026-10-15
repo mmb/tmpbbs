@@ -2,7 +2,7 @@ module github.com/mmb/tmpbbs/tools
 
 go 1.27
 
-toolchain go1.27.1
+toolchain go1.27.2
 
 tool (
 	golang.org/x/text/cmd/gotext
