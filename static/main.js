@@ -7,8 +7,8 @@ const commit = document.querySelector('meta[name="commit"]').content,
   secondsPerDay = 86400,
   secondsPerHour = 3600,
   secondsPerMinute = 60,
-  timeAgo = (unixTimestamp) => {
-    const secondsAgo = Math.max(0, Math.floor(Date.now() / msPerSecond) - unixTimestamp)
+  timeAgo = (date) => {
+    const secondsAgo = Math.max(0, Math.floor((Date.now() - date.getTime()) / msPerSecond))
     if (secondsAgo < secondsPerMinute) { return relativeTime.format(-secondsAgo, 'second') }
     if (secondsAgo < secondsPerHour) { return relativeTime.format(-Math.round(secondsAgo / secondsPerMinute), 'minute') }
     if (secondsAgo < secondsPerDay) { return relativeTime.format(-Math.round(secondsAgo / secondsPerHour), 'hour') }
@@ -16,9 +16,10 @@ const commit = document.querySelector('meta[name="commit"]').content,
   },
   timeAgoUpdateInterval = 60000,
   updateTimeAgo = () => {
-    document.querySelectorAll('.time').forEach(element => {
-      element.textContent = timeAgo(element.dataset.time)
-      element.title = new Date(element.dataset.time * msPerSecond).toLocaleString(document.documentElement.lang)
+    document.querySelectorAll('time').forEach(element => {
+      const date = new Date(element.dateTime)
+      element.textContent = timeAgo(date)
+      element.title = date.toLocaleString(document.documentElement.lang)
     })
   }
 
