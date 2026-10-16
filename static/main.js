@@ -1,4 +1,12 @@
 const commit = document.querySelector('meta[name="commit"]').content,
+  dateTime = new Intl.DateTimeFormat(document.documentElement.lang, {
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    month: 'numeric',
+    second: 'numeric',
+    year: 'numeric'
+  }),
   debounceInterval = 150,
   emojiSuggestions = document.getElementById('emoji-suggestions'),
   msPerSecond = 1000,
@@ -19,7 +27,9 @@ const commit = document.querySelector('meta[name="commit"]').content,
     document.querySelectorAll('time').forEach(element => {
       const date = new Date(element.dateTime)
       element.textContent = timeAgo(date)
-      element.title = date.toLocaleString(document.documentElement.lang)
+      if (!element.title) {
+        element.title = dateTime.format(date)
+      }
     })
   }
 
