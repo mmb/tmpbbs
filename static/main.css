@@ -9,10 +9,6 @@ body {
   padding-inline: 1em 0.5em;
 }
 
-time {
-  font-style: italic;
-}
-
 .replies {
    padding: 0;
 }
