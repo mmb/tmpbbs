@@ -1,3 +1,3 @@
 package tmpbbs
 
-//go:generate go tool -modfile=../../tools/go.mod gotext -srclang=en-US update -lang=ar,es-419,hi-IN,ja-JP,pt-BR,ru-RU,zh-CN,zh-TW -out=catalog.go github.com/mmb/tmpbbs/internal/tmpbbs
+//go:generate go tool -modfile=../../tools/go.mod gotext -srclang=en-US update -lang=ar,es-419,hi,ja,pt-BR,ru,zh-CN,zh-TW -out=catalog.go github.com/mmb/tmpbbs/internal/tmpbbs
