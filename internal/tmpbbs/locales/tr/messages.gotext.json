@@ -1,0 +1,95 @@
+{
+    "language": "tr",
+    "messages": [
+        {
+            "id": "by {Author}",
+            "message": "by {Author}",
+            "translation": "{Author} tarafından",
+            "placeholders": [
+                {
+                    "id": "Author",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "author"
+                }
+            ]
+        },
+        {
+            "id": "({Len} replies)",
+            "message": "({Len} replies)",
+            "translation": "({Len} yanıt)",
+            "placeholders": [
+                {
+                    "id": "Len",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "dp.Replies.Len()"
+                }
+            ]
+        },
+        {
+            "id": "page {Page}",
+            "message": "page {Page}",
+            "translation": "sayfa {Page}",
+            "placeholders": [
+                {
+                    "id": "Page",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "page"
+                }
+            ]
+        },
+        {
+            "id": "Superuser",
+            "message": "Superuser",
+            "translation": "Süper kullanıcı"
+        },
+        {
+            "id": "Original Poster",
+            "message": "Original Poster",
+            "translation": "Konu sahibi"
+        },
+        {
+            "id": "Reply",
+            "message": "Reply",
+            "translation": "Yanıtla"
+        },
+        {
+            "id": "Title",
+            "message": "Title",
+            "translation": "Başlık"
+        },
+        {
+            "id": "Author#tripcode-secret",
+            "message": "Author#tripcode-secret",
+            "translation": "Yazar#tripcode-gizli"
+        },
+        {
+            "id": "Markdown is supported.",
+            "message": "Markdown is supported.",
+            "translation": "Markdown desteklenir."
+        },
+        {
+            "id": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "message": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "translation": "İki nokta üst üste arasına kısa kodu yazarak emoji ekleyin (:mushroom: 🍄 olur)."
+        },
+        {
+            "id": "URL QR Code",
+            "message": "URL QR Code",
+            "translation": "URL QR kodu"
+        },
+        {
+            "id": "Close",
+            "message": "Close",
+            "translation": "Kapat"
+        }
+    ]
+}

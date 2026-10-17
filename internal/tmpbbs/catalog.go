@@ -34,6 +34,7 @@ func init() {
 		"ja":     &dictionary{index: jaIndex, data: jaData},
 		"pt_BR":  &dictionary{index: pt_BRIndex, data: pt_BRData},
 		"ru":     &dictionary{index: ruIndex, data: ruData},
+		"tr":     &dictionary{index: trIndex, data: trData},
 		"zh_CN":  &dictionary{index: zh_CNIndex, data: zh_CNData},
 		"zh_TW":  &dictionary{index: zh_TWIndex, data: zh_TWData},
 	}
@@ -157,6 +158,19 @@ const ruData string = "" + // Size: 471 bytes
 	"и с помощью кода между двоеточиями (:mushroom: превращается в 🍄).\x02QR" +
 	"-код URL\x02Закрыть"
 
+var trIndex = []uint32{ // 13 elements
+	0x00000000, 0x00000012, 0x00000021, 0x0000002d,
+	0x00000040, 0x0000004c, 0x00000055, 0x0000005e,
+	0x00000073, 0x00000089, 0x000000e1, 0x000000ed,
+	0x000000f3,
+} // Size: 76 bytes
+
+const trData string = "" + // Size: 243 bytes
+	"\x02%[1]s tarafından\x02(%[1]d yanıt)\x02sayfa %[1]d\x02Süper kullanıcı" +
+	"\x02Konu sahibi\x02Yanıtla\x02Başlık\x02Yazar#tripcode-gizli\x02Markdown" +
+	" desteklenir.\x02İki nokta üst üste arasına kısa kodu yazarak emoji ekle" +
+	"yin (:mushroom: 🍄 olur).\x02URL QR kodu\x02Kapat"
+
 var zh_CNIndex = []uint32{ // 13 elements
 	0x00000000, 0x0000000f, 0x00000025, 0x00000033,
 	0x00000040, 0x00000047, 0x0000004e, 0x00000055,
@@ -181,4 +195,4 @@ const zh_TWData string = "" + // Size: 244 bytes
 	"\x02作者#暗號密鑰\x02支援 Markdown 語法。\x02在冒號之間輸入短代碼即可插入表情符號(:mushroom: 會變成 🍄)。" +
 	"\x02URL QR Code\x02關閉"
 
-	// Total table size 3684 bytes (3KiB); checksum: 1C62012F
+	// Total table size 4003 bytes (3KiB); checksum: 592604AD
