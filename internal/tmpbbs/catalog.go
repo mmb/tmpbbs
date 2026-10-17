@@ -30,10 +30,10 @@ func init() {
 		"ar":     &dictionary{index: arIndex, data: arData},
 		"en_US":  &dictionary{index: en_USIndex, data: en_USData},
 		"es_419": &dictionary{index: es_419Index, data: es_419Data},
-		"hi_IN":  &dictionary{index: hi_INIndex, data: hi_INData},
-		"ja_JP":  &dictionary{index: ja_JPIndex, data: ja_JPData},
+		"hi":     &dictionary{index: hiIndex, data: hiData},
+		"ja":     &dictionary{index: jaIndex, data: jaData},
 		"pt_BR":  &dictionary{index: pt_BRIndex, data: pt_BRData},
-		"ru_RU":  &dictionary{index: ru_RUIndex, data: ru_RUData},
+		"ru":     &dictionary{index: ruIndex, data: ruData},
 		"zh_CN":  &dictionary{index: zh_CNIndex, data: zh_CNData},
 		"zh_TW":  &dictionary{index: zh_TWIndex, data: zh_TWData},
 	}
@@ -103,27 +103,27 @@ const es_419Data string = "" + // Size: 277 bytes
 	"\x02Inserta emojis usando códigos cortos entre dos puntos (:mushroom: se" +
 	" convierte en 🍄).\x02Código QR de la URL\x02Cerrar"
 
-var hi_INIndex = []uint32{ // 13 elements
+var hiIndex = []uint32{ // 13 elements
 	0x00000000, 0x00000019, 0x0000002e, 0x00000044,
 	0x00000060, 0x00000089, 0x00000096, 0x000000a9,
 	0x000000eb, 0x00000114, 0x000001ae, 0x000001cf,
 	0x000001e6,
 } // Size: 76 bytes
 
-const hi_INData string = "" + // Size: 486 bytes
+const hiData string = "" + // Size: 486 bytes
 	"\x02%[1]s द्वारा\x02(%[1]d जवाब)\x02पृष्ठ %[1]d\x02सुपरयूज़र\x02मूल पोस्" +
 	"टकर्ता\x02जवाब\x02शीर्षक\x02लेखक#ट्रिपकोड-गुप्तशब्द\x02Markdown समर्थि" +
 	"त है।\x02कोलन के बीच शॉर्टकोड डालकर इमोजी जोड़ें (:mushroom: 🍄 बन जाता" +
 	" है)।\x02URL क्यूआर कोड\x02बंद करें"
 
-var ja_JPIndex = []uint32{ // 13 elements
+var jaIndex = []uint32{ // 13 elements
 	0x00000000, 0x00000015, 0x0000002c, 0x0000003b,
 	0x00000054, 0x00000064, 0x0000006b, 0x00000078,
 	0x00000095, 0x000000b9, 0x0000013a, 0x0000014c,
 	0x00000156,
 } // Size: 76 bytes
 
-const ja_JPData string = "" + // Size: 342 bytes
+const jaData string = "" + // Size: 342 bytes
 	"\x02%[1]sによる投稿\x02（返信 %[1]d 件）\x02%[1]dページ\x02スーパーユーザー\x02元の投稿者\x02返信" +
 	"\x02タイトル\x02投稿者#トリップキー\x02Markdownに対応しています。\x02コロンで囲んだショートコードを使って絵文字を入力で" +
 	"きます（:mushroom: は 🍄 になります）。\x02URLのQRコード\x02閉じる"
@@ -142,14 +142,14 @@ const pt_BRData string = "" + // Size: 264 bytes
 	"kdown.\x02Insira emojis digitando o atalho entre dois-pontos (:mushroom:" +
 	" vira 🍄).\x02QR code da URL\x02Fechar"
 
-var ru_RUIndex = []uint32{ // 13 elements
+var ruIndex = []uint32{ // 13 elements
 	0x00000000, 0x0000000b, 0x0000006c, 0x00000083,
 	0x000000a6, 0x000000ba, 0x000000cb, 0x000000de,
 	0x00000105, 0x0000012c, 0x000001ba, 0x000001c8,
 	0x000001d7,
 } // Size: 76 bytes
 
-const ru_RUData string = "" + // Size: 471 bytes
+const ruData string = "" + // Size: 471 bytes
 	"\x02от %[1]s\x14\x01\x81\x01\x00\x04\x15\x02(%[1]d ответа)\x05\x17\x02(%" +
 	"[1]d ответов)\x02\x13\x02(%[1]d ответ)\x00\x15\x02(%[1]d ответа)\x02стра" +
 	"ница %[1]d\x02Суперпользователь\x02Автор темы\x02Ответить\x02Заголовок" +
