@@ -37,4 +37,4 @@ require (
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )
 
-replace github.com/kyokomi/emoji/v2 => github.com/mmb/kyokomiemoji/v2 v2.0.0-20250405050457-8f6070a155ee
+replace github.com/kyokomi/emoji/v2 => github.com/mmb/kyokomiemoji/v2 v2.0.0-20261018165651-9384d0403f5b
