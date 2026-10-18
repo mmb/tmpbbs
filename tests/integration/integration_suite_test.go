@@ -11,6 +11,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/chromedp/cdproto/network"
 	"github.com/chromedp/cdproto/runtime"
 	"github.com/chromedp/chromedp"
 	"github.com/chromedp/chromedp/remote"
@@ -173,6 +174,13 @@ func get(ctx context.Context, url string) string {
 	Expect(err).NotTo(HaveOccurred())
 
 	return html
+}
+
+func getWithHeaders(ctx context.Context, url string, headers network.Headers) string {
+	_, err := chromedp.Call(ctx, network.SetExtraHTTPHeaders, network.SetExtraHTTPHeadersParams{Headers: headers})
+	Expect(err).NotTo(HaveOccurred())
+
+	return get(ctx, url)
 }
 
 func mostRecentReplyURL(ctx context.Context, parentURL string) string {
