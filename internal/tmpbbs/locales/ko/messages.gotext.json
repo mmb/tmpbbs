@@ -1,0 +1,95 @@
+{
+    "language": "ko",
+    "messages": [
+        {
+            "id": "by {Author}",
+            "message": "by {Author}",
+            "translation": "{Author} 작성",
+            "placeholders": [
+                {
+                    "id": "Author",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "author"
+                }
+            ]
+        },
+        {
+            "id": "({Len} replies)",
+            "message": "({Len} replies)",
+            "translation": "(답글 {Len}개)",
+            "placeholders": [
+                {
+                    "id": "Len",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "dp.Replies.Len()"
+                }
+            ]
+        },
+        {
+            "id": "page {Page}",
+            "message": "page {Page}",
+            "translation": "{Page}페이지",
+            "placeholders": [
+                {
+                    "id": "Page",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "page"
+                }
+            ]
+        },
+        {
+            "id": "Superuser",
+            "message": "Superuser",
+            "translation": "슈퍼유저"
+        },
+        {
+            "id": "Original Poster",
+            "message": "Original Poster",
+            "translation": "글쓴이"
+        },
+        {
+            "id": "Reply",
+            "message": "Reply",
+            "translation": "답글"
+        },
+        {
+            "id": "Title",
+            "message": "Title",
+            "translation": "제목"
+        },
+        {
+            "id": "Author#tripcode-secret",
+            "message": "Author#tripcode-secret",
+            "translation": "작성자#트립코드-비밀"
+        },
+        {
+            "id": "Markdown is supported.",
+            "message": "Markdown is supported.",
+            "translation": "마크다운을 사용할 수 있습니다."
+        },
+        {
+            "id": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "message": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "translation": "콜론 사이에 숏코드를 입력해 이모지를 넣을 수 있습니다 (:mushroom:은 🍄로 바뀝니다)."
+        },
+        {
+            "id": "URL QR Code",
+            "message": "URL QR Code",
+            "translation": "URL QR 코드"
+        },
+        {
+            "id": "Close",
+            "message": "Close",
+            "translation": "닫기"
+        }
+    ]
+}

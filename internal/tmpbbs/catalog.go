@@ -32,6 +32,7 @@ func init() {
 		"es_419": &dictionary{index: es_419Index, data: es_419Data},
 		"hi":     &dictionary{index: hiIndex, data: hiData},
 		"ja":     &dictionary{index: jaIndex, data: jaData},
+		"ko":     &dictionary{index: koIndex, data: koData},
 		"pt_BR":  &dictionary{index: pt_BRIndex, data: pt_BRData},
 		"ru":     &dictionary{index: ruIndex, data: ruData},
 		"tr":     &dictionary{index: trIndex, data: trData},
@@ -129,6 +130,18 @@ const jaData string = "" + // Size: 342 bytes
 	"\x02タイトル\x02投稿者#トリップキー\x02Markdownに対応しています。\x02コロンで囲んだショートコードを使って絵文字を入力で" +
 	"きます（:mushroom: は 🍄 になります）。\x02URLのQRコード\x02閉じる"
 
+var koIndex = []uint32{ // 13 elements
+	0x00000000, 0x0000000d, 0x0000001f, 0x0000002e,
+	0x0000003b, 0x00000045, 0x0000004c, 0x00000053,
+	0x00000071, 0x0000009d, 0x00000110, 0x0000011e,
+	0x00000125,
+} // Size: 76 bytes
+
+const koData string = "" + // Size: 293 bytes
+	"\x02%[1]s 작성\x02(답글 %[1]d개)\x02%[1]d페이지\x02슈퍼유저\x02글쓴이\x02답글\x02제목\x02작성" +
+	"자#트립코드-비밀\x02마크다운을 사용할 수 있습니다.\x02콜론 사이에 숏코드를 입력해 이모지를 넣을 수 있습니다 (:mus" +
+	"hroom:은 🍄로 바뀝니다).\x02URL QR 코드\x02닫기"
+
 var pt_BRIndex = []uint32{ // 13 elements
 	0x00000000, 0x0000000a, 0x00000036, 0x00000044,
 	0x00000052, 0x00000063, 0x0000006d, 0x00000075,
@@ -195,4 +208,4 @@ const zh_TWData string = "" + // Size: 244 bytes
 	"\x02作者#暗號密鑰\x02支援 Markdown 語法。\x02在冒號之間輸入短代碼即可插入表情符號(:mushroom: 會變成 🍄)。" +
 	"\x02URL QR Code\x02關閉"
 
-	// Total table size 4003 bytes (3KiB); checksum: 592604AD
+	// Total table size 4372 bytes (4KiB); checksum: 831C8027
