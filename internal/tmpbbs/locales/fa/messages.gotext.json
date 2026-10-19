@@ -1,0 +1,95 @@
+{
+    "language": "fa",
+    "messages": [
+        {
+            "id": "by {Author}",
+            "message": "by {Author}",
+            "translation": "توسط {Author}",
+            "placeholders": [
+                {
+                    "id": "Author",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "author"
+                }
+            ]
+        },
+        {
+            "id": "({Len} replies)",
+            "message": "({Len} replies)",
+            "translation": "({Len} پاسخ)",
+            "placeholders": [
+                {
+                    "id": "Len",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "dp.Replies.Len()"
+                }
+            ]
+        },
+        {
+            "id": "page {Page}",
+            "message": "page {Page}",
+            "translation": "صفحه {Page}",
+            "placeholders": [
+                {
+                    "id": "Page",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "page"
+                }
+            ]
+        },
+        {
+            "id": "Superuser",
+            "message": "Superuser",
+            "translation": "ابرکاربر"
+        },
+        {
+            "id": "Original Poster",
+            "message": "Original Poster",
+            "translation": "نویسندهٔ اصلی"
+        },
+        {
+            "id": "Reply",
+            "message": "Reply",
+            "translation": "پاسخ"
+        },
+        {
+            "id": "Title",
+            "message": "Title",
+            "translation": "عنوان"
+        },
+        {
+            "id": "Author#tripcode-secret",
+            "message": "Author#tripcode-secret",
+            "translation": "نویسنده#رمز-تریپ‌کد"
+        },
+        {
+            "id": "Markdown is supported.",
+            "message": "Markdown is supported.",
+            "translation": "مارک‌داون پشتیبانی می‌شود."
+        },
+        {
+            "id": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "message": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "translation": "برای درج ایموجی، کد کوتاه آن را میان دو علامت دونقطه بنویسید (\u2066:mushroom:\u2069 به 🍄 تبدیل می‌شود)."
+        },
+        {
+            "id": "URL QR Code",
+            "message": "URL QR Code",
+            "translation": "کد QR نشانی اینترنتی"
+        },
+        {
+            "id": "Close",
+            "message": "Close",
+            "translation": "بستن"
+        }
+    ]
+}
