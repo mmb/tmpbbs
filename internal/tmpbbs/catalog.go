@@ -30,6 +30,7 @@ func init() {
 		"ar":     &dictionary{index: arIndex, data: arData},
 		"en_US":  &dictionary{index: en_USIndex, data: en_USData},
 		"es_419": &dictionary{index: es_419Index, data: es_419Data},
+		"fa":     &dictionary{index: faIndex, data: faData},
 		"hi":     &dictionary{index: hiIndex, data: hiData},
 		"ja":     &dictionary{index: jaIndex, data: jaData},
 		"ko":     &dictionary{index: koIndex, data: koData},
@@ -104,6 +105,20 @@ const es_419Data string = "" + // Size: 277 bytes
 	"\x02Responder\x02Título\x02Autor#tripcode-secreto\x02Se admite Markdown." +
 	"\x02Inserta emojis usando códigos cortos entre dos puntos (:mushroom: se" +
 	" convierte en 🍄).\x02Código QR de la URL\x02Cerrar"
+
+var faIndex = []uint32{ // 13 elements
+	0x00000000, 0x0000000f, 0x00000020, 0x0000002f,
+	0x00000040, 0x0000005a, 0x00000063, 0x0000006e,
+	0x00000094, 0x000000c8, 0x0000016d, 0x00000191,
+	0x0000019a,
+} // Size: 76 bytes
+
+const faData string = "" + // Size: 410 bytes
+	"\x02توسط %[1]s\x02(%[1]d پاسخ)\x02صفحه %[1]d\x02ابرکاربر\x02نویسندهٔ اصل" +
+	"ی\x02پاسخ\x02عنوان\x02نویسنده#رمز-تریپ\u200cکد\x02مارک\u200cداون پشتیبا" +
+	"نی می\u200cشود.\x02برای درج ایموجی، کد کوتاه آن را میان دو علامت دونقطه" +
+	" بنویسید (\u2066:mushroom:\u2069 به 🍄 تبدیل می\u200cشود).\x02کد QR نشانی" +
+	" اینترنتی\x02بستن"
 
 var hiIndex = []uint32{ // 13 elements
 	0x00000000, 0x00000019, 0x0000002e, 0x00000044,
@@ -208,4 +223,4 @@ const zh_TWData string = "" + // Size: 244 bytes
 	"\x02作者#暗號密鑰\x02支援 Markdown 語法。\x02在冒號之間輸入短代碼即可插入表情符號(:mushroom: 會變成 🍄)。" +
 	"\x02URL QR Code\x02關閉"
 
-	// Total table size 4372 bytes (4KiB); checksum: 831C8027
+	// Total table size 4858 bytes (4KiB); checksum: C343AF8C
