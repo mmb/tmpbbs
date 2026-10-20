@@ -5,11 +5,12 @@ go 1.27
 toolchain go1.27.2
 
 require (
-	github.com/chromedp/cdproto v0.157.11
+	github.com/chromedp/cdproto v0.158.1
 	github.com/chromedp/chromedp v0.20.1
 	github.com/chromedp/chromedp/remote v0.2.0
 	github.com/onsi/ginkgo/v2 v2.33.1
 	github.com/onsi/gomega v1.44.0
+	golang.org/x/text v0.43.0
 )
 
 require (
@@ -27,7 +28,6 @@ require (
 	golang.org/x/net v0.61.0 // indirect
 	golang.org/x/sync v0.24.0 // indirect
 	golang.org/x/sys v0.49.0 // indirect
-	golang.org/x/text v0.43.0 // indirect
 	golang.org/x/tools v0.51.0 // indirect
 )
 
