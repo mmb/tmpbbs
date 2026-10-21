@@ -26,7 +26,7 @@ var _ = Describe("language", func() {
 			dir := "ltr"
 
 			script, _ := language.MustParse(lang).Script()
-			if script.String() == "Arab" {
+			if script.String() == "Arab" || script.String() == "Hebr" {
 				dir = "rtl"
 			}
 

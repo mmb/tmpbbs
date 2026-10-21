@@ -1,0 +1,106 @@
+{
+    "language": "he",
+    "messages": [
+        {
+            "id": "by {Author}",
+            "message": "by {Author}",
+            "translation": "מאת {Author}",
+            "placeholders": [
+                {
+                    "id": "Author",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "author"
+                }
+            ]
+        },
+        {
+            "id": "({Len} replies)",
+            "message": "({Len} replies)",
+            "translation": {
+                "select": {
+                    "feature": "plural",
+                    "arg": "Len",
+                    "cases": {
+                        "one": { "msg": "(תגובה אחת)" },
+                        "two": { "msg": "(שתי תגובות)" },
+                        "many": { "msg": "({Len} תגובות)" },
+                        "other": { "msg": "({Len} תגובות)" }
+                    }
+                }
+            },
+            "placeholders": [
+                {
+                    "id": "Len",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "dp.Replies.Len()"
+                }
+            ]
+        },
+        {
+            "id": "page {Page}",
+            "message": "page {Page}",
+            "translation": "עמוד {Page}",
+            "placeholders": [
+                {
+                    "id": "Page",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "page"
+                }
+            ]
+        },
+        {
+            "id": "Superuser",
+            "message": "Superuser",
+            "translation": "משתמש-על"
+        },
+        {
+            "id": "Original Poster",
+            "message": "Original Poster",
+            "translation": "פותח השרשור"
+        },
+        {
+            "id": "Reply",
+            "message": "Reply",
+            "translation": "הגב"
+        },
+        {
+            "id": "Title",
+            "message": "Title",
+            "translation": "כותרת"
+        },
+        {
+            "id": "Author#tripcode-secret",
+            "message": "Author#tripcode-secret",
+            "translation": "כותב#סוד-טריפקוד"
+        },
+        {
+            "id": "Markdown is supported.",
+            "message": "Markdown is supported.",
+            "translation": "ניתן להשתמש ב-Markdown."
+        },
+        {
+            "id": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "message": "Insert emoji using shortcode between colons (:mushroom: becomes 🍄).",
+            "translation": "ניתן להוסיף אימוג׳י באמצעות קוד קצר בין נקודתיים (\u2066:mushroom:\u2069 הופך ל-🍄)."
+        },
+        {
+            "id": "URL QR Code",
+            "message": "URL QR Code",
+            "translation": "קוד QR של הכתובת"
+        },
+        {
+            "id": "Close",
+            "message": "Close",
+            "translation": "סגור"
+        }
+    ]
+}
