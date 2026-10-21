@@ -86,7 +86,7 @@ func (dp *displayPost) DisplayTitle() template.HTML {
 func (dp *displayPost) LanguageDirection() string {
 	script, _ := dp.Language.Script()
 	switch script.String() {
-	case "Arab":
+	case "Arab", "Hebr":
 		return "rtl"
 	default:
 		return "ltr"

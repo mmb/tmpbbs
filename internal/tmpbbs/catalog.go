@@ -31,6 +31,7 @@ func init() {
 		"en_US":  &dictionary{index: en_USIndex, data: en_USData},
 		"es_419": &dictionary{index: es_419Index, data: es_419Data},
 		"fa":     &dictionary{index: faIndex, data: faData},
+		"he":     &dictionary{index: heIndex, data: heData},
 		"hi":     &dictionary{index: hiIndex, data: hiData},
 		"ja":     &dictionary{index: jaIndex, data: jaData},
 		"ko":     &dictionary{index: koIndex, data: koData},
@@ -119,6 +120,20 @@ const faData string = "" + // Size: 410 bytes
 	"نی می\u200cشود.\x02برای درج ایموجی، کد کوتاه آن را میان دو علامت دونقطه" +
 	" بنویسید (\u2066:mushroom:\u2069 به 🍄 تبدیل می\u200cشود).\x02کد QR نشانی" +
 	" اینترنتی\x02بستن"
+
+var heIndex = []uint32{ // 13 elements
+	0x00000000, 0x0000000d, 0x0000006e, 0x0000007d,
+	0x0000008d, 0x000000a3, 0x000000aa, 0x000000b5,
+	0x000000d4, 0x000000f7, 0x00000176, 0x00000192,
+	0x0000019b,
+} // Size: 76 bytes
+
+const heData string = "" + // Size: 411 bytes
+	"\x02מאת %[1]s\x14\x01\x81\x01\x00\x05\x15\x02(%[1]d תגובות)\x02\x14\x02(" +
+	"תגובה אחת)\x03\x16\x02(שתי תגובות)\x00\x15\x02(%[1]d תגובות)\x02עמוד %[" +
+	"1]d\x02משתמש-על\x02פותח השרשור\x02הגב\x02כותרת\x02כותב#סוד-טריפקוד\x02ני" +
+	"תן להשתמש ב-Markdown.\x02ניתן להוסיף אימוג׳י באמצעות קוד קצר בין נקודתי" +
+	"ים (\u2066:mushroom:\u2069 הופך ל-🍄).\x02קוד QR של הכתובת\x02סגור"
 
 var hiIndex = []uint32{ // 13 elements
 	0x00000000, 0x00000019, 0x0000002e, 0x00000044,
@@ -223,4 +238,4 @@ const zh_TWData string = "" + // Size: 244 bytes
 	"\x02作者#暗號密鑰\x02支援 Markdown 語法。\x02在冒號之間輸入短代碼即可插入表情符號(:mushroom: 會變成 🍄)。" +
 	"\x02URL QR Code\x02關閉"
 
-	// Total table size 4858 bytes (4KiB); checksum: C343AF8C
+	// Total table size 5345 bytes (5KiB); checksum: F15D5F1C
