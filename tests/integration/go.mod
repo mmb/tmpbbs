@@ -2,7 +2,7 @@ module github.com/mmb/tmpbbs/tests/integration
 
 go 1.27
 
-toolchain go1.27.2
+toolchain go1.27.3
 
 require (
 	github.com/chromedp/cdproto v0.158.2
