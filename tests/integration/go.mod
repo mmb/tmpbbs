@@ -5,7 +5,7 @@ go 1.27
 toolchain go1.27.3
 
 require (
-	github.com/chromedp/cdproto v0.158.2
+	github.com/chromedp/cdproto v0.158.3
 	github.com/chromedp/chromedp v0.20.1
 	github.com/chromedp/chromedp/remote v0.2.0
 	github.com/onsi/ginkgo/v2 v2.33.1
