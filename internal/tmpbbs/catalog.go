@@ -31,6 +31,7 @@ func init() {
 		"en_US":  &dictionary{index: en_USIndex, data: en_USData},
 		"es_419": &dictionary{index: es_419Index, data: es_419Data},
 		"fa":     &dictionary{index: faIndex, data: faData},
+		"fr_FR":  &dictionary{index: fr_FRIndex, data: fr_FRData},
 		"he":     &dictionary{index: heIndex, data: heData},
 		"hi":     &dictionary{index: hiIndex, data: hiData},
 		"ja":     &dictionary{index: jaIndex, data: jaData},
@@ -120,6 +121,20 @@ const faData string = "" + // Size: 410 bytes
 	"نی می\u200cشود.\x02برای درج ایموجی، کد کوتاه آن را میان دو علامت دونقطه" +
 	" بنویسید (\u2066:mushroom:\u2069 به 🍄 تبدیل می\u200cشود).\x02کد QR نشانی" +
 	" اینترنتی\x02بستن"
+
+var fr_FRIndex = []uint32{ // 13 elements
+	0x00000000, 0x0000000a, 0x00000036, 0x00000041,
+	0x00000052, 0x00000062, 0x0000006c, 0x00000072,
+	0x00000089, 0x000000a6, 0x00000100, 0x00000111,
+	0x00000118,
+} // Size: 76 bytes
+
+const fr_FRData string = "" + // Size: 280 bytes
+	"\x02par %[1]s\x14\x01\x81\x01\x00\x02\x11\x02(%[1]d réponse)\x00\x12\x02" +
+	"(%[1]d réponses)\x02page %[1]d\x02Superutilisateur\x02Auteur original" +
+	"\x02Répondre\x02Titre\x02Auteur#secret-tripcode\x02Markdown est pris en " +
+	"charge.\x02Insérez un émoji à l'aide d'un code court entre deux-points (" +
+	":mushroom: devient 🍄).\x02QR code de l'URL\x02Fermer"
 
 var heIndex = []uint32{ // 13 elements
 	0x00000000, 0x0000000d, 0x0000006e, 0x0000007d,
@@ -238,4 +253,4 @@ const zh_TWData string = "" + // Size: 244 bytes
 	"\x02作者#暗號密鑰\x02支援 Markdown 語法。\x02在冒號之間輸入短代碼即可插入表情符號(:mushroom: 會變成 🍄)。" +
 	"\x02URL QR Code\x02關閉"
 
-	// Total table size 5345 bytes (5KiB); checksum: F15D5F1C
+	// Total table size 5701 bytes (5KiB); checksum: 78528A7
