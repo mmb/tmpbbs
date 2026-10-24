@@ -1,2 +1,6 @@
 [files]
-extend-exclude = ["go.mod", "internal/tmpbbs/locales/*/messages.gotext.json"]
+extend-exclude = [
+    "go.mod",
+    "internal/tmpbbs/catalog.go",
+    "internal/tmpbbs/locales/*/messages.gotext.json",
+]
