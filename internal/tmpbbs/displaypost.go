@@ -102,15 +102,16 @@ func (dp *displayPost) NumReplies() string {
 	return dp.Printer.Sprintf("(%d replies)", dp.Replies.Len())
 }
 
-// PageTitle returns the HTML title for the post's page.
-func (dp *displayPost) PageTitle() string {
+// PageTitle returns a [template.HTML] containing the page title for the post's
+// page.
+func (dp *displayPost) PageTitle() template.HTML {
 	title := dp.sanitizeAndExpandEmoji(dp.Title, dp.basicEmojiParser)
 
 	if title == "" {
-		return dp.emptyTitle()
+		title = dp.emptyTitle()
 	}
 
-	return title
+	return template.HTML(title) // #nosec G203 -- either sanitized above or no user input if empty
 }
 
 // ParentDisplayPost returns the displayPost of the post's parent.
