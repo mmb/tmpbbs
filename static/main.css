@@ -80,7 +80,3 @@ ul.post:has(> li > p > .emoji:only-child) > li > p > .emoji {
 img {
   max-width: 100%;
 }
-
-#show-qr {
-  display: none;
-}
