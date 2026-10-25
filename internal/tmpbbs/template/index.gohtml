@@ -89,7 +89,7 @@
 </li>
 </ul>
 {{- if .qrCodesEnabled }}
-<button id="show-qr" title="{{ .post.Printer.Sprintf "URL QR Code" }}">🔳📲</button>
+<button id="show-qr" hidden title="{{ .post.Printer.Sprintf "URL QR Code" }}">🔳📲</button>
 <dialog id="qr">
 <form method="dialog">
 <button autofocus>{{ .post.Printer.Sprintf "Close" }}</button>
