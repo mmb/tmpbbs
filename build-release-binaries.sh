@@ -16,25 +16,25 @@ BUILD_ARGS=(-ldflags "-s -w -X main.version=$VERSION -X main.commit=$COMMIT -X m
 build() {
   export GOOS=$1 GOARCH=$2
 
-  go build "${BUILD_ARGS[@]}" -o "$RELEASE_DIR/tmpbbs-$VERSION-$GOOS-$GOARCH"
+  go build "${BUILD_ARGS[@]}" -o "$RELEASE_DIR/tmpbbs-$VERSION-$GOOS-$GOARCH$(go env GOEXE)"
 }
 
 build_386() {
   export GOOS=$1 GOARCH=386 GO386=$2
 
-  go build "${BUILD_ARGS[@]}" -o "$RELEASE_DIR/tmpbbs-$VERSION-$GOOS-$GOARCH-$GO386"
+  go build "${BUILD_ARGS[@]}" -o "$RELEASE_DIR/tmpbbs-$VERSION-$GOOS-$GOARCH-$GO386$(go env GOEXE)"
 }
 
 build_arm() {
   export GOOS=$1 GOARCH=arm GOARM=$2
 
-  go build "${BUILD_ARGS[@]}" -o "$RELEASE_DIR/tmpbbs-$VERSION-$GOOS-$GOARCH-$GOARM"
+  go build "${BUILD_ARGS[@]}" -o "$RELEASE_DIR/tmpbbs-$VERSION-$GOOS-$GOARCH-$GOARM$(go env GOEXE)"
 }
 
 build_mips() {
-  export GOOS=$1 GOARCH=$2 GOMIPS=$3
+  export GOOS=$1 GOARCH=$2 GOMIPS=$3 GOMIPS64=$3
 
-  go build "${BUILD_ARGS[@]}" -o "$RELEASE_DIR/tmpbbs-$VERSION-$GOOS-$GOARCH-$GOMIPS"
+  go build "${BUILD_ARGS[@]}" -o "$RELEASE_DIR/tmpbbs-$VERSION-$GOOS-$GOARCH-$GOMIPS$(go env GOEXE)"
 }
 
 build android arm64
