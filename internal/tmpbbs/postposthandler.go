@@ -2,6 +2,7 @@ package tmpbbs
 
 import (
 	"cmp"
+	"errors"
 	"net/http"
 	"strings"
 )
@@ -25,13 +26,6 @@ func newPostPostHandler(postStore *PostStore, tripcoder *Tripcoder) *postPostHan
 
 // ServeHTTP creates new posts and redirects to the top of the parent's replies.
 func (pph *postPostHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
-	parentID := cmp.Or(crockfordNormalize(request.PathValue("parentID")), pph.postStore.rootID)
-	if !pph.postStore.hasPost(parentID) {
-		http.NotFound(responseWriter, request)
-
-		return
-	}
-
 	request.Body = http.MaxBytesReader(responseWriter, request.Body, maxRequestBodyBytes)
 
 	err := request.ParseForm()
@@ -42,13 +36,18 @@ func (pph *postPostHandler) ServeHTTP(responseWriter http.ResponseWriter, reques
 	}
 
 	post := newPost(request.FormValue("title"), request.FormValue("author"), request.FormValue("body"), pph.tripcoder)
-	if errors := post.validate(); len(errors) > 0 {
-		http.Error(responseWriter, strings.Join(errors, "\n"), http.StatusBadRequest)
+	if validationErrors := post.validate(); len(validationErrors) > 0 {
+		http.Error(responseWriter, strings.Join(validationErrors, "\n"), http.StatusBadRequest)
 
 		return
 	}
 
-	pph.postStore.put(post, parentID)
+	parentID := cmp.Or(crockfordNormalize(request.PathValue("parentID")), pph.postStore.rootID)
+	if errors.Is(pph.postStore.put(post, parentID), errParentNotFound) {
+		http.NotFound(responseWriter, request)
+
+		return
+	}
 
 	http.Redirect(responseWriter, request, post.Parent.repliesPageURL(1, "replies-start"), http.StatusSeeOther)
 }

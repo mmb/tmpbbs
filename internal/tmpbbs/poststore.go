@@ -3,6 +3,7 @@ package tmpbbs
 import (
 	"container/list"
 	"context"
+	"errors"
 	"log/slog"
 	"os"
 	"strings"
@@ -24,6 +25,8 @@ type PostStore struct {
 	mutex         sync.RWMutex
 }
 
+var errParentNotFound = errors.New("parent post not found")
+
 // NewPostStore returns a new PostStore. It also creates the root Post.
 func NewPostStore(title string, pruneInterval time.Duration, pruneMaxAge time.Duration) *PostStore {
 	rootPost := newPost(title, "", "", nil)
@@ -35,7 +38,8 @@ func NewPostStore(title string, pruneInterval time.Duration, pruneMaxAge time.Du
 		rootID:        rootPost.id,
 		rootPost:      rootPost,
 	}
-	postStore.put(rootPost, "")
+	rootPost.postsElement = postStore.posts.PushBack(rootPost)
+	postStore.idMap[rootPost.id] = rootPost.postsElement
 
 	if pruneInterval > 0 {
 		go postStore.startPruner()
@@ -58,8 +62,12 @@ func (ps *PostStore) LoadYAML(path string, tripcoder *Tripcoder) error {
 		return yamlErr
 	}
 
+	var putErr error
 	for i := range posts {
-		ps.put(newPost(posts[i].Title, posts[i].Author, posts[i].Body, tripcoder), ps.rootID)
+		putErr = ps.put(newPost(posts[i].Title, posts[i].Author, posts[i].Body, tripcoder), ps.rootID)
+		if putErr != nil {
+			return putErr
+		}
 	}
 
 	return nil
@@ -133,15 +141,6 @@ func (ps *PostStore) getSince(postID string, maxPosts int) []*post {
 	return result
 }
 
-func (ps *PostStore) hasPost(postID string) bool {
-	ps.mutex.RLock()
-	defer ps.mutex.RUnlock()
-
-	_, found := ps.idMap[postID]
-
-	return found
-}
-
 func (ps *PostStore) prune(ctx context.Context) {
 	slog.InfoContext(ctx, "prune start")
 
@@ -167,23 +166,30 @@ func (ps *PostStore) prune(ctx context.Context) {
 	slog.InfoContext(ctx, "prune end", "prunedCount", beforeCount-afterCount)
 }
 
-func (ps *PostStore) put(post *post, parentID string) {
+func (ps *PostStore) put(post *post, parentID string) error {
 	ps.mutex.Lock()
 	defer ps.mutex.Unlock()
 
-	if post.Parent = ps.getPostByID(parentID); post.Parent != nil {
-		post.parentRepliesElement = post.Parent.Replies.PushFront(post)
+	if _, exists := ps.idMap[post.id]; exists {
+		return nil
 	}
 
+	if post.Parent = ps.getPostByID(parentID); post.Parent == nil {
+		return errParentNotFound
+	}
+
+	post.parentRepliesElement = post.Parent.Replies.PushFront(post)
 	post.postsElement = ps.posts.PushBack(post)
 	ps.idMap[post.id] = post.postsElement
 
-	if (post.IsOriginalPoster() || post.IsSuperuser()) && strings.HasPrefix(post.Body, "!delete") && post.Parent != nil &&
+	if (post.IsOriginalPoster() || post.IsSuperuser()) && strings.HasPrefix(post.Body, "!delete") &&
 		post.Parent != ps.rootPost {
 		post.Parent.delete()
 	}
 
 	post.bump()
+
+	return nil
 }
 
 func (ps *PostStore) startPruner() {
