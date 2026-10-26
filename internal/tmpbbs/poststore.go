@@ -73,16 +73,14 @@ func (ps *PostStore) LoadYAML(path string, tripcoder *Tripcoder) error {
 
 // delete removes all references to a post from the PostStore.
 // Write lock must be obtained before calling.
-func (ps *PostStore) delete(ctx context.Context, postToDelete *post) {
+func (ps *PostStore) delete(postToDelete *post) {
 	_, found := ps.idMap[postToDelete.id]
 	if !found {
 		return
 	}
 
-	slog.InfoContext(ctx, "delete post", "id", postToDelete.id)
-
 	for reply := postToDelete.Replies.Front(); reply != nil; reply = reply.Next() {
-		ps.delete(ctx, reply.Value.(*post)) //nolint:errcheck,forcetypeassert // only one type
+		ps.delete(reply.Value.(*post)) //nolint:errcheck,forcetypeassert // only one type
 	}
 
 	postToDelete.Parent.Replies.Remove(postToDelete.parentRepliesElement)
@@ -145,10 +143,8 @@ func (ps *PostStore) prune(ctx context.Context) {
 	var deletePosts []*post
 
 	ps.mutex.Lock()
-	defer ps.mutex.Unlock()
 
 	beforeCount := ps.posts.Len()
-
 	for element := ps.posts.Front().Next(); element != nil; element = element.Next() {
 		checkPost := element.Value.(*post) //nolint:errcheck,forcetypeassert // only one type
 		if time.Since(checkPost.lastUpdate()) > ps.pruneMaxAge {
@@ -157,10 +153,12 @@ func (ps *PostStore) prune(ctx context.Context) {
 	}
 
 	for _, p := range deletePosts {
-		ps.delete(ctx, p)
+		ps.delete(p)
 	}
 
 	afterCount := ps.posts.Len()
+	ps.mutex.Unlock()
+
 	slog.InfoContext(ctx, "prune end", "prunedCount", beforeCount-afterCount)
 }
 
