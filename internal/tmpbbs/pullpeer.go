@@ -162,7 +162,7 @@ func (pp *pullPeer) sync(ctx context.Context) int {
 		parentID := protoPost.GetParentId()
 		// If the parent is the peer's root, add it to our root
 		if parentID == pp.rootID {
-			parentID = pp.postStore.rootID
+			parentID = pp.postStore.rootPost.id
 		}
 
 		if errors.Is(pp.postStore.put(post, parentID), errParentNotFound) {
