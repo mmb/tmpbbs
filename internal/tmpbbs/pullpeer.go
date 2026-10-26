@@ -148,12 +148,6 @@ func (pp *pullPeer) sync(ctx context.Context) int {
 
 			continue
 		}
-		// We already have this post, do not add
-		if pp.postStore.hasPost(protoPost.GetId()) {
-			pp.lastIDSynced = protoPost.GetId()
-
-			continue
-		}
 
 		post := &post{
 			Title:     protoPost.GetTitle(),
@@ -165,28 +159,21 @@ func (pp *pullPeer) sync(ctx context.Context) int {
 			Time:      protoPost.GetTime().AsTime(),
 			superuser: protoPost.GetSuperuser(),
 		}
-
+		parentID := protoPost.GetParentId()
 		// If the parent is the peer's root, add it to our root
-		if protoPost.GetParentId() == pp.rootID {
-			pp.postStore.put(post, pp.postStore.rootID)
-			pp.lastIDSynced = protoPost.GetId()
-
-			continue
+		if parentID == pp.rootID {
+			parentID = pp.postStore.rootID
 		}
 
-		// If we have the parent, add it to the parent
-		if pp.postStore.hasPost(protoPost.GetParentId()) {
-			pp.postStore.put(post, protoPost.GetParentId())
-			pp.lastIDSynced = protoPost.GetId()
+		if errors.Is(pp.postStore.put(post, parentID), errParentNotFound) {
+			// We don't have the parent, start a resync from the peer root.
+			pp.lastIDSynced = ""
+			pp.logger.WarnContext(ctx, "resync from root", "missingParentID", protoPost.GetParentId())
 
-			continue
+			return 0
 		}
 
-		// We don't have the parent, start a resync from the peer root.
-		pp.lastIDSynced = ""
-		pp.logger.WarnContext(ctx, "resync from root", "missingParentID", protoPost.GetParentId())
-
-		return 0
+		pp.lastIDSynced = protoPost.GetId()
 	}
 
 	return len(protoPosts)
