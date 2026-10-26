@@ -19,7 +19,6 @@ type PostStore struct {
 	idMap         map[string]*list.Element
 	posts         *list.List
 	rootPost      *post
-	rootID        string
 	pruneInterval time.Duration
 	pruneMaxAge   time.Duration
 	mutex         sync.RWMutex
@@ -35,7 +34,6 @@ func NewPostStore(title string, pruneInterval time.Duration, pruneMaxAge time.Du
 		posts:         list.New(),
 		pruneInterval: pruneInterval,
 		pruneMaxAge:   pruneMaxAge,
-		rootID:        rootPost.id,
 		rootPost:      rootPost,
 	}
 	rootPost.postsElement = postStore.posts.PushBack(rootPost)
@@ -64,7 +62,7 @@ func (ps *PostStore) LoadYAML(path string, tripcoder *Tripcoder) error {
 
 	var putErr error
 	for i := range posts {
-		putErr = ps.put(newPost(posts[i].Title, posts[i].Author, posts[i].Body, tripcoder), ps.rootID)
+		putErr = ps.put(newPost(posts[i].Title, posts[i].Author, posts[i].Body, tripcoder), ps.rootPost.id)
 		if putErr != nil {
 			return putErr
 		}

@@ -42,7 +42,7 @@ func (pph *postPostHandler) ServeHTTP(responseWriter http.ResponseWriter, reques
 		return
 	}
 
-	parentID := cmp.Or(crockfordNormalize(request.PathValue("parentID")), pph.postStore.rootID)
+	parentID := cmp.Or(crockfordNormalize(request.PathValue("parentID")), pph.postStore.rootPost.id)
 	if errors.Is(pph.postStore.put(post, parentID), errParentNotFound) {
 		http.NotFound(responseWriter, request)
 
