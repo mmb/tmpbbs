@@ -2,6 +2,7 @@ package tmpbbs
 
 import (
 	"errors"
+	"fmt"
 	"log/slog"
 	"strings"
 	"time"
@@ -13,6 +14,11 @@ import (
 // LoggedViperSettings makes a map[string]any satisfy the slog LogValuer
 // interface.
 type LoggedViperSettings map[string]any
+
+const defaultPullInterval = 30 * time.Second
+
+// ErrPullIntervalTooShort is caused by pull-interval being too short.
+var ErrPullIntervalTooShort = errors.New("pull-interval is too short")
 
 // ErrRepliesPerPageInvalid is caused by replies-per-page being an integer less
 // than 1.
@@ -106,8 +112,7 @@ func initFlags() {
 		"how often to check for stale posts to prune ($TMPBBS_PRUNE_INTERVAL)")
 	pflag.DurationP("prune-max-age", "w", 30*24*time.Hour,
 		"delete posts that haven't been updated in this long ($TMPBBS_PRUNE_MAX_AGE)")
-	pflag.DurationP("pull-interval", "i", 30*time.Second, //nolint:mnd // default
-		"peer pull interval ($TMPBBS_PULL_INTERVAL)")
+	pflag.DurationP("pull-interval", "i", defaultPullInterval, "peer pull interval ($TMPBBS_PULL_INTERVAL)")
 	pflag.StringSliceP("pull-peers", "d", []string{},
 		"comma-separated list of tmpbbs gRPC <tls://>host:gRPCport to pull posts from ($TMPBBS_PULL_PEERS)")
 	pflag.BoolP("qr-codes", "q", true, "enable shareable URL QR codes ($TMPBBS_QR_CODES)")
@@ -129,6 +134,10 @@ func initFlags() {
 
 func validateViper(vipr *viper.Viper) error {
 	var errs []error
+
+	if vipr.GetDuration("pull-interval") < defaultPullInterval {
+		errs = append(errs, fmt.Errorf("%w: must be at least %s", ErrPullIntervalTooShort, defaultPullInterval))
+	}
 
 	if vipr.GetInt("replies-per-page") < 1 {
 		errs = append(errs, ErrRepliesPerPageInvalid)
