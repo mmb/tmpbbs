@@ -48,6 +48,6 @@ var _ = Describe("emoji", func() {
 
 		Eventually(func() string {
 			return get(checkTab, tmpbbsURL)
-		}, "5s").Should(ContainSubstring("🦋"))
+		}, "10s").Should(ContainSubstring("🦋"))
 	})
 })

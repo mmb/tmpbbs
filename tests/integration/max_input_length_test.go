@@ -117,6 +117,8 @@ var _ = Describe("maximum input length", func() {
 			},
 			Entry("ASCII characters", strings.Repeat("A", 8193), strings.Repeat("A", 8192)),
 			Entry("CJK characters", strings.Repeat("字", 8193), strings.Repeat("字", 8192)),
-			Entry("4-byte emoji", strings.Repeat("😀", 4097), strings.Repeat("😀", 4096)))
+			Entry("4-byte emoji", strings.Repeat("😀", 4097), strings.Repeat("😀", 4096)),
+			Entry("newline conversion", strings.Repeat("\n", 8180)+"end newlines", "end newlines"),
+		)
 	})
 })
