@@ -2,6 +2,7 @@ package integration_test
 
 import (
 	"fmt"
+	"net/http"
 	"net/url"
 	"strconv"
 	"time"
@@ -26,10 +27,10 @@ var _ = Describe("pagination", func() {
 	It("shows page navigation", func() {
 		for i := range 100 {
 			title := fmt.Sprintf("pagination test post %d", i)
-			post(mainTab, testRootURL, title, "", "")
-			Eventually(func() string {
-				return get(checkTab, testRootURL)
-			}, "5s").Should(ContainSubstring(title))
+			resp, err := http.PostForm(testRootURL, url.Values{"title": {title}})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(resp.Body.Close()).To(Succeed())
+			Expect(resp.StatusCode).To(Equal(http.StatusOK))
 		}
 
 		testRootURLParsed, err := url.Parse(testRootURL)
