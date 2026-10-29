@@ -35,7 +35,10 @@ func (pph *postPostHandler) ServeHTTP(responseWriter http.ResponseWriter, reques
 		return
 	}
 
-	post := newPost(request.FormValue("title"), request.FormValue("author"), request.FormValue("body"), pph.tripcoder)
+	// Newlines are counted as one character by browser field length limits but converted to \r\n so the server length
+	// limit checks see them as two characters.
+	post := newPost(request.FormValue("title"), request.FormValue("author"),
+		strings.ReplaceAll(request.FormValue("body"), "\r\n", "\n"), pph.tripcoder)
 	if validationErrors := post.validate(); len(validationErrors) > 0 {
 		http.Error(responseWriter, strings.Join(validationErrors, "\n"), http.StatusBadRequest)
 
