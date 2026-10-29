@@ -14,9 +14,7 @@ defaults:
     shell: bash
 
 permissions:
-  checks: write
   contents: read
-  security-events: write
 
 jobs:
   actionlint:
@@ -77,6 +75,9 @@ jobs:
           working-directory: ${{ matrix.dir }}
           args: --config=${{ github.workspace }}/.golangci.yaml
   govulncheck:
+    permissions:
+      contents: read
+      security-events: write
     runs-on: ubuntu-latest
     steps:
       - uses: golang/govulncheck-action@032d45514ae346b1db93c04b0c90b841c370344f  # v1.1.0
@@ -171,6 +172,9 @@ jobs:
       - name: Run Stylelint
         run: npm install stylelint stylelint-config-standard && npx stylelint --formatter unix '**/*.css'
   trivy:
+    permissions:
+      contents: read
+      security-events: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
