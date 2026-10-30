@@ -106,9 +106,8 @@ jobs:
         run: |
           npm install --global htmlhint
           go run tmpbbs.go &
-          sleep 3
+          curl --fail --retry 30 --retry-connrefused --retry-delay 1 --silent http://localhost:8080/healthz
           htmlhint http://localhost:8080/
-          kill $!
   integration-tests:
     runs-on: ubuntu-latest
     defaults:
@@ -205,8 +204,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
       - name: Start tmpbbs
-        run: go run tmpbbs.go &
+        run: |
+          go run tmpbbs.go &
+          curl --fail --retry 30 --retry-connrefused --retry-delay 1 --silent http://localhost:8080/healthz
       - uses: zaproxy/action-full-scan@3c58388149901b9a03b7718852c5ba889646c27c  # v0.13.0
         with:
           target: http://localhost:8080
