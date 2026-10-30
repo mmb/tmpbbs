@@ -16,7 +16,7 @@ type PostSyncServer struct {
 	postStore *PostStore
 }
 
-const maxMaxResults = 500
+const maxMaxResults = 100
 
 // NewPostSyncServer returns a new PostSyncServer.
 func NewPostSyncServer(postStore *PostStore) *PostSyncServer {
