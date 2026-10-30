@@ -3,6 +3,7 @@ ARG UID="1000"
 FROM golang:1.27 AS build
 ARG TARGETARCH
 ARG TARGETOS
+ARG TARGETVARIANT
 ARG VERSION
 ARG COMMIT
 ARG DATE
@@ -13,7 +14,8 @@ COPY . .
 ENV CGO_ENABLED=0
 ENV GOARCH=${TARGETARCH}
 ENV GOOS=${TARGETOS}
-RUN go build -ldflags "-s -w -X main.version=${VERSION} -X main.commit=${COMMIT} -X main.date=${DATE:-$(date -u +%Y-%m-%dT%H:%M:%SZ)}" -trimpath -v
+RUN if [ "$TARGETARCH" = arm ]; then export GOARM="${TARGETVARIANT#v}"; fi && \
+    go build -ldflags "-s -w -X main.version=${VERSION} -X main.commit=${COMMIT} -X main.date=${DATE:-$(date -u +%Y-%m-%dT%H:%M:%SZ)}" -trimpath -v
 
 FROM scratch
 ARG UID
