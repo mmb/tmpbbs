@@ -1,6 +1,7 @@
 package tmpbbs
 
 import (
+	"bytes"
 	"embed"
 	"fmt"
 	"html/template"
@@ -59,16 +60,24 @@ func newPostGetHandler(postStore *PostStore, commit string, cssURLs []string, em
 
 // ServeHTTP serves rendered post pages.
 func (pgh *postGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
+	language := message.MatchLanguage(request.Header.Get("Accept-Language"), "en-US")
+	printer := message.NewPrinter(language)
+
+	repliesPage, err := strconv.Atoi(request.URL.Query().Get("p"))
+	if err != nil {
+		repliesPage = 1
+	}
+
+	responseWriter.Header().Set("Vary", "Accept-Language")
+
+	var (
+		page     bytes.Buffer
+		rendered bool
+	)
+
 	if !pgh.postStore.get(crockfordNormalize(request.PathValue("id")), func(post *post) {
-		language := message.MatchLanguage(request.Header.Get("Accept-Language"), "en-US")
-		printer := message.NewPrinter(language)
 		displayPost := newDisplayPost(post, language, printer, pgh.basicEmojiParser, pgh.wrappingEmojiParser,
 			pgh.markdownParser)
-
-		repliesPage, err := strconv.Atoi(request.URL.Query().Get("p"))
-		if err != nil {
-			repliesPage = 1
-		}
 
 		if !displayPost.hasRepliesPage(repliesPage, pgh.repliesPerPage) {
 			http.NotFound(responseWriter, request)
@@ -76,14 +85,12 @@ func (pgh *postGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request
 			return
 		}
 
-		responseWriter.Header().Set("Vary", "Accept-Language")
-
 		eTag := fmt.Sprintf(`"%s-%d-%d-%s"`, pgh.commit, post.lastUpdate().UnixNano(), repliesPage, language)
-		responseWriter.Header().Set("ETag", eTag)
 
 		if ifNoneMatch := request.Header.Get("If-None-Match"); ifNoneMatch != "" {
 			for checkETag := range strings.SplitSeq(ifNoneMatch, ",") {
 				if strings.TrimSpace(checkETag) == eTag {
+					responseWriter.Header().Set("ETag", eTag)
 					responseWriter.WriteHeader(http.StatusNotModified)
 
 					return
@@ -91,14 +98,23 @@ func (pgh *postGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request
 			}
 		}
 
-		err = pgh.renderPost(displayPost, repliesPage, responseWriter)
-		if err != nil {
-			http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
+		renderErr := pgh.renderPost(displayPost, repliesPage, &page)
+		if renderErr == nil {
+			rendered = true
 
-			return
+			responseWriter.Header().Set("ETag", eTag)
+		} else {
+			http.Error(responseWriter, renderErr.Error(), http.StatusInternalServerError)
 		}
 	}) {
 		http.NotFound(responseWriter, request)
+
+		return
+	}
+
+	if rendered {
+		responseWriter.Header().Set("Content-Length", strconv.Itoa(page.Len()))
+		_, _ = responseWriter.Write(page.Bytes()) //nolint:errcheck // client is gone, nothing to do with the error
 	}
 }
 
