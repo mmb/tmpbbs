@@ -4,7 +4,6 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
-	"fmt"
 	"io"
 	"log/slog"
 	"strings"
@@ -62,7 +61,7 @@ func (tc Tripcoder) code(input string) (string, string) {
 	hash := hmac.New(sha256.New, tc.salt)
 	hash.Write([]byte(input)) //nolint:errcheck // can't error
 
-	return parts[0], fmt.Sprintf("%.10s", hex.EncodeToString(hash.Sum(nil)))
+	return parts[0], hex.EncodeToString(hash.Sum(nil)[:5])
 }
 
 func (tc Tripcoder) isSuperuser(tripcode string) bool {
