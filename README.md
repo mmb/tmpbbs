@@ -34,7 +34,7 @@ the same platform) and the data can be pulled and kept up-to-date using
 ## Installation
 
 Binaries can be found in the [latest release](https://github.com/mmb/tmpbbs/releases/latest)
-or `go install github.com/mmb/tmpbbs@latest`.
+or `git clone https://github.com/mmb/tmpbbs.git && cd tmpbbs && go install`.
 
 ## Container Images
 
