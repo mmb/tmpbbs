@@ -2,8 +2,9 @@ package tmpbbs
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"embed"
-	"fmt"
+	"encoding/hex"
 	"html/template"
 	"io"
 	"net/http"
@@ -71,51 +72,53 @@ func (pgh *postGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request
 	responseWriter.Header().Set("Vary", "Accept-Language")
 
 	var (
-		page     bytes.Buffer
-		rendered bool
+		page         bytes.Buffer
+		pageNotFound bool
+		renderErr    error
 	)
 
-	if !pgh.postStore.get(crockfordNormalize(request.PathValue("id")), func(post *post) {
+	postFound := pgh.postStore.get(crockfordNormalize(request.PathValue("id")), func(post *post) {
 		displayPost := newDisplayPost(post, language, printer, pgh.basicEmojiParser, pgh.wrappingEmojiParser,
 			pgh.markdownParser)
 
 		if !displayPost.hasRepliesPage(repliesPage, pgh.repliesPerPage) {
-			http.NotFound(responseWriter, request)
+			pageNotFound = true
 
 			return
 		}
 
-		eTag := fmt.Sprintf(`"%s-%d-%d-%s"`, pgh.commit, post.lastUpdate().UnixNano(), repliesPage, language)
+		renderErr = pgh.renderPost(displayPost, repliesPage, &page)
+	})
 
-		if ifNoneMatch := request.Header.Get("If-None-Match"); ifNoneMatch != "" {
-			for checkETag := range strings.SplitSeq(ifNoneMatch, ",") {
-				if strings.TrimSpace(checkETag) == eTag {
-					responseWriter.Header().Set("ETag", eTag)
-					responseWriter.WriteHeader(http.StatusNotModified)
-
-					return
-				}
-			}
-		}
-
-		renderErr := pgh.renderPost(displayPost, repliesPage, &page)
-		if renderErr == nil {
-			rendered = true
-
-			responseWriter.Header().Set("ETag", eTag)
-		} else {
-			http.Error(responseWriter, renderErr.Error(), http.StatusInternalServerError)
-		}
-	}) {
+	if !postFound || pageNotFound {
 		http.NotFound(responseWriter, request)
 
 		return
 	}
 
-	if rendered {
-		responseWriter.Header().Set("Content-Length", strconv.Itoa(page.Len()))
-		_, _ = responseWriter.Write(page.Bytes()) //nolint:errcheck // client is gone, nothing to do with the error
+	if renderErr != nil {
+		http.Error(responseWriter, renderErr.Error(), http.StatusInternalServerError)
+
+		return
 	}
+
+	sum := sha256.Sum256(page.Bytes())
+	eTag := `"` + hex.EncodeToString(sum[:]) + `"`
+	responseWriter.Header().Set("ETag", eTag)
+
+	if ifNoneMatch := request.Header.Get("If-None-Match"); ifNoneMatch != "" {
+		for checkETag := range strings.SplitSeq(ifNoneMatch, ",") {
+			checkETag = strings.TrimPrefix(strings.TrimSpace(checkETag), "W/")
+			if checkETag == eTag || checkETag == "*" {
+				responseWriter.WriteHeader(http.StatusNotModified)
+
+				return
+			}
+		}
+	}
+
+	responseWriter.Header().Set("Content-Length", strconv.Itoa(page.Len()))
+	_, _ = responseWriter.Write(page.Bytes()) //nolint:errcheck // client is gone, nothing to do with the error
 }
 
 func (pgh *postGetHandler) renderPost(displayPost *displayPost, repliesPage int, w io.Writer) error {

@@ -149,15 +149,21 @@ func (pp *pullPeer) sync(ctx context.Context) int {
 			continue
 		}
 
+		postTime := protoPost.GetTime().AsTime()
+		if now := time.Now(); postTime.After(now) {
+			postTime = now
+		}
+
 		post := &post{
-			Title:     protoPost.GetTitle(),
-			Author:    protoPost.GetAuthor(),
-			Tripcode:  protoPost.GetTripcode(),
-			Body:      protoPost.GetBody(),
-			Replies:   list.New(),
-			id:        protoPost.GetId(),
-			Time:      protoPost.GetTime().AsTime(),
-			superuser: protoPost.GetSuperuser(),
+			Author:       protoPost.GetAuthor(),
+			Body:         protoPost.GetBody(),
+			id:           protoPost.GetId(),
+			lastActivity: postTime,
+			Replies:      list.New(),
+			superuser:    protoPost.GetSuperuser(),
+			Time:         postTime,
+			Title:        protoPost.GetTitle(),
+			Tripcode:     protoPost.GetTripcode(),
 		}
 		parentID := protoPost.GetParentId()
 		// If the parent is the peer's root, add it to our root
