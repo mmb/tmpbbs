@@ -16,7 +16,7 @@ import (
 // A PostStore stores Posts in memory and provides safety for concurrent
 // access.
 type PostStore struct {
-	idMap         map[string]*list.Element
+	idMap         map[string]*post
 	posts         *list.List
 	rootPost      *post
 	pruneInterval time.Duration
@@ -30,14 +30,14 @@ var errParentNotFound = errors.New("parent post not found")
 func NewPostStore(title string, pruneInterval time.Duration, pruneMaxAge time.Duration) *PostStore {
 	rootPost := newPost(title, "", "", nil)
 	postStore := &PostStore{
-		idMap:         make(map[string]*list.Element),
+		idMap:         make(map[string]*post),
 		posts:         list.New(),
 		pruneInterval: pruneInterval,
 		pruneMaxAge:   pruneMaxAge,
 		rootPost:      rootPost,
 	}
 	rootPost.postsElement = postStore.posts.PushBack(rootPost)
-	postStore.idMap[rootPost.id] = rootPost.postsElement
+	postStore.idMap[rootPost.id] = rootPost
 
 	if pruneInterval > 0 {
 		go postStore.startPruner()
@@ -74,8 +74,7 @@ func (ps *PostStore) LoadYAML(path string, tripcoder *Tripcoder) error {
 // delete removes all references to a post from the PostStore.
 // Write lock must be obtained before calling.
 func (ps *PostStore) delete(postToDelete *post) {
-	_, found := ps.idMap[postToDelete.id]
-	if !found {
+	if ps.idMap[postToDelete.id] == nil {
 		return
 	}
 
@@ -109,12 +108,7 @@ func (ps *PostStore) get(postID string, callback func(*post)) bool {
 // getPostByID returns the post with ID postID or nil if not found.
 // The caller must handle locking.
 func (ps *PostStore) getPostByID(postID string) *post {
-	element, found := ps.idMap[postID]
-	if !found {
-		return nil
-	}
-
-	return element.Value.(*post) //nolint:errcheck,forcetypeassert // only one type
+	return ps.idMap[postID]
 }
 
 func (ps *PostStore) getSince(postID string, maxPosts int) []*post {
@@ -123,8 +117,8 @@ func (ps *PostStore) getSince(postID string, maxPosts int) []*post {
 	ps.mutex.RLock()
 	defer ps.mutex.RUnlock()
 
-	if sinceElement, found := ps.idMap[postID]; found {
-		start = sinceElement.Next()
+	if p := ps.idMap[postID]; p != nil {
+		start = p.postsElement.Next()
 	} else {
 		start = ps.posts.Front()
 	}
@@ -166,7 +160,7 @@ func (ps *PostStore) put(post *post, parentID string) error {
 	ps.mutex.Lock()
 	defer ps.mutex.Unlock()
 
-	if _, exists := ps.idMap[post.id]; exists {
+	if ps.idMap[post.id] != nil {
 		return nil
 	}
 
@@ -176,7 +170,7 @@ func (ps *PostStore) put(post *post, parentID string) error {
 
 	post.parentRepliesElement = post.Parent.Replies.PushFront(post)
 	post.postsElement = ps.posts.PushBack(post)
-	ps.idMap[post.id] = post.postsElement
+	ps.idMap[post.id] = post
 
 	if (post.IsOriginalPoster() || post.IsSuperuser()) && strings.HasPrefix(post.Body, "!delete") &&
 		post.Parent != ps.rootPost {
