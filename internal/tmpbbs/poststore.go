@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"context"
 	"errors"
+	"iter"
 	"log/slog"
 	"os"
 	"strings"
@@ -111,24 +112,22 @@ func (ps *PostStore) getPostByID(postID string) *post {
 	return ps.idMap[postID]
 }
 
-func (ps *PostStore) getSince(postID string, maxPosts int) []*post {
-	var start *list.Element
+func (ps *PostStore) getSince(postID string, maxPosts int) iter.Seq[*post] {
+	return func(yield func(*post) bool) {
+		ps.mutex.RLock()
+		defer ps.mutex.RUnlock()
 
-	ps.mutex.RLock()
-	defer ps.mutex.RUnlock()
+		start := ps.posts.Front()
+		if p := ps.idMap[postID]; p != nil {
+			start = p.postsElement.Next()
+		}
 
-	if p := ps.idMap[postID]; p != nil {
-		start = p.postsElement.Next()
-	} else {
-		start = ps.posts.Front()
+		for count, element := 0, start; count < maxPosts && element != nil; count, element = count+1, element.Next() {
+			if !yield(element.Value.(*post)) { //nolint:errcheck,forcetypeassert // only one type
+				return
+			}
+		}
 	}
-
-	result := make([]*post, 0, maxPosts)
-	for count, element := 0, start; count < maxPosts && element != nil; count, element = count+1, element.Next() {
-		result = append(result, element.Value.(*post)) //nolint:errcheck,forcetypeassert // only one type
-	}
-
-	return result
 }
 
 func (ps *PostStore) prune(ctx context.Context) {

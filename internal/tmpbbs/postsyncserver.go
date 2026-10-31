@@ -42,16 +42,14 @@ func (pss *PostSyncServer) Get(ctx context.Context, request *proto.PostSyncReque
 		maxResults = maxMaxResults
 	}
 
-	posts := pss.postStore.getSince(request.GetId(), maxResults)
-	protoPosts := make([]*proto.Post, len(posts))
-
-	for index, post := range posts {
+	protoPosts := make([]*proto.Post, 0, maxResults)
+	for post := range pss.postStore.getSince(request.GetId(), maxResults) {
 		var parentID string
 		if post.Parent != nil {
 			parentID = post.Parent.id
 		}
 
-		protoPosts[index] = &proto.Post{
+		protoPosts = append(protoPosts, &proto.Post{
 			Time:      timestamppb.New(post.Time),
 			Title:     post.Title,
 			Author:    post.Author,
@@ -60,11 +58,11 @@ func (pss *PostSyncServer) Get(ctx context.Context, request *proto.PostSyncReque
 			Id:        post.id,
 			ParentId:  parentID,
 			Superuser: post.IsSuperuser(),
-		}
+		})
 	}
 
-	logger.InfoContext(ctx, "responded to peer sync request", "sinceID", request.GetId(),
-		"maxResults", maxResults, "numResults", len(protoPosts))
+	logger.InfoContext(ctx, "responded to peer sync request", "sinceID", request.GetId(), "maxResults", maxResults,
+		"numResults", len(protoPosts))
 
 	return &proto.PostSyncResponse{
 		Posts: protoPosts,
