@@ -12,6 +12,7 @@ import (
 )
 
 type post struct {
+	lastActivity         time.Time
 	Time                 time.Time `yaml:"time"`
 	Parent               *post     `yaml:"parent"`
 	parentRepliesElement *list.Element
@@ -43,15 +44,18 @@ func newPost(title string, author string, body string, tripcoder *Tripcoder) *po
 		superuser = tripcoder.isSuperuser(tripcode)
 	}
 
+	now := time.Now()
+
 	return &post{
-		Author:    author,
-		Body:      body,
-		id:        ulid.Make().String(),
-		Replies:   list.New(),
-		superuser: superuser,
-		Time:      time.Now(),
-		Title:     title,
-		Tripcode:  tripcode,
+		Author:       author,
+		Body:         body,
+		id:           ulid.Make().String(),
+		lastActivity: now,
+		Replies:      list.New(),
+		superuser:    superuser,
+		Time:         now,
+		Title:        title,
+		Tripcode:     tripcode,
 	}
 }
 
@@ -83,6 +87,11 @@ func (p *post) bump() {
 	}
 
 	p.Parent.Replies.MoveToFront(p.parentRepliesElement)
+
+	if p.lastActivity.After(p.Parent.lastActivity) {
+		p.Parent.lastActivity = p.lastActivity
+	}
+
 	p.Parent.bump()
 }
 
@@ -95,16 +104,6 @@ func (p *post) delete() {
 
 func (p *post) hasRepliesPage(page int, perPage int) bool {
 	return page > 0 && page <= p.repliesLastPage(perPage)
-}
-
-// lastUpdate returns the last update time of the most recent reply or the
-// time of the post if there are no replies.
-func (p *post) lastUpdate() time.Time {
-	if lastReply := p.Replies.Front(); lastReply != nil {
-		return lastReply.Value.(*post).lastUpdate() //nolint:errcheck,forcetypeassert // only one type
-	}
-
-	return p.Time.Round(0)
 }
 
 func (p *post) readableID() string {

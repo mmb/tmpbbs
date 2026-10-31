@@ -147,7 +147,7 @@ func (ps *PostStore) prune(ctx context.Context) {
 	beforeCount := ps.posts.Len()
 	for element := ps.posts.Front().Next(); element != nil; element = element.Next() {
 		checkPost := element.Value.(*post) //nolint:errcheck,forcetypeassert // only one type
-		if time.Since(checkPost.lastUpdate()) > ps.pruneMaxAge {
+		if time.Since(checkPost.lastActivity) > ps.pruneMaxAge {
 			deletePosts = append(deletePosts, checkPost)
 		}
 	}
