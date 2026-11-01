@@ -31,6 +31,11 @@ func (lh *logHandler) ServeHTTP(responseWriter http.ResponseWriter, request *htt
 	start := time.Now()
 
 	lh.wrappedHandler.ServeHTTP(&lrw, request)
+
+	if request.URL.Path == "/healthz" && lrw.statusCode == 0 {
+		return
+	}
+
 	slog.InfoContext(request.Context(), "HTTP request",
 		slog.Group("request",
 			"remoteAddr", request.RemoteAddr,
