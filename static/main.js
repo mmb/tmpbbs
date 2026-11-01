@@ -45,7 +45,7 @@ class EmojiSuggester {
   }
 
   listen() {
-    const events = ['keyup', 'mouseup']
+    const events = ['input', 'keyup', 'mouseup']
 
     let timeout
     events.forEach(event => {
