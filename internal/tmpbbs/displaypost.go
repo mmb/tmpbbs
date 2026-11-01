@@ -9,7 +9,6 @@ package tmpbbs
 import (
 	"fmt"
 	"html/template"
-	"maps"
 	"slices"
 	"strings"
 	"time"
@@ -129,30 +128,23 @@ func (dp *displayPost) RepliesNav(currentPage int, perPage int, liClass string) 
 
 	firstPage := 1
 	prevPage := max(currentPage-1, 1)
-	nextPage := min(dp.repliesLastPage(perPage), currentPage+1)
 	lastPage := dp.repliesLastPage(perPage)
+	nextPage := min(lastPage, currentPage+1)
+	pages := []int{firstPage, prevPage, currentPage, nextPage, lastPage}
+	slices.Sort(pages)
 
-	show := make(map[int]bool, 5) //nolint:mnd // max number of links in nav, can't change
-	show[firstPage] = true
-	show[prevPage] = true
-	show[nextPage] = true
-	show[lastPage] = true
-	show[currentPage] = false
-
-	if len(show) == 1 {
+	pages = slices.Compact(pages)
+	if len(pages) == 1 {
 		return ""
 	}
 
-	pages := slices.Sorted(maps.Keys(show))
-
 	links := make([]string, len(pages))
-
 	for i, page := range pages {
 		pageText := dp.Printer.Sprintf("page %d", page)
-		if show[page] {
-			links[i] = fmt.Sprintf("<a href=%q>%s</a>", dp.repliesPageURL(page, "replies-start"), pageText)
-		} else {
+		if page == currentPage {
 			links[i] = pageText
+		} else {
+			links[i] = fmt.Sprintf("<a href=%q>%s</a>", dp.repliesPageURL(page, "replies-start"), pageText)
 		}
 	}
 
