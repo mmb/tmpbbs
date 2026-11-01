@@ -15,9 +15,9 @@ func Serve(ctx context.Context, listenAddress string, tlsCertFile string, tlsKey
 		Addr:              listenAddress,
 		Handler:           newLogHandler(serveMux),
 		IdleTimeout:       120 * time.Second, //nolint:mnd // not worth creating a const
-		ReadHeaderTimeout: 2 * time.Second,   //nolint:mnd // not worth creating a const
-		ReadTimeout:       5 * time.Second,   //nolint:mnd // not worth creating a const
-		WriteTimeout:      10 * time.Second,  //nolint:mnd // not worth creating a const
+		ReadHeaderTimeout: 10 * time.Second,  //nolint:mnd // not worth creating a const
+		ReadTimeout:       15 * time.Second,  //nolint:mnd // not worth creating a const
+		WriteTimeout:      5 * time.Minute,   //nolint:mnd // not worth creating a const
 	}
 	tlsEnabled := tlsCertFile != "" && tlsKeyFile != ""
 	slog.InfoContext(ctx, "listening for HTTP", "address", listenAddress, "tlsEnabled", tlsEnabled)
