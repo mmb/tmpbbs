@@ -5,14 +5,8 @@ import (
 	"os"
 )
 
-type selfGetHandler struct{}
-
-func newSelfGetHandler() *selfGetHandler {
-	return &selfGetHandler{}
-}
-
-// ServeHTTP serves the running binary.
-func (sgh *selfGetHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
+// selfGet serves the running binary.
+func selfGet(responseWriter http.ResponseWriter, request *http.Request) {
 	binaryPath, err := os.Executable()
 	if err != nil {
 		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
