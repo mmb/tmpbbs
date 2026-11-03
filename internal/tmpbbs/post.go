@@ -3,7 +3,6 @@ package tmpbbs
 import (
 	"container/list"
 	"fmt"
-	"math"
 	"strings"
 	"time"
 	"unicode/utf16"
@@ -112,7 +111,7 @@ func (p *post) readableID() string {
 }
 
 func (p *post) repliesLastPage(perPage int) int {
-	return max(1, int(math.Ceil(float64(p.Replies.Len())/float64(perPage))))
+	return max(1, (p.Replies.Len()+perPage-1)/perPage)
 }
 
 func (p *post) repliesPageURL(page int, anchor string) string {
