@@ -49,19 +49,15 @@ func NewTripcoder(salt string, superuserTripcodes []string, randReader io.Reader
 }
 
 func (tc Tripcoder) code(input string) (string, string) {
-	parts := strings.SplitN(input, "#", 2) //nolint:mnd // input has two parts, can't change
-	if len(parts) != 2 {                   //nolint:mnd // input has two parts, can't change
-		return input, ""
-	}
-
-	if parts[1] == "" {
-		return parts[0], ""
+	name, secret, found := strings.Cut(input, "#")
+	if !found || secret == "" {
+		return name, ""
 	}
 
 	hash := hmac.New(sha256.New, tc.salt)
 	hash.Write([]byte(input)) //nolint:errcheck // can't error
 
-	return parts[0], hex.EncodeToString(hash.Sum(nil)[:5])
+	return name, hex.EncodeToString(hash.Sum(nil)[:5])
 }
 
 func (tc Tripcoder) isSuperuser(tripcode string) bool {
