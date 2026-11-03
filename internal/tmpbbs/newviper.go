@@ -49,8 +49,7 @@ func NewViper() (*viper.Viper, error) {
 		return nil, err
 	}
 
-	configFile := vipr.GetString("config-file")
-	if configFile != "" {
+	if configFile := vipr.GetString("config-file"); configFile != "" {
 		vipr.SetConfigFile(configFile)
 
 		err = vipr.ReadInConfig()
