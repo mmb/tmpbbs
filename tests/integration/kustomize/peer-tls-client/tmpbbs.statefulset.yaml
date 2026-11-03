@@ -9,6 +9,8 @@ spec:
       containers:
         - name: tmpbbs
           env:
+            - name: TMPBBS_ALLOW_UNSAFE_CONFIG
+              value: 'true'
             - name: TMPBBS_CONFIG_FILE
               value:
             - name: TMPBBS_PULL_INTERVAL
