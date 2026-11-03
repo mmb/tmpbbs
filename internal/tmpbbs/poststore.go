@@ -79,8 +79,10 @@ func (ps *PostStore) delete(postToDelete *post) {
 		return
 	}
 
-	for reply := postToDelete.Replies.Front(); reply != nil; reply = reply.Next() {
+	for reply := postToDelete.Replies.Front(); reply != nil; {
+		next := reply.Next()
 		ps.delete(reply.Value.(*post)) //nolint:errcheck,forcetypeassert // only one type
+		reply = next
 	}
 
 	postToDelete.Parent.Replies.Remove(postToDelete.parentRepliesElement)
@@ -138,9 +140,12 @@ func (ps *PostStore) prune(ctx context.Context) {
 	ps.mutex.Lock()
 
 	beforeCount := ps.posts.Len()
+
+	cutoff := time.Now().Add(-ps.pruneMaxAge)
 	for element := ps.posts.Front().Next(); element != nil; element = element.Next() {
 		checkPost := element.Value.(*post) //nolint:errcheck,forcetypeassert // only one type
-		if time.Since(checkPost.lastActivity) > ps.pruneMaxAge {
+		if checkPost.lastActivity.Before(cutoff) &&
+			(checkPost.Parent == ps.rootPost || !checkPost.Parent.lastActivity.Before(cutoff)) {
 			deletePosts = append(deletePosts, checkPost)
 		}
 	}
