@@ -67,8 +67,8 @@ func (esh *emojiSuggestHandler) ServeHTTP(responseWriter http.ResponseWriter, re
 	result := make([]suggestion, len(uniqueMap))
 	i := 0
 
-	for suggestion := range uniqueMap {
-		result[i] = suggestion
+	for s := range uniqueMap {
+		result[i] = s
 		i++
 	}
 
