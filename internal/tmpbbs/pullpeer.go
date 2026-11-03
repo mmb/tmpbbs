@@ -61,12 +61,12 @@ func RunPullPeers(addresses []string, trustedCAPath string, interval time.Durati
 	}
 
 	for index, address := range addresses {
-		pullPeer, err := newPullPeer(address, caCertPool, interval, postStore)
+		peer, err := newPullPeer(address, caCertPool, interval, postStore)
 		if err != nil {
 			return err
 		}
 
-		go pullPeer.run(time.Duration(index) * waitBetween)
+		go peer.run(time.Duration(index) * waitBetween)
 	}
 
 	return nil
@@ -77,9 +77,8 @@ func newPullPeer(address string, caCertPool *x509.CertPool, interval time.Durati
 ) (*pullPeer, error) {
 	var creds credentials.TransportCredentials
 
-	if strings.HasPrefix(address, "tls://") {
-		address = address[6:]
-
+	address, useTLS := strings.CutPrefix(address, "tls://")
+	if useTLS {
 		tlsConfig := tls.Config{RootCAs: caCertPool}
 		if caCertPool == nil {
 			tlsConfig.InsecureSkipVerify = true // #nosec G402 -- if no trusted CAs, allow self-signed
@@ -154,7 +153,7 @@ func (pp *pullPeer) sync(ctx context.Context) int {
 			postTime = now
 		}
 
-		post := &post{
+		peerPost := &post{
 			Author:       protoPost.GetAuthor(),
 			Body:         protoPost.GetBody(),
 			id:           protoPost.GetId(),
@@ -171,7 +170,7 @@ func (pp *pullPeer) sync(ctx context.Context) int {
 			parentID = pp.postStore.rootPost.id
 		}
 
-		if errors.Is(pp.postStore.put(post, parentID), errParentNotFound) {
+		if errors.Is(pp.postStore.put(peerPost, parentID), errParentNotFound) {
 			// We don't have the parent, start a resync from the peer root.
 			pp.lastIDSynced = ""
 			pp.logger.WarnContext(ctx, "resync from root", "missingParentID", protoPost.GetParentId())
