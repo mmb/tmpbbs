@@ -8,7 +8,7 @@ require (
 	github.com/chromedp/cdproto v0.159.0
 	github.com/chromedp/chromedp v0.20.1
 	github.com/chromedp/chromedp/remote v0.2.0
-	github.com/onsi/ginkgo/v2 v2.33.1
+	github.com/onsi/ginkgo/v2 v2.34.0
 	github.com/onsi/gomega v1.44.0
 	golang.org/x/text v0.43.0
 )
