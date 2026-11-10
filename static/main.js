@@ -40,7 +40,7 @@ class EmojiSuggester {
   constructor(input, displayContainer) {
     this.input = input
     this.displayContainer = displayContainer
-    this.minPrefixLength = 3
+    this.minPrefixLength = 2
     this.whitespaceRegex = /\s/u
   }
 
@@ -86,13 +86,16 @@ class EmojiSuggester {
   }
 
   async #getSuggestions() {
-    if (!this.currentWord.startsWith(':') || this.currentWord.length < this.minPrefixLength) {
+    const query = this.currentWord.replace(/^:|:$/gu, '')
+
+    if (!this.currentWord.startsWith(':') || query.length < this.minPrefixLength) {
       this.#clearSuggestions()
 
       return
     }
 
-    const params = new URLSearchParams([['q', this.currentWord]]),
+    // eslint-disable-next-line one-var
+    const params = new URLSearchParams([['q', query]]),
       suggestions = await (await fetch(`/emoji-suggest/${commit}?${params}`, { cache: 'default' })).json()
 
     this.#clearSuggestions()

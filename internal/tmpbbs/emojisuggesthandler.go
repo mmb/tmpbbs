@@ -26,7 +26,7 @@ const minQueryLength = 2
 func newEmojiSuggestHandler() *emojiSuggestHandler {
 	tri := trie.New()
 	for shortcode, pictogram := range emoji.CodeMap() {
-		tri.Add(shortcode, suggestion{
+		tri.Add(strings.Trim(shortcode, ":"), suggestion{
 			Suggestion: strings.Trim(emoji.NormalizeShortCode(shortcode), ":"),
 			Pictogram:  pictogram,
 		})
