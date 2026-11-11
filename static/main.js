@@ -86,7 +86,7 @@ class EmojiSuggester {
   }
 
   async #getSuggestions() {
-    const query = this.currentWord.replace(/^:|:$/gu, '')
+    const query = this.currentWord.replace(/^:|:$/gu, '').toLowerCase()
 
     if (!this.currentWord.startsWith(':') || query.length < this.minPrefixLength) {
       this.#clearSuggestions()
