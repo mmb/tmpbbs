@@ -16,7 +16,6 @@ func newCommonHeadersHandler(wrappedHandler http.Handler, externalCSS bool) *com
 		"base-uri 'self'",
 		"form-action 'self'",
 		"frame-ancestors 'none'",
-		"img-src *",
 		"object-src 'none'",
 	}
 	if externalCSS {
