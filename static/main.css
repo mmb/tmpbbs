@@ -76,7 +76,3 @@ details:has(> summary + p > .emoji:only-child) > summary + p > .emoji,
 ul.post:has(> li > p > .emoji:only-child) > li > p > .emoji {
   font-size: 4em;
 }
-
-img {
-  max-width: 100%;
-}
