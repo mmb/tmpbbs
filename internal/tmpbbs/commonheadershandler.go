@@ -36,6 +36,7 @@ func (chh *commonHeadersHandler) ServeHTTP(responseWriter http.ResponseWriter, r
 	responseWriter.Header().Set("Permissions-Policy", "geolocation=(), microphone=(), camera=()")
 	responseWriter.Header().Set("Referrer-Policy", "no-referrer")
 	responseWriter.Header().Set("X-Content-Type-Options", "nosniff")
+	responseWriter.Header().Set("X-DNS-Prefetch-Control", "off")
 	responseWriter.Header().Set("X-Frame-Options", "DENY")
 	chh.wrappedHandler.ServeHTTP(responseWriter, request)
 }
