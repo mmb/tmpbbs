@@ -8,33 +8,41 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/derekparker/trie"
 	"github.com/kyokomi/emoji/v2"
 )
 
 type emojiSuggestHandler struct {
-	trie *trie.Trie
+	emojiSuggestions []emojiSuggestion
 }
 
-type suggestion struct {
+type emojiSuggestion struct {
 	Pictogram  string `json:"pictogram"`
+	shortcode  string
 	Suggestion string `json:"suggestion"`
 }
 
-const minQueryLength = 2
+const (
+	maxResults     = 8
+	minQueryLength = 2
+)
 
 func newEmojiSuggestHandler() *emojiSuggestHandler {
-	tri := trie.New()
+	handler := &emojiSuggestHandler{
+		emojiSuggestions: make([]emojiSuggestion, 0, len(emoji.CodeMap())),
+	}
 	for shortcode, pictogram := range emoji.CodeMap() {
-		tri.Add(strings.Trim(shortcode, ":"), suggestion{
-			Suggestion: strings.Trim(emoji.NormalizeShortCode(shortcode), ":"),
+		handler.emojiSuggestions = append(handler.emojiSuggestions, emojiSuggestion{
 			Pictogram:  pictogram,
+			shortcode:  strings.Trim(shortcode, ":"),
+			Suggestion: strings.Trim(emoji.NormalizeShortCode(shortcode), ":"),
 		})
 	}
 
-	return &emojiSuggestHandler{
-		trie: tri,
-	}
+	slices.SortFunc(handler.emojiSuggestions, func(a emojiSuggestion, b emojiSuggestion) int {
+		return cmp.Compare(a.shortcode, b.shortcode)
+	})
+
+	return handler
 }
 
 // ServeHTTP serves JSON emoji suggestions for autocomplete.
@@ -49,37 +57,47 @@ func (esh *emojiSuggestHandler) ServeHTTP(responseWriter http.ResponseWriter, re
 		return
 	}
 
-	uniqueMap := make(map[suggestion]struct{})
-
-	for _, key := range esh.trie.PrefixSearch(query) {
-		value, _ := esh.trie.Find(key)
-
-		metaSuggestion, ok := value.Meta().(suggestion)
-		if !ok {
-			http.Error(responseWriter, "suggestion type assertion failed", http.StatusInternalServerError)
-
-			return
-		}
-
-		uniqueMap[metaSuggestion] = struct{}{}
-	}
-
-	result := make([]suggestion, len(uniqueMap))
-	i := 0
-
-	for s := range uniqueMap {
-		result[i] = s
-		i++
-	}
-
-	slices.SortFunc(result, func(a suggestion, b suggestion) int {
-		return cmp.Compare(a.Suggestion, b.Suggestion)
+	start, _ := slices.BinarySearchFunc(esh.emojiSuggestions, query, func(suggestion emojiSuggestion, prefix string) int {
+		return cmp.Compare(suggestion.shortcode, prefix)
 	})
 
-	err := json.NewEncoder(responseWriter).Encode(result)
+	end := start
+	for _, suggestion := range esh.emojiSuggestions[start:] {
+		if !strings.HasPrefix(suggestion.shortcode, query) {
+			break
+		}
+
+		end++
+	}
+
+	result := slices.Clone(esh.emojiSuggestions[start:end])
+	slices.SortFunc(result, func(a emojiSuggestion, b emojiSuggestion) int {
+		return a.compare(b, query)
+	})
+	result = slices.CompactFunc(result, func(a emojiSuggestion, b emojiSuggestion) bool {
+		return a.Suggestion == b.Suggestion
+	})
+
+	err := json.NewEncoder(responseWriter).Encode(result[:min(len(result), maxResults)])
 	if err != nil {
 		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
 
 		return
 	}
+}
+
+func (es emojiSuggestion) compare(other emojiSuggestion, query string) int {
+	return cmp.Or(
+		cmp.Compare(es.queryRank(query), other.queryRank(query)),
+		cmp.Compare(len(es.Suggestion), len(other.Suggestion)),
+		cmp.Compare(es.Suggestion, other.Suggestion),
+	)
+}
+
+func (es emojiSuggestion) queryRank(query string) int {
+	if strings.HasPrefix(es.Suggestion, query) {
+		return 0
+	}
+
+	return 1
 }
