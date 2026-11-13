@@ -20,22 +20,22 @@ jobs:
   actionlint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
       - uses: docker://rhysd/actionlint@sha256:6f03470d0152251d7f07f7c4dc019dbe7024c72cd952f839544c7798843efa8f
         with:
           args: -color
   committed:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
-      - uses: crate-ci/committed@02af07ed1d11ad69a96ab75f08c9831a4e2c00da  # v1.1.12
+      - uses: crate-ci/committed@v1.1.12
   eslint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
       - name: Run ESLint
         run: npm install eslint @eslint/js globals && npx eslint
   go-generate:
@@ -43,8 +43,8 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-go@v7
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-go@v7.0.0
         with:
           go-version-file: go.mod
       - name: Install the latest protoc and update tools
@@ -66,11 +66,11 @@ jobs:
           - .
           - tests/integration
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-go@v7
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-go@v7.0.0
         with:
           go-version-file: ${{ matrix.dir }}/go.mod
-      - uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a  # v9.3.0
+      - uses: golangci/golangci-lint-action@v9.3.0
         with:
           working-directory: ${{ matrix.dir }}
           args: --config=${{ github.workspace }}/.golangci.yaml
@@ -80,7 +80,7 @@ jobs:
       security-events: write
     runs-on: ubuntu-latest
     steps:
-      - uses: golang/govulncheck-action@032d45514ae346b1db93c04b0c90b841c370344f  # v1.1.0
+      - uses: golang/govulncheck-action@v1.1.0
         with:
           go-version-file: go.mod
           go-version-input:
@@ -93,13 +93,13 @@ jobs:
   hadolint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: hadolint/hadolint-action@06be81baf89a55ffd0e24b8f04a4185738dd3387  # v3.5.0
+      - uses: actions/checkout@v7.0.1
+      - uses: hadolint/hadolint-action@v3.5.0
   htmlhint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-go@v7
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-go@v7.0.0
         with:
           go-version-file: go.mod
       - name: Run HTMLhint
@@ -116,17 +116,17 @@ jobs:
         working-directory: tests/integration
     steps:
       - id: kind
-        uses: helm/kind-action@ea822c7bf1874f08e5a491df991c228edffc3376  # v1.15.2
+        uses: helm/kind-action@v1.15.2
         with:
           registry: true
-      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069  # v4.4.1
+      - uses: docker/setup-buildx-action@v4.4.1
         with:
           driver-opts: network=host
           buildkitd-config-inline: |
             [registry."kind-registry:5000"]
             http = true
-      - uses: actions/checkout@v7
-      - uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc  # v7.4.0
+      - uses: actions/checkout@v7.0.1
+      - uses: docker/build-push-action@v7.4.0
         with:
           context: .
           tags: ${{ steps.kind.outputs.LOCAL_REGISTRY }}/tmpbbs:test
@@ -136,7 +136,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           push: true
-      - uses: actions/setup-go@v7
+      - uses: actions/setup-go@v7.0.0
         with:
           go-version-file: go.mod
       - name: Run integration tests
@@ -144,7 +144,7 @@ jobs:
   kubeconform:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
       - name: Kustomize
         run: kubectl kustomize kubernetes > kustomized.yaml
       - uses: docker://ghcr.io/yannh/kubeconform@sha256:85dbef6b4b312b99133decc9c6fc9495e9fc5f92293d4ff3b7e1b30f5611823c
@@ -153,21 +153,21 @@ jobs:
   markdownlint-cli2:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: DavidAnson/markdownlint-cli2-action@696eb3f2509270d7b882d2aa68347bc676e7af34  # v25.0.0
+      - uses: actions/checkout@v7.0.1
+      - uses: DavidAnson/markdownlint-cli2-action@v25.0.0
         with:
           globs: '**/*.md'
   shellcheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
       - name: Run ShellCheck
         run: find . -type f -name "*.sh" -exec shellcheck --format gcc {} +
   stylelint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
       - name: Run Stylelint
         run: npm install stylelint stylelint-config-standard && npx stylelint --formatter unix '**/*.css'
   trivy:
@@ -176,8 +176,8 @@ jobs:
       security-events: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25  # v0.36.0
+      - uses: actions/checkout@v7.0.1
+      - uses: aquasecurity/trivy-action@v0.36.0
         with:
           exit-code: '1'
           scan-type: fs
@@ -192,26 +192,26 @@ jobs:
     env:
       CLICOLOR: 1
     steps:
-      - uses: actions/checkout@v7
-      - uses: crate-ci/typos@2611abd15acb0c2e317fb9e45855aabb8b35a414  # v1.52.1
+      - uses: actions/checkout@v7.0.1
+      - uses: crate-ci/typos@v1.52.1
   yamllint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
       - name: Run yamllint
         run: yamllint --format github .
   zap:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-go@v7
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-go@v7.0.0
         with:
           go-version-file: go.mod
       - name: Start tmpbbs
         run: |
           go run tmpbbs.go &
           curl --fail --retry 30 --retry-connrefused --retry-delay 1 --silent http://localhost:8080/healthz
-      - uses: zaproxy/action-full-scan@3c58388149901b9a03b7718852c5ba889646c27c  # v0.13.0
+      - uses: zaproxy/action-full-scan@v0.13.0
         with:
           target: http://localhost:8080
           rules_file_name: .zap/rules.tsv
