@@ -18,7 +18,7 @@ own copy of them. You can get the binary from `/self` (assuming you are using
 the same platform) and the data can be pulled and kept up-to-date using
 `--pull-peers`.
 
-![screenshot](https://github.com/user-attachments/assets/0dc2295d-f0b7-4269-a5e4-0d2d57ce36a9)
+![screenshot](https://github.com/user-attachments/assets/c67bc1da-9f5e-43f1-b862-178c88fadad1)
 
 ## Features
 
