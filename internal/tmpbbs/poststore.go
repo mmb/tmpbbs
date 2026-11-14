@@ -40,7 +40,7 @@ func NewPostStore(title string, pruneInterval time.Duration, pruneMaxAge time.Du
 	rootPost.postsElement = postStore.posts.PushBack(rootPost)
 	postStore.idMap[rootPost.id] = rootPost
 
-	if pruneInterval > 0 {
+	if pruneInterval > 0 && pruneMaxAge > 0 {
 		go postStore.startPruner()
 	}
 
