@@ -30,7 +30,12 @@ func (pph *postPostHandler) ServeHTTP(responseWriter http.ResponseWriter, reques
 
 	err := request.ParseForm()
 	if err != nil {
-		http.Error(responseWriter, err.Error(), http.StatusBadRequest)
+		status := http.StatusBadRequest
+		if _, ok := errors.AsType[*http.MaxBytesError](err); ok {
+			status = http.StatusRequestEntityTooLarge
+		}
+
+		http.Error(responseWriter, err.Error(), status)
 
 		return
 	}
