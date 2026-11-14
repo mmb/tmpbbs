@@ -113,13 +113,20 @@ func newPullPeer(address string, caCertPool *x509.CertPool, interval time.Durati
 	}, nil
 }
 
+func (pp *pullPeer) catchUp(ctx context.Context) {
+	for pp.sync(ctx) >= int(pp.maxResults) {
+		continue
+	}
+}
+
 func (pp *pullPeer) run(initialWait time.Duration) {
+	ctx := context.Background()
+	pp.catchUp(ctx)
 	time.Sleep(initialWait)
 
 	for {
-		if pp.sync(context.Background()) < int(pp.maxResults) {
-			time.Sleep(pp.interval)
-		}
+		time.Sleep(pp.interval)
+		pp.catchUp(ctx)
 	}
 }
 
