@@ -193,7 +193,7 @@ jobs:
       CLICOLOR: 1
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: crate-ci/typos@v1.52.1
+      - uses: crate-ci/typos@v1.52.2
   yamllint:
     runs-on: ubuntu-latest
     steps:

@@ -9,7 +9,7 @@ workflows:
         - 'actions/setup-node@v7.1.0'
         - 'aquasecurity/trivy-action@v0.36.0'
         - 'crate-ci/committed@v1.1.12'
-        - 'crate-ci/typos@v1.52.1'
+        - 'crate-ci/typos@v1.52.2'
         - 'davidanson/markdownlint-cli2-action@v25.0.0'
         - 'docker/build-push-action@v7.4.0'
         - 'docker/setup-buildx-action@v4.4.1'
@@ -95,9 +95,9 @@ dependencies:
         commit: 'sha1-02af07ed1d11ad69a96ab75f08c9831a4e2c00da'
         owner_id: 36412122
         repo_id: 199063936
-    'crate-ci/typos@v1.52.1':
-        ref: 'v1.52.1'
-        commit: 'sha1-2611abd15acb0c2e317fb9e45855aabb8b35a414'
+    'crate-ci/typos@v1.52.2':
+        ref: 'v1.52.2'
+        commit: 'sha1-276087d9a4f06398b3e04825487805e2d7375888'
         owner_id: 36412122
         repo_id: 181782286
     'davidanson/markdownlint-cli2-action@v25.0.0':
