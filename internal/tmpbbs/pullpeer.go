@@ -40,7 +40,9 @@ var ErrTrustedCAParsing = errors.New("error parsing trusted CA certificates")
 // RunPullPeers creates a PullPeer for each peer address and starts syncing.
 // It calculates a time to wait before starting for each peer so they run
 // staggered.
-func RunPullPeers(addresses []string, trustedCAPath string, interval time.Duration, postStore *PostStore) error {
+func RunPullPeers(ctx context.Context, addresses []string, trustedCAPath string, interval time.Duration,
+	postStore *PostStore,
+) error {
 	var caCertPool *x509.CertPool
 
 	if trustedCAPath != "" {
@@ -66,7 +68,7 @@ func RunPullPeers(addresses []string, trustedCAPath string, interval time.Durati
 			return err
 		}
 
-		go peer.run(time.Duration(index) * waitBetween)
+		go peer.run(ctx, time.Duration(index)*waitBetween)
 	}
 
 	return nil
@@ -119,13 +121,22 @@ func (pp *pullPeer) catchUp(ctx context.Context) {
 	}
 }
 
-func (pp *pullPeer) run(initialWait time.Duration) {
-	ctx := context.Background()
+func (pp *pullPeer) run(ctx context.Context, initialWait time.Duration) {
 	pp.catchUp(ctx)
-	time.Sleep(initialWait)
+
+	select {
+	case <-ctx.Done():
+		return
+	case <-time.After(initialWait):
+	}
 
 	for {
-		time.Sleep(pp.interval)
+		select {
+		case <-ctx.Done():
+			return
+		case <-time.After(pp.interval):
+		}
+
 		pp.catchUp(ctx)
 	}
 }

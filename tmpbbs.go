@@ -111,7 +111,7 @@ func main() {
 		}()
 	}
 
-	err = tmpbbs.RunPullPeers(viper.GetStringSlice("pull-peers"), viper.GetString("tls-trusted-ca"),
+	err = tmpbbs.RunPullPeers(ctx, viper.GetStringSlice("pull-peers"), viper.GetString("tls-trusted-ca"),
 		viper.GetDuration("pull-interval"), postStore)
 	if err != nil {
 		log.Fatal(err)
