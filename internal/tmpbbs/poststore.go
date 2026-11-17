@@ -28,7 +28,9 @@ type PostStore struct {
 var errParentNotFound = errors.New("parent post not found")
 
 // NewPostStore returns a new PostStore. It also creates the root Post.
-func NewPostStore(title string, pruneInterval time.Duration, pruneMaxAge time.Duration) *PostStore {
+func NewPostStore(ctx context.Context, title string, pruneInterval time.Duration,
+	pruneMaxAge time.Duration,
+) *PostStore {
 	rootPost := newPost(title, "", "", nil)
 	postStore := &PostStore{
 		idMap:         make(map[string]*post),
@@ -41,7 +43,7 @@ func NewPostStore(title string, pruneInterval time.Duration, pruneMaxAge time.Du
 	postStore.idMap[rootPost.id] = rootPost
 
 	if pruneInterval > 0 && pruneMaxAge > 0 {
-		go postStore.startPruner()
+		go postStore.startPruner(ctx)
 	}
 
 	return postStore
@@ -186,12 +188,20 @@ func (ps *PostStore) put(post *post, parentID string) error {
 	return nil
 }
 
-func (ps *PostStore) startPruner() {
+func (ps *PostStore) startPruner(ctx context.Context) {
 	ticker := time.NewTicker(ps.pruneInterval)
 	defer ticker.Stop()
 
 	for {
-		<-ticker.C
-		ps.prune(context.Background())
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+			if ctx.Err() != nil {
+				return
+			}
+
+			ps.prune(ctx)
+		}
 	}
 }

@@ -88,7 +88,7 @@ func main() {
 	slog.InfoContext(ctx, "startup", "version", version, "commit", commit, "date", date, "config",
 		tmpbbs.LoggedViperSettings(viper.AllSettings()))
 
-	postStore := tmpbbs.NewPostStore(viper.GetString("title"), viper.GetDuration("prune-interval"),
+	postStore := tmpbbs.NewPostStore(ctx, viper.GetString("title"), viper.GetDuration("prune-interval"),
 		viper.GetDuration("prune-max-age"))
 
 	tripcoder, err := tmpbbs.NewTripcoder(viper.GetString("tripcode-salt"), viper.GetStringSlice("superuser-tripcodes"),
