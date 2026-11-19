@@ -3,6 +3,7 @@ package tmpbbs
 import (
 	"context"
 	"crypto/tls"
+	"errors"
 	"log/slog"
 	"net"
 	"time"
@@ -17,6 +18,7 @@ const (
 	grpcKeepAliveTime          = 25 * time.Second
 	grpcKeepAliveTimeout       = 10 * time.Second
 	grpcServerKeepAliveMinTime = 20 * time.Second
+	grpcShutdownTimeout        = 10 * time.Second
 )
 
 // ServeGRPC creates and configures a grpc.Server then starts listening.
@@ -31,16 +33,7 @@ func ServeGRPC(ctx context.Context, listenAddress string, tlsCertFile string, tl
 	}
 	defer listener.Close()
 
-	serverOptions := []grpc.ServerOption{
-		grpc.KeepaliveEnforcementPolicy(keepalive.EnforcementPolicy{
-			MinTime:             grpcServerKeepAliveMinTime,
-			PermitWithoutStream: true,
-		}),
-		grpc.KeepaliveParams(keepalive.ServerParameters{
-			Time:    grpcKeepAliveTime,
-			Timeout: grpcKeepAliveTimeout,
-		}),
-	}
+	serverOptions := baseGRPCServerOptions()
 
 	if tlsCertFile != "" && tlsKeyFile != "" {
 		var certificate tls.Certificate
@@ -62,5 +55,39 @@ func ServeGRPC(ctx context.Context, listenAddress string, tlsCertFile string, tl
 	slog.InfoContext(ctx, "listening for gRPC", "address", listenAddress, "tlsCertFile", tlsCertFile, "tlsKeyFile",
 		tlsKeyFile)
 
-	return grpcServer.Serve(listener)
+	errChan := make(chan error, 1)
+	go func() {
+		errChan <- grpcServer.Serve(listener)
+	}()
+
+	select {
+	case serveErr := <-errChan:
+		return serveErr
+	case <-ctx.Done():
+	}
+
+	stopTimer := time.AfterFunc(grpcShutdownTimeout, grpcServer.Stop)
+	defer stopTimer.Stop()
+
+	grpcServer.GracefulStop()
+
+	serveErr := <-errChan
+	if serveErr != nil && !errors.Is(serveErr, grpc.ErrServerStopped) {
+		return serveErr
+	}
+
+	return nil
+}
+
+func baseGRPCServerOptions() []grpc.ServerOption {
+	return []grpc.ServerOption{
+		grpc.KeepaliveEnforcementPolicy(keepalive.EnforcementPolicy{
+			MinTime:             grpcServerKeepAliveMinTime,
+			PermitWithoutStream: true,
+		}),
+		grpc.KeepaliveParams(keepalive.ServerParameters{
+			Time:    grpcKeepAliveTime,
+			Timeout: grpcKeepAliveTimeout,
+		}),
+	}
 }
