@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+const httpShutdownTimeout = 10 * time.Second
+
 // Serve creates and configures an [http.Server] then starts listening.
 func Serve(ctx context.Context, listenAddress string, tlsCertFile string, tlsKeyFile string,
 	serveMux http.Handler,
@@ -22,9 +24,33 @@ func Serve(ctx context.Context, listenAddress string, tlsCertFile string, tlsKey
 	tlsEnabled := tlsCertFile != "" && tlsKeyFile != ""
 	slog.InfoContext(ctx, "listening for HTTP", "address", listenAddress, "tlsEnabled", tlsEnabled)
 
-	if tlsEnabled {
-		return server.ListenAndServeTLS(tlsCertFile, tlsKeyFile)
+	errChan := make(chan error, 1)
+
+	go func() {
+		if tlsEnabled {
+			errChan <- server.ListenAndServeTLS(tlsCertFile, tlsKeyFile)
+
+			return
+		}
+
+		errChan <- server.ListenAndServe()
+	}()
+
+	select {
+	case err := <-errChan:
+		return err
+	case <-ctx.Done():
 	}
 
-	return server.ListenAndServe()
+	shutdownCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), httpShutdownTimeout)
+	defer cancel()
+
+	err := server.Shutdown(shutdownCtx)
+	if err != nil {
+		_ = server.Close()
+
+		return err
+	}
+
+	return nil
 }
