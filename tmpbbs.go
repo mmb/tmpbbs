@@ -46,13 +46,15 @@ import (
 	"crypto/rand"
 	"embed"
 	"fmt"
-	"log"
 	"log/slog"
 	"os"
+	"os/signal"
 	"strconv"
+	"syscall"
 	"time"
 
 	"github.com/mmb/tmpbbs/internal/tmpbbs"
+	"golang.org/x/sync/errgroup"
 )
 
 // If commit is not set by go build (during development, for example) set it to the current time because it's used for
@@ -67,61 +69,83 @@ var (
 var staticFS embed.FS
 
 func main() {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-ctx.Done()
+		stop()
+	}()
+
 	if commit == "" {
 		commit = strconv.FormatInt(time.Now().UnixNano(), 10)
 	}
 
-	ctx := context.Background()
+	err := run(ctx)
+	if err != nil {
+		slog.ErrorContext(ctx, "fatal", "error", err)
+		stop()
+		os.Exit(1)
+	}
 
+	stop()
+}
+
+func run(ctx context.Context) error {
 	viper, err := tmpbbs.NewViper()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	if viper.GetBool("version") {
 		fmt.Fprintf(os.Stdout, "%s-%s-%s\n", version, commit, date)
-		os.Exit(0)
+
+		return nil
 	}
 
 	tmpbbs.SetupLog(viper.GetBool("json-log"))
-
 	slog.InfoContext(ctx, "startup", "version", version, "commit", commit, "date", date, "config",
 		tmpbbs.LoggedViperSettings(viper.AllSettings()))
-
-	postStore := tmpbbs.NewPostStore(ctx, viper.GetString("title"), viper.GetDuration("prune-interval"),
+	postStore := tmpbbs.NewPostStore(viper.GetString("title"), viper.GetDuration("prune-interval"),
 		viper.GetDuration("prune-max-age"))
 
 	tripcoder, err := tmpbbs.NewTripcoder(viper.GetString("tripcode-salt"), viper.GetStringSlice("superuser-tripcodes"),
 		rand.Reader)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	for _, loadPath := range viper.GetStringSlice("load-posts") {
 		err = postStore.LoadYAML(loadPath, tripcoder)
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
-	}
-
-	if viper.GetString("grpc-listen-address") != "" {
-		go func() {
-			log.Fatal(tmpbbs.ServeGRPC(ctx, viper.GetString("grpc-listen-address"), viper.GetString("tls-cert"),
-				viper.GetString("tls-key"), tmpbbs.NewPostSyncServer(postStore)))
-		}()
-	}
-
-	err = tmpbbs.RunPullPeers(ctx, viper.GetStringSlice("pull-peers"), viper.GetString("tls-trusted-ca"),
-		viper.GetDuration("pull-interval"), postStore)
-	if err != nil {
-		log.Fatal(err)
 	}
 
 	serveMux, err := tmpbbs.NewServeMux(viper, commit, staticFS, postStore, tripcoder)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
-	log.Fatal(tmpbbs.Serve(ctx, viper.GetString("listen-address"), viper.GetString("tls-cert"), viper.GetString("tls-key"),
-		serveMux))
+	group, groupCtx := errgroup.WithContext(ctx)
+
+	err = tmpbbs.RunPullPeers(groupCtx, viper.GetStringSlice("pull-peers"), viper.GetString("tls-trusted-ca"),
+		viper.GetDuration("pull-interval"), postStore)
+	if err != nil {
+		return err
+	}
+
+	group.Go(func() error {
+		return tmpbbs.Serve(groupCtx, viper.GetString("listen-address"), viper.GetString("tls-cert"),
+			viper.GetString("tls-key"), serveMux)
+	})
+	group.Go(func() error {
+		return tmpbbs.ServeGRPC(groupCtx, viper.GetString("grpc-listen-address"), viper.GetString("tls-cert"),
+			viper.GetString("tls-key"), tmpbbs.NewPostSyncServer(postStore))
+	})
+	group.Go(func() error {
+		postStore.RunPruner(groupCtx)
+
+		return nil
+	})
+
+	return group.Wait()
 }

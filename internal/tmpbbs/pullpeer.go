@@ -122,6 +122,8 @@ func (pp *pullPeer) catchUp(ctx context.Context) {
 }
 
 func (pp *pullPeer) run(ctx context.Context, initialWait time.Duration) {
+	defer slog.InfoContext(ctx, "stopped pulling peer", "address", pp.address)
+
 	pp.catchUp(ctx)
 
 	select {
@@ -135,6 +137,9 @@ func (pp *pullPeer) run(ctx context.Context, initialWait time.Duration) {
 		case <-ctx.Done():
 			return
 		case <-time.After(pp.interval):
+			if ctx.Err() != nil {
+				return
+			}
 		}
 
 		pp.catchUp(ctx)
