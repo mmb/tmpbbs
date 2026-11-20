@@ -105,7 +105,8 @@ jobs:
       - name: Run HTMLhint
         run: |
           npm install --global htmlhint
-          go run tmpbbs.go &
+          go build
+          ./tmpbbs &
           curl --fail --retry 30 --retry-connrefused --retry-delay 1 --silent http://localhost:8080/healthz
           htmlhint http://localhost:8080/
   integration-tests:
@@ -209,7 +210,8 @@ jobs:
           go-version-file: go.mod
       - name: Start tmpbbs
         run: |
-          go run tmpbbs.go &
+          go build
+          ./tmpbbs &
           curl --fail --retry 30 --retry-connrefused --retry-delay 1 --silent http://localhost:8080/healthz
       - uses: zaproxy/action-full-scan@v0.13.0
         with:
