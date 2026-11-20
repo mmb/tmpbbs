@@ -25,6 +25,10 @@ const (
 func ServeGRPC(ctx context.Context, listenAddress string, tlsCertFile string, tlsKeyFile string,
 	postSyncServer *PostSyncServer,
 ) error {
+	if listenAddress == "" {
+		return nil
+	}
+
 	var listenConfig net.ListenConfig
 
 	listener, err := listenConfig.Listen(ctx, "tcp", listenAddress)
@@ -64,6 +68,7 @@ func ServeGRPC(ctx context.Context, listenAddress string, tlsCertFile string, tl
 	case serveErr := <-errChan:
 		return serveErr
 	case <-ctx.Done():
+		slog.InfoContext(ctx, "stopping gRPC server")
 	}
 
 	stopTimer := time.AfterFunc(grpcShutdownTimeout, grpcServer.Stop)

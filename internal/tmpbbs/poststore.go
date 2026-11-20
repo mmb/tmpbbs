@@ -28,7 +28,7 @@ type PostStore struct {
 var errParentNotFound = errors.New("parent post not found")
 
 // NewPostStore returns a new PostStore. It also creates the root Post.
-func NewPostStore(ctx context.Context, title string, pruneInterval time.Duration,
+func NewPostStore(title string, pruneInterval time.Duration,
 	pruneMaxAge time.Duration,
 ) *PostStore {
 	rootPost := newPost(title, "", "", nil)
@@ -41,10 +41,6 @@ func NewPostStore(ctx context.Context, title string, pruneInterval time.Duration
 	}
 	rootPost.postsElement = postStore.posts.PushBack(rootPost)
 	postStore.idMap[rootPost.id] = rootPost
-
-	if pruneInterval > 0 && pruneMaxAge > 0 {
-		go postStore.startPruner(ctx)
-	}
 
 	return postStore
 }
@@ -72,6 +68,31 @@ func (ps *PostStore) LoadYAML(path string, tripcoder *Tripcoder) error {
 	}
 
 	return nil
+}
+
+// RunPruner prunes old posts on a timer until the context is done.
+func (ps *PostStore) RunPruner(ctx context.Context) {
+	if ps.pruneInterval <= 0 || ps.pruneMaxAge <= 0 {
+		return
+	}
+
+	defer slog.InfoContext(ctx, "stopped pruner")
+
+	ticker := time.NewTicker(ps.pruneInterval)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+			if ctx.Err() != nil {
+				return
+			}
+
+			ps.prune(ctx)
+		}
+	}
 }
 
 // delete removes all references to a post from the PostStore.
@@ -186,22 +207,4 @@ func (ps *PostStore) put(post *post, parentID string) error {
 	post.bump()
 
 	return nil
-}
-
-func (ps *PostStore) startPruner(ctx context.Context) {
-	ticker := time.NewTicker(ps.pruneInterval)
-	defer ticker.Stop()
-
-	for {
-		select {
-		case <-ctx.Done():
-			return
-		case <-ticker.C:
-			if ctx.Err() != nil {
-				return
-			}
-
-			ps.prune(ctx)
-		}
-	}
 }

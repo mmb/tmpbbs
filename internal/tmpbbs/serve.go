@@ -40,6 +40,7 @@ func Serve(ctx context.Context, listenAddress string, tlsCertFile string, tlsKey
 	case err := <-errChan:
 		return err
 	case <-ctx.Done():
+		slog.InfoContext(ctx, "stopping HTTP server")
 	}
 
 	shutdownCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), httpShutdownTimeout)
