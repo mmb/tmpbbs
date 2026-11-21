@@ -116,8 +116,33 @@ func newPullPeer(address string, caCertPool *x509.CertPool, interval time.Durati
 }
 
 func (pp *pullPeer) catchUp(ctx context.Context) {
+	pp.checkRootID(ctx)
+
 	for pp.sync(ctx) >= int(pp.maxResults) {
 		continue
+	}
+}
+
+// checkRootID clears the last synced ID if the peer's root ID has changed.
+// This will cause a resync from the peer's root.
+func (pp *pullPeer) checkRootID(ctx context.Context) {
+	if pp.rootID == "" {
+		return
+	}
+
+	clientCtx, cancel := context.WithTimeout(ctx, max(pp.interval-5*time.Second, minClientTimeout))
+	defer cancel()
+
+	response, err := pp.client.Get(clientCtx, &proto.PostSyncRequest{Id: "", MaxResults: 1}, grpc.UseCompressor(gzip.Name))
+	if err != nil {
+		pp.logger.ErrorContext(clientCtx, "peer root ID check failed", "error", err)
+
+		return
+	}
+
+	if posts := response.GetPosts(); len(posts) > 0 && posts[0].GetId() != pp.rootID {
+		pp.lastIDSynced = ""
+		pp.logger.WarnContext(clientCtx, "peer root changed", "oldRootID", pp.rootID, "newRootID", posts[0].GetId())
 	}
 }
 
