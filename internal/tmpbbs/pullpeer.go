@@ -24,7 +24,6 @@ type pullPeer struct {
 	client       proto.PostSyncClient
 	logger       *slog.Logger
 	postStore    *PostStore
-	address      string
 	lastIDSynced string
 	rootID       string
 	interval     time.Duration
@@ -79,13 +78,15 @@ func newPullPeer(address string, caCertPool *x509.CertPool, interval time.Durati
 ) (*pullPeer, error) {
 	var creds credentials.TransportCredentials
 
+	logger := slog.Default().With("serverAddress", address)
+
 	address, useTLS := strings.CutPrefix(address, "tls://")
 	if useTLS {
 		tlsConfig := tls.Config{RootCAs: caCertPool}
 		if caCertPool == nil {
 			tlsConfig.InsecureSkipVerify = true // #nosec G402 -- if no trusted CAs, allow self-signed
 
-			slog.Warn("peer server certificate verification disabled, use --tls-trusted-ca to verify", "address", address)
+			logger.Warn("peer server certificate verification disabled, use --tls-trusted-ca to verify")
 		}
 
 		creds = credentials.NewTLS(&tlsConfig)
@@ -106,10 +107,9 @@ func newPullPeer(address string, caCertPool *x509.CertPool, interval time.Durati
 	}
 
 	return &pullPeer{
-		address:    address,
 		client:     proto.NewPostSyncClient(clientConn),
 		interval:   interval,
-		logger:     slog.Default().With("serverAddress", address),
+		logger:     logger,
 		maxResults: maxMaxResults,
 		postStore:  postStore,
 	}, nil
@@ -122,7 +122,7 @@ func (pp *pullPeer) catchUp(ctx context.Context) {
 }
 
 func (pp *pullPeer) run(ctx context.Context, initialWait time.Duration) {
-	defer slog.InfoContext(ctx, "stopped pulling peer", "address", pp.address)
+	defer pp.logger.InfoContext(ctx, "stopped pulling peer")
 
 	pp.catchUp(ctx)
 
