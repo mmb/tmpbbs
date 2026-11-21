@@ -1,4 +1,3 @@
-10055	IGNORE	(img-src: * so external images can be used in posts)
 10096	IGNORE	(post timestamps are localized on the client side)
 10202	IGNORE	(no authentication or sessions)
 40018	IGNORE	(no database or SQL)
