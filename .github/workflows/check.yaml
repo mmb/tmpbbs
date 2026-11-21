@@ -44,7 +44,7 @@ jobs:
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: actions/setup-go@v7.0.0
+      - uses: actions/setup-go@v7.1.0
         with:
           go-version-file: go.mod
       - name: Install the latest protoc and update tools
@@ -67,7 +67,7 @@ jobs:
           - tests/integration
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: actions/setup-go@v7.0.0
+      - uses: actions/setup-go@v7.1.0
         with:
           go-version-file: ${{ matrix.dir }}/go.mod
       - uses: golangci/golangci-lint-action@v9.3.0
@@ -99,7 +99,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: actions/setup-go@v7.0.0
+      - uses: actions/setup-go@v7.1.0
         with:
           go-version-file: go.mod
       - name: Run HTMLhint
@@ -137,7 +137,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           push: true
-      - uses: actions/setup-go@v7.0.0
+      - uses: actions/setup-go@v7.1.0
         with:
           go-version-file: go.mod
       - name: Run integration tests
@@ -205,7 +205,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: actions/setup-go@v7.0.0
+      - uses: actions/setup-go@v7.1.0
         with:
           go-version-file: go.mod
       - name: Start tmpbbs
