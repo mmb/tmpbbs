@@ -1,10 +1,12 @@
 import { defineConfig } from 'eslint/config'
 import globals from 'globals'
 import js from '@eslint/js'
+import stylistic from '@stylistic/eslint-plugin'
+import unicorn from 'eslint-plugin-unicorn'
 
 export default defineConfig([
   {
-    extends: ['js/all'],
+    extends: ['js/all', unicorn.configs.all, stylistic.configs.all],
     files: ['**/*.{js,mjs,cjs}'],
     languageOptions: { globals: globals.browser },
     linterOptions: {
@@ -13,15 +15,21 @@ export default defineConfig([
     },
     plugins: { js },
     rules: {
-      'comma-dangle': ['error', 'never'],
       // eslint-disable-next-line no-magic-numbers
-      indent: ['error', 2],
+      '@stylistic/indent': ['error', 2],
+      '@stylistic/lines-between-class-members': 'off',
+      '@stylistic/no-multiple-empty-lines': ['error', { max: 1, maxBOF: 0, maxEOF: 0 }],
+      '@stylistic/padded-blocks': ['error', 'never'],
+      '@stylistic/quote-props': ['error', 'as-needed'],
+      '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
+      '@stylistic/semi': ['error', 'never'],
+      '@stylistic/space-before-function-paren': ['error', 'never'],
       'init-declarations': 'off',
-      'key-spacing': ['error', { mode: 'strict' }],
-      'no-magic-numbers': [ 'error', { ignore: [0, 1] }],
-      'quote-props': ['error', 'as-needed'],
-      quotes: ['error', 'single', { avoidEscape: true }],
-      semi: ['error', 'never']
+      'no-magic-numbers': ['error', { ignore: [0, 1] }],
+      'no-ternary': 'off',
+      'unicorn/name-replacements': ['error', { allowList: { params: true } }],
+      'unicorn/prefer-string-slice': 'off',
+      'unicorn/prefer-temporal': 'off'
     }
   }
 ])
