@@ -11,5 +11,6 @@ namespace: tmpbbs
 resources:
   - tmpbbs-http.service.yaml
   - tmpbbs.namespace.yaml
+  - tmpbbs.poddisruptionbudget.yaml
   - tmpbbs.service.yaml
   - tmpbbs.statefulset.yaml
