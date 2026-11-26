@@ -76,3 +76,18 @@ details:has(> summary + p > .emoji:only-child) > summary + p > .emoji,
 ul.post:has(> li > p > .emoji:only-child) > li > p > .emoji {
   font-size: 4em;
 }
+
+@media print {
+  #replies-nav,
+  #reply-form,
+  #show-qr,
+  form,
+  summary::after {
+    display: none;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}

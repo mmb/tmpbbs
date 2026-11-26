@@ -143,7 +143,8 @@ func (dp *displayPost) RepliesNav(currentPage int, perPage int, liClass string) 
 	}
 
 	return template.HTML(
-		fmt.Sprintf("<li class=%q>%s</li>", liClass, strings.Join(links, " / "))) // #nosec G203 -- no user input
+		fmt.Sprintf(`<li class=%q id="replies-nav">%s</li>`, liClass,
+			strings.Join(links, " / "))) // #nosec G203 -- no user input
 }
 
 // RepliesPage returns a page of the posts's replies.
