@@ -45,7 +45,7 @@
 {{ template "post" .post }}
 <ul class="post replies">
 {{- if .repliesEnabled }}
-<li class="odd">
+<li class="odd" id="reply-form">
 <details open>
 <summary>
 {{ .post.Printer.Sprintf "Reply" }}
